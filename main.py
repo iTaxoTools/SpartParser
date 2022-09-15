@@ -148,14 +148,14 @@ class SpartParserRegular:
                 startIndi = True
                 continue
             if startIndi and line.strip()[-1] == ';':
-                Indi = line.strip().split(':')
-                self.spartDict['individuals'][Indi[0].strip()] = {}
-                self.individualAssignments[Indi[0].strip()] = Indi[1][:-1].strip()
+                indi = line.strip().split(':')
+                self.spartDict['individuals'][indi[0].strip()] = {}
+                self.individualAssignments[indi[0].strip()] = indi[1][:-1].strip()
                 break
             elif startIndi:
-                Indi = line.strip().split(':')
-                self.spartDict['individuals'][Indi[0].strip()] = {}
-                self.individualAssignments[Indi[0].strip()] = Indi[1].strip()
+                indi = line.strip().split(':')
+                self.spartDict['individuals'][indi[0].strip()] = {}
+                self.individualAssignments[indi[0].strip()] = indi[1].strip()
 
         return self.spartDict
 
@@ -169,8 +169,8 @@ class SpartParserRegular:
             result = re.search(f'({self.keysDict["n_subsets"]}.*?);', line)
             if result:
                 getSubsets = result.group(1).split("=")[1].strip()
-                CounttList =  getSubsets.strip().split('/')
-                for scores in CounttList:
+                counttList =  getSubsets.strip().split('/')
+                for scores in counttList:
                     score = scores.strip().split(':')
                     subsetCounttList.append((score[0],score[1] if score[-1] != score[0]  else ''))
             #spartitions
