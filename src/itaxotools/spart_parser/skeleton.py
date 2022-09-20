@@ -1,4 +1,5 @@
 
+from . import SpartParser
 
 class SpartDict(dict):
 
@@ -8,10 +9,11 @@ class SpartDict(dict):
     def add_spartition(self, name, subsets):
         self['spartitions'] = ...
 
-    def write_xml():
-        ...
+    def write_xml(self, path):
+        with open(path, 'w') as file:
+            file.write('')
 
-    def write_regular():
+    def write_regular(self, path):
         ...
 
     @classmethod
@@ -23,12 +25,13 @@ class SpartDict(dict):
 
 ...
 
-spart = SpartDict()
-
-for individual in individuals:
-    spart.add_individual(individual)
-
-for spartition in spartitions:
-    spart.add_spartition(spartition.name, [{'a'}, {'b', 'c'}, {'d'}] )
+#
+# spart = SpartDict()
+#
+# for individual in individuals:
+#     spart.add_individual(individual)
+#
+# for spartition in spartitions:
+#     spart.add_spartition(spartition.name, [{'a'}, {'b', 'c'}, {'d'}] )
 
 ...
