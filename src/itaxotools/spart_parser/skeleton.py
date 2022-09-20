@@ -1,9 +1,31 @@
 
+from typing import Dict
+from dataclasses import dataclass
+
 from . import SpartParser
+
+
+# probably ignore this
+@dataclass
+class Individual():
+    name: str
+    score: int = None
+
+
+def ...
+    return Individual('this thing', 12)
+
 
 class SpartDict(dict):
 
-    def add_individual(self, name):
+    @property
+    def individuals(self) -> Set[Individual]:
+        ...
+
+    def partitions(self) -> List:
+        ...
+
+    def add_individual(self, individual: Individual):
         ...
 
     def add_spartition(self, name, subsets):
