@@ -220,10 +220,17 @@ class SpartParserRegular:
 def without_keys(d, keys):
     return {x: d[x] for x in d if x not in keys}
 
+
 if __name__ == '__main__':
-    spartParser = SpartParser('spart.xml')
-    #print(spartParser.generateData())
+    from sys import argv
+    from pathlib import Path
 
-    test = SpartParserRegular('LIMES_examplefile1_mtDNA-withABGD_iTaxoTools_0_1.spart')
-
-    print(test.generateData())
+    file = argv[1]
+    path = Path(file)
+    if path.suffix == '.xml':
+        spartParser = SpartParser(str(path))
+    else:
+        spartParser = SpartParserRegular(str(path))
+    x = spartParser.generateData()
+    from json import dumps
+    print(dumps(x))
