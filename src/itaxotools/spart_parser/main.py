@@ -221,7 +221,7 @@ def without_keys(d, keys):
     return {x: d[x] for x in d if x not in keys}
 
 
-if __name__ == '__main__':
+def main():
     from sys import argv
     from pathlib import Path
 
@@ -234,3 +234,6 @@ if __name__ == '__main__':
     x = spartParser.generateData()
     from json import dumps
     print(dumps(x))
+
+if __name__ == '__main__':
+    main()
