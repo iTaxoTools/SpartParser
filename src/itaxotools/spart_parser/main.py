@@ -34,7 +34,7 @@ class Spart:
         spartitionTags = {}
         for spartition, data in spartDict['spartitions'].items():
             for tag, val in data.items():
-                if tag.isnumeric() or tag == 'concordances':
+                if str(tag).isnumeric() or tag == 'concordances':
                     continue
                 else:
                     spartitionTags[tag] = val
@@ -46,14 +46,14 @@ class Spart:
             subIndividualTags = {}
             #Subsets/subset
             for subsetNum, val in data.items():
-                if subsetNum.isnumeric():
+                if str(subsetNum).isnumeric():
                     for key, val in data[subsetNum].items():
                         if key != 'individuals':
                             subsetTags[key] = val
             subsetET = ET.SubElement(subsetsET, "subset", attrib=subsetTags)
             #Subsets/subset/individual
             for subsetNum, val in data.items():
-                if subsetNum.isnumeric():
+                if str(subsetNum).isnumeric():
                     for key, val in data[subsetNum].items():
                         if key == 'individuals':
                             for indi, v in data[subsetNum][key].items():
@@ -395,6 +395,5 @@ if __name__ == '__main__':
     for f in exmDir:
         path = Path(f)
         sp = main('..\..\..\examples\\' + f)
-        if path.suffix == '.xml':
-           s.toXML(sp)
+        s.toXML(sp)
         s.toRegularSpart(sp)
