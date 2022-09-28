@@ -28,10 +28,14 @@ setup(
         "dev": [
             "pytest>=6.2.5",
         ],
+        "gui": [
+            "PySide6>=6.3.2",
+        ],
     },
     entry_points={
         "console_scripts": [
             "SpartParser=itaxotools.spart_parser.main:main",
+            "SpartParserGui=itaxotools.spart_parser.gui:run",
         ]
     },
     classifiers=[
