@@ -1,5 +1,5 @@
 
-from typing import Dict
+from typing import Dict, Set, List
 from dataclasses import dataclass
 
 from . import SpartParser
@@ -12,8 +12,8 @@ class Individual():
     score: int = None
 
 
-def ...
-    return Individual('this thing', 12)
+# def ...
+#     return Individual('this thing', 12)
 
 
 class SpartDict(dict):

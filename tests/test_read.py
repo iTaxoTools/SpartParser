@@ -21,10 +21,10 @@ def test_read_sanity(path: Path):
     print(dumps(x))
 
 
-def test_read_write(tmp_path: Path):
-    in_path = TEST_DATA_DIR / 'spart.xml'
-    out_path = tmp_path / 'out.xml'
-    spart = SpartDict.read_xml(in_path)
-    spart = SpartDict(spart)
-    spart.write_xml(out_path)
-    assert in_path.read_text() == out_path.read_text()
+# def test_read_write(tmp_path: Path):
+#     in_path = TEST_DATA_DIR / 'spart.xml'
+#     out_path = tmp_path / 'out.xml'
+#     spart = SpartDict.read_xml(in_path)
+#     spart = SpartDict(spart)
+#     spart.write_xml(out_path)
+#     assert in_path.read_text() == out_path.read_text()
