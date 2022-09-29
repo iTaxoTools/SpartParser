@@ -135,9 +135,9 @@ class Spart:
                                 for _ in spartDict['spartitions'][n2w(spNum) + ' spartition'][subNum]['individuals'].keys():
                                     indiCount += 1
 
-                        n_individuals += str(indiCount) + ' /'
+                        n_individuals += str(indiCount) + ' / '
                     for subCount in range(1, len(subCountDict) + 1):
-                        n_subsets += str(subCountDict[subCount]) + ' /'
+                        n_subsets += str(subCountDict[subCount]) + ' / '
 
                     f.write(f'\n\nn_spartition = {n_spartition[:-2]};')
                     f.write(f'\n\nn_individuals = {n_individuals[:-2]};')
@@ -153,7 +153,7 @@ class Spart:
                             for sub in range(1, subCountDict[spNum] + 1):
                                 if checkKey(spartDict['spartitions'][n2w(spNum) + ' spartition'], sub):
                                     if indiName in spartDict['spartitions'][n2w(spNum) + ' spartition'][sub]['individuals']:
-                                        inSub += str(sub) + ' /'
+                                        inSub += str(sub) + ' / '
                         f.write(f'\n{indiName} : {inSub[:-2]} ')
                     f.write(';')
 
