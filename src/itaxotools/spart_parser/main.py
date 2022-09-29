@@ -1,3 +1,4 @@
+from __future__ import annotations
 import collections
 import time
 import xml.etree.ElementTree as ET
@@ -7,19 +8,55 @@ from datetime import datetime
 from sys import argv
 from pathlib import Path
 
+
+class CannotParseFile(Exception):
+    def __init__(self, path: Path):
+        self.path = path
+        super().__init__((f'Cannot parse file: {str(path)}'))
+
+
 class Spart:
+    """Holds a list of individuals, spartitions and their subsets"""
 
-    def __init__(self):
-        self.spartDict = {}
+    def __init__(self, spartDict: dict = None):
+        """Create a new empty dataset by default"""
+        if spartDict is None:
+            raise NotImplementedError()
+        self.spartDict = spartDict
 
-    def individuals(self, individualName, **kwargs):
-        self.spartDict['individuals'] = {}
-        self.spartDict['individuals'][individualName] = {}
-        for key, val in kwargs.items():
-            self.spartDict['individuals'][individualName][key] = val
-        return self.spartDict
+    @classmethod
+    def fromMatricial(cls, path: Path) -> Spart:
+        """Parse a matricial spart file and return a Spart instance"""
+        parser = SpartParserRegular(str(path))
+        spartDict = parser.generateData()
+        return cls(spartDict)
 
-    def toXML(self, spartDict):
+    @classmethod
+    def fromXML(cls, path: Path) -> Spart:
+        """Parse an XML spart file and return a Spart instance"""
+        parser = SpartParser(str(path))
+        spartDict = parser.generateData()
+        return cls(spartDict)
+
+    @classmethod
+    def fromPath(cls, path: Path) -> Spart:
+        """Parse any supported file and return a Spart instance"""
+        try:
+            return cls.fromXML(path)
+        except:
+            pass
+
+        try:
+            return cls.fromMatricial(path)
+        except:
+            pass
+
+        raise CannotParseFile(path)
+
+
+    def toXML(self, path: Path) -> None:
+        """Export Spart data as an XML file at the designated path"""
+        spartDict = self.spartDict
         root = ET.Element("root")
         project_name = ET.SubElement(root, 'project_name').text = spartDict['project_name']
         date = ET.SubElement(root, 'date').text = spartDict['date']
@@ -67,15 +104,13 @@ class Spart:
 
         tree = ET.ElementTree(root)
         xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
-        time.sleep(0.00001)
-        fileName = 'SPART_TEST' + datetime.utcnow().strftime("%Y%m%d%H%M%S%f") + ".xml"
-        with open(fileName, "w") as f:
+        with open(path, "w") as f:
             f.write(xmlstr)
 
-    def toRegularSpart(self, spartDict):
-        time.sleep(0.00001)
-        fileName = 'LIMES_TEST' + datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
-        with open(fileName + '.spart', 'w+') as f:
+    def toMatricial(self, path: Path) -> None:
+        """Export Spart data as a Matricial file at the designated path"""
+        spartDict = self.spartDict
+        with open(path, 'w+') as f:
             f.write('begin spart;')
             numSpartitions = len(spartDict['spartitions'])
             subCountDict = {}
@@ -89,7 +124,7 @@ class Spart:
                     n_subsets_scores = ''
                     for spNum in range(1, numSpartitions+1):
                         if checkKey(spartDict['spartitions'][n2w(spNum) + ' spartition'], 'Label'):
-                            n_spartition += spartDict['spartitions'][n2w(spNum) + ' spartition']['Label'] +' /'
+                            n_spartition += spartDict['spartitions'][n2w(spNum) + ' spartition']['Label'] +' / '
                         #count subsets
                         indiCount = 0
                         for subNum, val in spartDict['spartitions'][n2w(spNum) + ' spartition'].items():
@@ -126,8 +161,54 @@ class Spart:
             f.write('\nend;')
             f.close()
 
-    def spartitions(self):
-        pass
+    def getIndividuals(self) -> list[str]:
+        """Returns a list with the ids of each individual"""
+        raise NotImplementedError()
+
+    def getIndividualData(self, id: str) -> dict[str, object]:
+        """Returns extra information about the given individual id"""
+        raise NotImplementedError()
+
+    def getSpartitions(self) -> list[str]:
+        """Returns a list with the labels of each spartition"""
+        raise NotImplementedError()
+
+    def getSpartitionData(self, label: str) -> dict[str, object]:
+        """Returns extra information about the given spartition"""
+        raise NotImplementedError()
+
+    def getSpartitionSubsets(self, label: str) -> list[str]:
+        """Returns a list with the labels of all subsets of the given spartition"""
+        raise NotImplementedError()
+
+    def getSubsetIndividuals(self, spartition: str, subset: str) -> list[str]:
+        """Returns a list of all individuals contained in the spartition
+        and subset specified by the given labels."""
+        raise NotImplementedError()
+
+    def addIndividual(self, id: str, **kwargs) -> None:
+        """Add a new individual. Extra information (locality, voucher etc.)
+        is passed as keyword arguments."""
+        self.spartDict['individuals'] = {}
+        self.spartDict['individuals'][id] = {}
+        for key, val in kwargs.items():
+            self.spartDict['individuals'][id][key] = val
+        return self.spartDict
+
+    def addSpartition(self, label: str, **kwargs) -> None:
+        """Add a new spartition. Extra information (score, type etc.)
+        is passed as keyword arguments."""
+        raise NotImplementedError()
+
+    def addSubset(self, spartition: str, label: str, **kwargs) -> None:
+        """Add a new subset to the given spartition. Extra information
+        (score, taxon name etc.) is passed as keyword arguments."""
+        raise NotImplementedError()
+
+    def addSubsetIndividual(self, spartition: str, subset: str, individual: str, **kwargs) -> None:
+        """Add an existing individual to the subset of given spartition.
+        Extra information (score etc.) is passed as keyword arguments."""
+        raise NotImplementedError()
 
 
 class SpartParser:
@@ -370,30 +451,26 @@ def checkKey(dic, key):
         return False
 
 
-def main(file):
-    #file = argv[1]
+def main():
+    path = Path(argv[1])
+    spart = Spart.fromPath(path)
+    from json import dumps
+    print(dumps(spart.spartDict))
 
-    path = Path(file)
-    if path.suffix == '.xml':
-        spartParser = SpartParser(str(path))
-    else:
-        spartParser = SpartParserRegular(str(path))
-    x = spartParser.generateData()
-    # from json import dumps
-    # return dumps(x)
-    return x
 
+def demo():
+    demoDir = Path("demo")
+    demoDir.mkdir(exist_ok=True)
+
+    exmDir = Path("examples")
+    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+    for src in exmDir.iterdir():
+        spart = Spart.fromPath(src)
+        dest_xml = demoDir / f'{src.name}.{timestamp}.xml'
+        spart.toXML(dest_xml)
+        dest_mat = demoDir / f'{src.name}.{timestamp}.spart'
+        spart.toMatricial(dest_mat)
 
 
 if __name__ == '__main__':
-    # print(main())
-    s = Spart()
-    # xml_str = s.toXML(main())
-    # root = etree.fromstring(xml_str)
-    # print(etree.tostring(root, pretty_print=True).decode())
-    exmDir = os.listdir("..\..\..\examples")
-    for f in exmDir:
-        path = Path(f)
-        sp = main('..\..\..\examples\\' + f)
-        s.toXML(sp)
-        s.toRegularSpart(sp)
+    demo()

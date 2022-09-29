@@ -36,13 +36,13 @@ setup(
     entry_points={
         "console_scripts": [
             "SpartParser=itaxotools.spart_parser.main:main",
+            "SpartParserDemo=itaxotools.spart_parser.main:demo",
             "SpartParserGui=itaxotools.spart_parser.gui:run",
         ]
     },
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3 :: Only",

@@ -1,1 +1,1 @@
-from .main import SpartParser, SpartParserRegular
+from .main import Spart
