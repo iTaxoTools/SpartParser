@@ -27,6 +27,8 @@ from itaxotools.common.utility import AttrDict
 from itaxotools.common.widgets import ToolDialog, ScalingImage, VLineSeparator
 
 from . import app
+from .utility import bind, unbind
+from .model import SpartType
 
 
 class ToolLogo(QtWidgets.QLabel):
@@ -70,6 +72,9 @@ class ToolBar(QtWidgets.QToolBar):
                 padding: 0px 8px 0px 8px;
                 margin: 0px 0px 0px 0px;
                 text-align: right;
+                }
+            QToolButton:disabled {
+                color: palette(Dark);
                 }
             QToolButton:hover {
                 background: palette(Window);
@@ -143,16 +148,29 @@ class TextView(QtWidgets.QTextEdit):
         self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
         self.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
         self.document().setDocumentMargin(8)
-        # widget.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        # widget.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
-        # widget.setReadOnly(True)
+        self.setAcceptRichText(False)
+        self.setReadOnly(True)
+        # self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+        # self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
+
+    def open(self, path: Path):
+        if path is None:
+            self.clear()
+            return
+        with open(path) as file:
+            text = file.read()
+            self.setText(text)
 
 
 class Body(QtWidgets.QSplitter):
     def __init__(self, *args, **kwargs):
         super().__init__(QtCore.Qt.Horizontal)
-        self.addWidget(self.left_panel())
-        self.addWidget(self.right_panel())
+
+        self.left_panel = TextView('LEFT')
+        self.right_panel = TextView('RIGHT')
+
+        self.addWidget(self.left_panel)
+        self.addWidget(self.right_panel)
         self.setStretchFactor(0, 1)
         self.setStretchFactor(1, 1)
         self.setCollapsible(0, False)
@@ -160,20 +178,19 @@ class Body(QtWidgets.QSplitter):
         self.setStyleSheet("QSplitter::handle { height: 12px; }")
         self.setContentsMargins(32, 24, 32, 24)
 
-    def left_panel(self):
-        return TextView('LEFT')
-
-    def right_panel(self):
-        return TextView('RIGHT')
+        bind(app.model.properties.path_matricial, self.left_panel.open)
+        bind(app.model.properties.path_xml, self.right_panel.open)
 
 
 class InfoLabel(QtWidgets.QLabel):
-    def __init__(self, text, value='-'):
+    def __init__(self, text, value=None):
         super().__init__()
         self.prefix = text
         self.setValue(value)
 
-    def setValue(self, value='-'):
+    def setValue(self, value=None):
+        if value is None:
+            value = '-'
         self.value = value
         if isinstance(value, int):
             value = f'{value:,}'
@@ -200,16 +217,21 @@ class Footer(QtWidgets.QFrame):
                 }
             """)
 
+        self.status = QtWidgets.QLabel('STATUS')
         self.individuals = InfoLabel('Individuals')
         self.spartitions = InfoLabel('Spartitions')
 
+        bind(app.model.properties.individuals, self.individuals.setValue)
+        bind(app.model.properties.spartitions, self.spartitions.setValue)
+        bind(app.model.properties.status, self.status.setText)
+
         layout = QtWidgets.QHBoxLayout()
-        layout.addSpacing(8)
+        layout.addWidget(self.status)
+        layout.addStretch(1)
         layout.addWidget(self.individuals)
         layout.addSpacing(8)
         layout.addWidget(self.spartitions)
-        layout.addStretch(1)
-        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setContentsMargins(8, 0, 8, 0)
         self.setLayout(layout)
 
 
@@ -227,6 +249,9 @@ class Main(ToolDialog):
 
         self.draw()
         self.act()
+
+        bind(app.model.properties.input_name, self.setWindowTitle,
+            lambda x: self.title if not x else f'{self.title} - {x}')
 
     def draw(self):
         """Draw all contents"""
@@ -259,16 +284,19 @@ class Main(ToolDialog):
         self.actions['save_matricial'] = QtGui.QAction('&Matricial', self)
         self.actions['save_matricial'].setIcon(app.resources.icons.save)
         self.actions['save_matricial'].setStatusTip('Save Matricial')
-        self.actions['save_matricial'].triggered.connect(self.handleSave)
+        self.actions['save_matricial'].triggered.connect(self.handleSaveMatricial)
 
         self.actions['save_xml'] = QtGui.QAction('&XML', self)
         self.actions['save_xml'].setIcon(app.resources.icons.save)
         self.actions['save_xml'].setStatusTip('Save XML')
-        self.actions['save_xml'].triggered.connect(self.handleSave)
+        self.actions['save_xml'].triggered.connect(self.handleSaveXML)
 
         self.widgets.header.toolBar.addAction(self.actions['open'])
         self.widgets.header.toolBar.addAction(self.actions['save_matricial'])
         self.widgets.header.toolBar.addAction(self.actions['save_xml'])
+
+        bind(app.model.properties.ready, self.actions['save_matricial'].setEnabled)
+        bind(app.model.properties.ready, self.actions['save_xml'].setEnabled)
 
     def handleHome(self):
         self.widgets.body.showDashboard()
@@ -279,12 +307,21 @@ class Main(ToolDialog):
         if not filename:
             return
         QtCore.QDir.setCurrent(str(Path(filename).parent))
-        print(filename)
+        app.model.open(Path(filename))
 
-    def handleSave(self):
+    def handleSave(self, type):
+        suggested_name = app.model.path_input.stem + type.extension
+        destination = Path(app.model.work_dir / suggested_name)
+        filters = f'{type.description} (*{type.extension})'
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(
             self, f'{self.title} - Save File',
-            QtCore.QDir.currentPath() + '/' + 'foo' + '.xml')
+            str(destination), filters)
         if not filename:
             return
-        print(filename)
+        app.model.save(Path(filename), type)
+
+    def handleSaveMatricial(self):
+        self.handleSave(SpartType.Matricial)
+
+    def handleSaveXML(self):
+        self.handleSave(SpartType.XML)

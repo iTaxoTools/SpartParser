@@ -18,4 +18,10 @@
 
 """Program globals"""
 
-from . import model, resources, skin
+__all__ = ['resources', 'skin', 'model']
+
+from ..model import AppModel
+from . import resources, skin
+
+
+model = AppModel()
