@@ -3,7 +3,7 @@ attrs==22.1.0
 colorama==0.4.5
 future==0.18.2
 iniconfig==1.1.1
-itaxotools-common==0.2.dev3
+itaxotools-common==0.2.dev4
 packaging==21.3
 pefile==2022.5.30
 pip==22.2.2

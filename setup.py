@@ -31,7 +31,7 @@ setup(
         ],
         "gui": [
             "PySide6>=6.3.2",
-            "itaxotools-common==0.2.dev3",
+            "itaxotools-common==0.2.dev4",
         ],
     },
     entry_points={

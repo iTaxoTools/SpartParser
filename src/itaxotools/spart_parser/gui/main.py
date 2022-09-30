@@ -275,19 +275,17 @@ class Main(ToolDialog):
     """Main window, handles everything"""
 
     def __init__(self, parent=None, files=[]):
-        super(Main, self).__init__(parent)
+        super().__init__(parent)
 
-        self.title = 'SpartParser'
-
+        self.title = app.title
         self.setWindowIcon(app.resources.icons.app)
-        self.setWindowTitle(self.title)
         self.resize(800, 500)
 
         self.draw()
         self.act()
 
         bind(app.model.properties.input_name, self.setWindowTitle,
-            lambda x: self.title if not x else f'{self.title} - {x}')
+            lambda x: app.title if not x else f'{app.title} - {x}')
 
     def draw(self):
         """Draw all contents"""
@@ -339,22 +337,28 @@ class Main(ToolDialog):
 
     def handleOpen(self):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, f'{self.title} - Open File')
+            self, f'{app.title} - Open File')
         if not filename:
             return
         QtCore.QDir.setCurrent(str(Path(filename).parent))
-        app.model.open(Path(filename))
+        try:
+            app.model.open(Path(filename))
+        except Exception as exception:
+            self.showException(exception)
 
     def handleSave(self, type):
         suggested_name = app.model.path_input.stem + type.extension
         destination = Path(app.model.work_dir / suggested_name)
         filters = f'{type.description} (*{type.extension})'
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, f'{self.title} - Save File',
+            self, f'{app.title} - Save File',
             str(destination), filters)
         if not filename:
             return
-        app.model.save(Path(filename), type)
+        try:
+            app.model.save(Path(filename), type)
+        except Exception as exception:
+            self.showException(exception)
 
     def handleSaveMatricial(self):
         self.handleSave(SpartType.Matricial)

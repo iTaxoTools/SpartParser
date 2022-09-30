@@ -23,5 +23,5 @@ __all__ = ['resources', 'skin', 'model']
 from ..model import AppModel
 from . import resources, skin
 
-
+title = 'SpartParser'
 model = AppModel()

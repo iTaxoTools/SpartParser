@@ -26,6 +26,8 @@ from shutil import copy
 
 from .utility import Property, PropertyObject
 
+from itaxotools.spart_parser import Spart
+
 
 class SpartType(Enum):
     Matricial = 'Matricial Spart', '.spart'
@@ -46,12 +48,11 @@ class AppModel(PropertyObject):
     path_xml = Property(Path)
     work_dir = Property(Path)
     input_name = Property(str)
-    input_type = Property(SpartType)
     individuals = Property(object)
     spartitions = Property(object)
     status = Property(str)
     ready = Property(bool)
-    object = Property(object)
+    spart = Property(Spart)
 
     def __init__(self):
         super().__init__()
@@ -61,36 +62,40 @@ class AppModel(PropertyObject):
         self.ready = False
         self.work_dir = None
         self.input_name = None
-        self.input_type = None
         self.individuals = None
         self.spartitions = None
         self.status = 'Open a file to begin.'
 
     def open(self, path: Path):
-        converted_path = self.temp_path / f'{path.name}.xml'
-        copy(path, converted_path)
+        parsed_matricial = self.temp_path / f'{path.name}.parsed.spart'
+        parsed_xml = self.temp_path / f'{path.name}.parsed.xml'
+
+        spart = Spart.fromPath(path)
+        spart.toMatricial(parsed_matricial)
+        spart.toXML(parsed_xml)
 
         self.work_dir = path.parent
         self.path_input = path
-        self.path_matricial = path
-        self.path_xml = converted_path
+        self.path_matricial = parsed_matricial
+        self.path_xml = parsed_xml
         self.input_name = path.name
 
-        self.object = None
-        self.individuals = 41
-        self.spartitions = 43
-        self.input_type = SpartType.Matricial
+        try:
+            self.individuals = len(spart.getIndividuals())
+            self.spartitions = len(spart.getSpartitions())
+        except NotImplementedError:
+            pass
 
+        self.spart = spart
         self.ready = True
-        print(f'OPEN: {str(path)} > {str(converted_path)}')
-        self.status = f'Successfully opened {str(self.input_type)} file: {self.shorten(self.input_name)}'
+        self.status = f'Successfully opened file: {self.shorten(self.input_name)}'
 
     def save(self, destination: Path, type: SpartType):
         source = {
             SpartType.Matricial: self.path_matricial,
             SpartType.XML: self.path_xml,
         }[type]
-        print(f'COPY: {str(source)} > {str(destination)}')
+        copy(source, destination)
         self.status = f'Successfully saved {str(type)} file: {self.shorten(destination.name)}'
 
     def shorten(self, name):
