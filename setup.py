@@ -9,7 +9,7 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name="spart_parser",
+    name="spart-parser",
     version="0.0.1",
     description="Parse and write SPART files",
     long_description=long_description,
@@ -27,6 +27,7 @@ setup(
     extras_require={
         "dev": [
             "pytest>=6.2.5",
+            "pyinstaller>=4.5.1",
         ],
         "gui": [
             "PySide6>=6.3.2",
@@ -43,6 +44,7 @@ setup(
     classifiers=[
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Programming Language :: Python :: 3.10",
         "Programming Language :: Python :: 3 :: Only",
