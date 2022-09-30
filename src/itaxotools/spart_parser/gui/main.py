@@ -142,44 +142,80 @@ class Header(QtWidgets.QFrame):
         self.setLayout(layout)
 
 
-class TextView(QtWidgets.QTextEdit):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
-        self.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
-        self.document().setDocumentMargin(8)
-        self.setAcceptRichText(False)
-        self.setReadOnly(True)
+class TextView(QtWidgets.QWidget):
+    def __init__(self, label: str, parent=None):
+        super().__init__(parent)
+
+        self.label = QtWidgets.QLabel(label)
+        self.label.setIndent(4)
+        self.label.setMargin(2)
+        self.label.setStyleSheet("""
+            QLabel {
+                font-size: 14px;
+                font-weight: bold;
+                letter-spacing: 1px;
+                color: palette(Light);
+                background: palette(Shadow);
+                border-right: 1px solid palette(Dark);
+                border-top-right-radius: 1px;
+                padding: 2px;
+                }
+            QLabel:disabled {
+                background: palette(Mid);
+                border-right: 1px solid palette(Midlight);
+                }
+            """)
+
+        self.widget = QtWidgets.QTextEdit()
+        self.widget.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
+        self.widget.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
+        self.widget.document().setDocumentMargin(8)
+        self.widget.setAcceptRichText(False)
+        self.widget.setReadOnly(True)
         # self.setHorizontalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
         # self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOn)
 
+        layout = QtWidgets.QVBoxLayout()
+        layout.addWidget(self.label)
+        layout.addWidget(self.widget, 1)
+        layout.setSpacing(0)
+        layout.setContentsMargins(0, 0, 0, 0)
+        self.setLayout(layout)
+
     def open(self, path: Path):
         if path is None:
-            self.clear()
+            self.widget.clear()
+            self.label.setEnabled(False)
             return
         with open(path) as file:
             text = file.read()
-            self.setText(text)
+            self.widget.setText(text)
+            self.label.setEnabled(True)
 
 
 class Body(QtWidgets.QSplitter):
     def __init__(self, *args, **kwargs):
         super().__init__(QtCore.Qt.Horizontal)
 
-        self.left_panel = TextView('LEFT')
-        self.right_panel = TextView('RIGHT')
+        self.view_input = TextView('Original input')
+        self.view_matricial = TextView('Parsed Matricial')
+        self.view_xml = TextView('Parsed XML')
 
-        self.addWidget(self.left_panel)
-        self.addWidget(self.right_panel)
+        self.addWidget(self.view_input)
+        self.addWidget(self.view_matricial)
+        self.addWidget(self.view_xml)
         self.setStretchFactor(0, 1)
         self.setStretchFactor(1, 1)
-        self.setCollapsible(0, False)
-        self.setCollapsible(1, False)
+        self.setStretchFactor(2, 1)
+        self.setCollapsible(0, True)
+        self.setCollapsible(1, True)
+        self.setCollapsible(2, True)
         self.setStyleSheet("QSplitter::handle { height: 12px; }")
         self.setContentsMargins(32, 24, 32, 24)
 
-        bind(app.model.properties.path_matricial, self.left_panel.open)
-        bind(app.model.properties.path_xml, self.right_panel.open)
+        bind(app.model.properties.path_input, self.view_input.open)
+        bind(app.model.properties.path_matricial, self.view_matricial.open)
+        bind(app.model.properties.path_xml, self.view_xml.open)
 
 
 class InfoLabel(QtWidgets.QLabel):
