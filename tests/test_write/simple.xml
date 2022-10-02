@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<root>
+   <project_name>simple_test</project_name>
+   <date>2022-10-02T12:00:00</date>
+   <individuals>
+      <individual id="individual_1"/>
+      <individual id="individual_2"/>
+      <individual id="individual_3"/>
+   </individuals>
+   <spartitions>
+      <spartition Label="spartition_1">
+         <remarks>First spartition</remarks>
+          <subsets>
+    				<subset label="1">
+    					<individual ref="individual_1"/>
+    				</subset>
+    				<subset label="2">
+    					<individual ref="individual_2"/>
+    				</subset>
+    				<subset label="3">
+    					<individual ref="individual_3"/>
+    				</subset>
+    			</subsets>
+      </spartition>
+      <spartition Label="spartition_2">
+         <remarks>Second spartition</remarks>
+          <subsets>
+    				<subset label="1">
+    					<individual ref="individual_1"/>
+              <individual ref="individual_2"/>
+    				</subset>
+    				<subset label="2">
+    					<individual ref="individual_3"/>
+    				</subset>
+    			</subsets>
+      </spartition>
+      <spartition Label="spartition_3">
+         <remarks>Third spartition</remarks>
+          <subsets>
+    				<subset label="1">
+    					<individual ref="individual_1"/>
+              <individual ref="individual_2"/>
+              <individual ref="individual_3"/>
+    				</subset>
+    			</subsets>
+      </spartition>
+   </spartitions>
+</root>

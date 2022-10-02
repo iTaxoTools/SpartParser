@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<root>
+   <project_name>simple_test</project_name>
+   <date>2022-10-02T12:00:00</date>
+   <individuals>
+      <individual id="individual_1" locality="A" voucher="X"/>
+      <individual id="individual_2" locality="B"/>
+      <individual id="individual_3" locality="C"/>
+   </individuals>
+   <spartitions>
+      <spartition Label="spartition_1" source="M">
+        <remarks>First spartition</remarks>
+        <subsets>
+  				<subset label="1" taxon="taxon_1_1">
+  					<individual ref="individual_1" score="1.1"/>
+  				</subset>
+  				<subset label="2" taxon="taxon_1_2">
+  					<individual ref="individual_2" score="1.2"/>
+  				</subset>
+  				<subset label="3" taxon="taxon_1_3">
+  					<individual ref="individual_3" score="1.3"/>
+  				</subset>
+  			</subsets>
+      </spartition>
+      <spartition Label="spartition_2" source="N">
+        <remarks>Second spartition</remarks>
+        <subsets>
+  				<subset label="1" taxon="taxon_2_1">
+  					<individual ref="individual_1" score="2.1"/>
+            <individual ref="individual_2" score="2.2"/>
+  				</subset>
+  				<subset label="2" taxon="taxon_2_2">
+  					<individual ref="individual_3" score="2.3"/>
+  				</subset>
+  			</subsets>
+      </spartition>
+      <spartition Label="spartition_3" source="O">
+        <remarks>Third spartition</remarks>
+        <subsets>
+  				<subset label="1" taxon="taxon_3_1">
+  					<individual ref="individual_1" score="3.1"/>
+            <individual ref="individual_2" score="3.2"/>
+            <individual ref="individual_3" score="3.3"/>
+  				</subset>
+  			</subsets>
+      </spartition>
+   </spartitions>
+</root>
