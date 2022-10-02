@@ -53,7 +53,6 @@ class Spart:
 
         raise CannotParseFile(path)
 
-
     def toXML(self, path: Path) -> None:
         """Export Spart data as an XML file at the designated path"""
         spartDict = self.spartDict
@@ -181,9 +180,18 @@ class Spart:
         """Returns a list with the labels of all subsets of the given spartition"""
         raise NotImplementedError()
 
+    def getSubsetData(self, spartition: str, subset: str) -> dict[str, object]:
+        """Returns extra information about the given subset"""
+        raise NotImplementedError()
+
     def getSubsetIndividuals(self, spartition: str, subset: str) -> list[str]:
         """Returns a list of all individuals contained in the spartition
         and subset specified by the given labels."""
+        raise NotImplementedError()
+
+    def getSubsetIndividualData(self, spartition: str, subset: str, individual: str) -> dict[str, object]:
+        """Returns extra information about the given individual
+        associated with the given subset."""
         raise NotImplementedError()
 
     def addIndividual(self, id: str, **kwargs) -> None:
@@ -208,6 +216,22 @@ class Spart:
     def addSubsetIndividual(self, spartition: str, subset: str, individual: str, **kwargs) -> None:
         """Add an existing individual to the subset of given spartition.
         Extra information (score etc.) is passed as keyword arguments."""
+        raise NotImplementedError()
+
+    @property
+    def project_name(self):
+        raise NotImplementedError()
+
+    @project_name.setter
+    def project_name(self, name: str):
+        raise NotImplementedError()
+
+    @property
+    def date(self):
+        raise NotImplementedError()
+
+    @date.setter
+    def date(self, date: datetime):
         raise NotImplementedError()
 
 
