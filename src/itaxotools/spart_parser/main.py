@@ -15,8 +15,8 @@ class Spart:
     def __init__(self, spartDict: dict = None):
         if spartDict is None:
             self.spartDict = {}
-            self.spartDict['project_name'] = {}
-            self.spartDict['date'] = {}
+            self.spartDict['project_name'] = ''
+            self.spartDict['date'] = ''
             self.spartDict['individuals'] = {}
             self.spartDict['spartitions'] = {}
         else:
@@ -48,16 +48,17 @@ class Spart:
             raise CannotParseFile(path)
 
     def toXML(self, path: Path):
+        """Convert Spart instance to XML file"""
         root = ET.Element("root")
         project_name = ET.SubElement(root, 'project_name').text = self.spartDict['project_name']
         date = ET.SubElement(root, 'date').text = self.spartDict['date']
 
-        #individuals
+        #Write Individuals to xml
         individuals = ET.SubElement(root, "individuals")
         for individual, data in self.spartDict['individuals'].items():
             ET.SubElement(individuals, "individual", id=individual, attrib=data)
 
-        #spartitions
+        #Write Spartitions to xml
         spartitions = ET.SubElement(root, "spartitions")
         spartitionTags = {}
         for spartition, data in self.spartDict['spartitions'].items():
@@ -89,14 +90,19 @@ class Spart:
                                     subIndividualTags[k] = v
                             subindividualET = ET.SubElement(subsetET, "individual", attrib=subIndividualTags)
 
-        #latlon
+        #Write latlon  to xml
 
-        tree = ET.ElementTree(root)
+        #Write Sequences to xml
+
+        #Create XML file
         xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
         with open(path, "w") as f:
             f.write(xmlstr)
 
     def toMatricial(self, path: Path):
+        """Convert Spart instance to spart file"""
+
+        #Creating spart file with given path
         with open(path, 'w+') as f:
             f.write('begin spart;')
             numSpartitions = len(self.spartDict['spartitions'])
@@ -195,6 +201,7 @@ class Spart:
         """Returns extra information about the given individual id"""
         if checkKey(self.spartDict['individuals'], id):
             return self.spartDict['individuals'][id]
+        return {}
 
     def getSpartitions(self) -> list[str]:
         """Returns a list with the labels of each spartition"""
@@ -207,7 +214,6 @@ class Spart:
 
     def getSpartitionData(self, label: str) -> dict[str, object]:
         """Returns extra information about the given spartition"""
-
         for spartition in self.spartDict['spartitions'].keys():
             for tag in self.spartDict['spartitions'][spartition].keys():
                 if self.spartDict['spartitions'][spartition]['label'] == label:

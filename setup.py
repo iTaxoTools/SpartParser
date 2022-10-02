@@ -9,7 +9,7 @@ here = pathlib.Path(__file__).parent.resolve()
 long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
-    name="spart_parser",
+    name="spart-parser",
     version="0.0.1",
     description="Parse and write SPART files",
     long_description=long_description,
@@ -27,11 +27,18 @@ setup(
     extras_require={
         "dev": [
             "pytest>=6.2.5",
+            "pyinstaller>=4.5.1",
+        ],
+        "gui": [
+            "PySide6>=6.3.2",
+            "itaxotools-common==0.2.dev4",
         ],
     },
     entry_points={
         "console_scripts": [
             "SpartParser=itaxotools.spart_parser.main:main",
+            "SpartParserDemo=itaxotools.spart_parser.main:demo",
+            "SpartParserGui=itaxotools.spart_parser.gui:run",
         ]
     },
     classifiers=[

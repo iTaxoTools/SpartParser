@@ -129,3 +129,5 @@ references/
 testfiles/
 pyrightconfig.json
 helpers/
+
+demo/
