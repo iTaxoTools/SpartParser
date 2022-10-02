@@ -1,77 +1,69 @@
-from __future__ import annotations
-import collections
-import time
+import collections, time, re, os
 import xml.etree.ElementTree as ET
 from xml.dom import minidom
-import re,os
 from datetime import datetime
 from sys import argv
 from pathlib import Path
-
 
 class CannotParseFile(Exception):
     def __init__(self, path: Path):
         self.path = path
         super().__init__((f'Cannot parse file: {str(path)}'))
 
-
 class Spart:
-    """Holds a list of individuals, spartitions and their subsets"""
 
     def __init__(self, spartDict: dict = None):
-        """Create a new empty dataset by default"""
         if spartDict is None:
-            raise NotImplementedError()
-        self.spartDict = spartDict
+            self.spartDict = {}
+            self.spartDict['project_name'] = ''
+            self.spartDict['date'] = ''
+            self.spartDict['individuals'] = {}
+            self.spartDict['spartitions'] = {}
+        else:
+            self.spartDict = spartDict
 
     @classmethod
-    def fromMatricial(cls, path: Path) -> Spart:
+    def fromMatricial(cls, path: Path):
         """Parse a matricial spart file and return a Spart instance"""
         parser = SpartParserRegular(str(path))
         spartDict = parser.generateData()
         return cls(spartDict)
 
     @classmethod
-    def fromXML(cls, path: Path) -> Spart:
+    def fromXML(cls, path: Path):
         """Parse an XML spart file and return a Spart instance"""
         parser = SpartParser(str(path))
         spartDict = parser.generateData()
         return cls(spartDict)
 
     @classmethod
-    def fromPath(cls, path: Path) -> Spart:
+    def fromPath(cls, path: Path):
         """Parse any supported file and return a Spart instance"""
         try:
-            return cls.fromXML(path)
+            if path.suffix == '.xml':
+                return cls.fromXML(path)
+            else:
+                return cls.fromMatricial(path)
         except:
-            pass
+            raise CannotParseFile(path)
 
-        try:
-            return cls.fromMatricial(path)
-        except:
-            pass
-
-        raise CannotParseFile(path)
-
-
-    def toXML(self, path: Path) -> None:
-        """Export Spart data as an XML file at the designated path"""
-        spartDict = self.spartDict
+    def toXML(self, path: Path):
+        """Convert Spart instance to XML file"""
         root = ET.Element("root")
-        project_name = ET.SubElement(root, 'project_name').text = spartDict['project_name']
-        date = ET.SubElement(root, 'date').text = spartDict['date']
+        project_name = ET.SubElement(root, 'project_name').text = self.spartDict['project_name']
+        date = ET.SubElement(root, 'date').text = self.spartDict['date']
 
-        #individuals
+        #Write Individuals to xml
         individuals = ET.SubElement(root, "individuals")
-        for individual, data in spartDict['individuals'].items():
+        for individual, data in self.spartDict['individuals'].items():
             ET.SubElement(individuals, "individual", id=individual, attrib=data)
 
-        #spartitions
+        #Write Spartitions to xml
         spartitions = ET.SubElement(root, "spartitions")
         spartitionTags = {}
-        for spartition, data in spartDict['spartitions'].items():
+        for spartition, data in self.spartDict['spartitions'].items():
             for tag, val in data.items():
-                if str(tag).isnumeric() or tag == 'concordances':
+                if tag == 'subsets' or tag == 'concordances':
                     continue
                 else:
                     spartitionTags[tag] = val
@@ -82,134 +74,175 @@ class Spart:
             subsetTags = {}
             subIndividualTags = {}
             #Subsets/subset
-            for subsetNum, val in data.items():
-                if str(subsetNum).isnumeric():
-                    for key, val in data[subsetNum].items():
-                        if key != 'individuals':
-                            subsetTags[key] = val
-            subsetET = ET.SubElement(subsetsET, "subset", attrib=subsetTags)
-            #Subsets/subset/individual
-            for subsetNum, val in data.items():
-                if str(subsetNum).isnumeric():
-                    for key, val in data[subsetNum].items():
-                        if key == 'individuals':
-                            for indi, v in data[subsetNum][key].items():
-                                subIndividualTags['ref'] = indi
-                                if data[subsetNum][key][indi]:
-                                    for k, v in data[subsetNum][key][indi].items():
-                                        subIndividualTags[k] = v
-                                subindividualET = ET.SubElement(subsetET, "individual", attrib=subIndividualTags)
+            for subsetNum, val in data['subsets'].items():
+                subsetTags['label'] = subsetNum
+                for key, val in data['subsets'][subsetNum].items():
+                    if key != 'individuals':
+                        subsetTags[key] = val
+                subsetET = ET.SubElement(subsetsET, "subset", attrib=subsetTags)
+                #Subsets/subset/individual
+                for key, val in data['subsets'][subsetNum].items():
+                    if key == 'individuals':
+                        for indi, v in data['subsets'][subsetNum][key].items():
+                            subIndividualTags['ref'] = indi
+                            if data['subsets'][subsetNum][key][indi]:
+                                for k, v in data['subsets'][subsetNum][key][indi].items():
+                                    subIndividualTags[k] = v
+                            subindividualET = ET.SubElement(subsetET, "individual", attrib=subIndividualTags)
 
-        #latlon
+        #Write latlon  to xml
 
-        tree = ET.ElementTree(root)
+        #Write Sequences to xml
+
+        #Create XML file
         xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
         with open(path, "w") as f:
             f.write(xmlstr)
 
-    def toMatricial(self, path: Path) -> None:
-        """Export Spart data as a Matricial file at the designated path"""
-        spartDict = self.spartDict
+    def toMatricial(self, path: Path):
+        """Convert Spart instance to spart file"""
+
+        #Creating spart file with given path
         with open(path, 'w+') as f:
             f.write('begin spart;')
-            numSpartitions = len(spartDict['spartitions'])
+            numSpartitions = len(self.spartDict['spartitions'])
             subCountDict = {}
-            for key, val in spartDict.items():
-                if key == 'project_name' or key == 'date':
-                    f.write(f'\n\n{key} = {val};')
+            if checkKey(self.spartDict, 'project_name'):
+                f.write(f'\n\nproject_name = {self.spartDict["project_name"]};')
+            if checkKey(self.spartDict, 'date'):
+                f.write(f'\n\ndate = {self.spartDict["date"]};')
+            for key, val in self.spartDict.items():
                 if key == 'spartitions':
                     n_spartition = f'{numSpartitions} : '
                     n_individuals = ''
                     n_subsets = ''
                     n_subsets_scores = ''
+                    n_subsets_strings = []
                     for spNum in range(1, numSpartitions+1):
-                        if checkKey(spartDict['spartitions'][n2w(spNum) + ' spartition'], 'Label'):
-                            n_spartition += spartDict['spartitions'][n2w(spNum) + ' spartition']['Label'] +' / '
+                        if checkKey(self.spartDict['spartitions'][n2w(spNum) + ' spartition'], 'label'):
+                            n_spartition += self.spartDict['spartitions'][n2w(spNum) + ' spartition']['label'] +' / '
                         #count subsets
                         indiCount = 0
-                        for subNum, val in spartDict['spartitions'][n2w(spNum) + ' spartition'].items():
-                            if str(subNum).isnumeric():
+                        for subNum, val in self.spartDict['spartitions'][n2w(spNum) + ' spartition']['subsets'].items():
+                            if subNum.isnumeric():
                                 subCountDict[spNum] = 1 + subCountDict.get(spNum, 0)
-                                if checkKey(spartDict['spartitions'][n2w(spNum) + ' spartition'][subNum], 'score'):
-                                    n_subsets_scores += f"{spartDict['spartitions'][n2w(spNum) + ' spartition'][subNum]['score'] + ','}"
-                                for _ in spartDict['spartitions'][n2w(spNum) + ' spartition'][subNum]['individuals'].keys():
+                                if checkKey(self.spartDict['spartitions'][n2w(spNum) + ' spartition']['subsets'][subNum], 'score'):
+                                    n_subsets_scores += f"{self.spartDict['spartitions'][n2w(spNum) + ' spartition']['subsets'][subNum]['score'] + ','}"
+                                for _ in self.spartDict['spartitions'][n2w(spNum) + ' spartition']['subsets'][subNum]['individuals'].keys():
                                     indiCount += 1
-
+                        n_subsets_strings.append(f"{str(subCountDict[spNum])}:{n_subsets_scores}")
+                        n_subsets_scores = ""
                         n_individuals += str(indiCount) + ' / '
                     for subCount in range(1, len(subCountDict) + 1):
-                        n_subsets += str(subCountDict[subCount]) + ' / '
+                        n_subsets += n_subsets_strings[subCount-1][:-1]+ ' / '
 
-                    f.write(f'\n\nn_spartition = {n_spartition[:-2]};')
-                    f.write(f'\n\nn_individuals = {n_individuals[:-2]};')
+                    f.write(f'\n\nn_spartition = {n_spartition[:-3]};')
+                    f.write(f'\n\nn_individuals = {n_individuals[:-3]};')
                     if n_subsets_scores:
-                        f.write(f'\n\nn_subsets = {n_subsets[:-2]}:{n_subsets_scores[:-2]};')
+                        f.write(f'\n\nn_subsets = {n_subsets[:-3]}:{n_subsets_scores[:-1]};')
                     else:
-                        f.write(f'\n\nn_subsets = {n_subsets[:-2]};')
+                        f.write(f'\n\nn_subsets = {n_subsets[:-3]};')
                     f.write(f'\n\nindividual_assignment = ')
 
-                    for indiName in spartDict["individuals"].keys():
+                    for indiName in self.spartDict["individuals"].keys():
                         inSub = ''
                         for spNum in range(1, numSpartitions +1):
                             for sub in range(1, subCountDict[spNum] + 1):
-                                if checkKey(spartDict['spartitions'][n2w(spNum) + ' spartition'], sub):
-                                    if indiName in spartDict['spartitions'][n2w(spNum) + ' spartition'][sub]['individuals']:
+                                if checkKey(self.spartDict['spartitions'][n2w(spNum) + ' spartition']['subsets'], str(sub)):
+                                    if indiName in self.spartDict['spartitions'][n2w(spNum) + ' spartition']['subsets'][str(sub)]['individuals']:
                                         inSub += str(sub) + ' / '
-                        f.write(f'\n{indiName} : {inSub[:-2]} ')
+                        f.write(f'\n{indiName} : {inSub[:-3]} ')
                     f.write(';')
 
 
             f.write('\nend;')
             f.close()
 
+    def addIndividual(self, individualName, **kwargs):
+        self.spartDict['individuals'][individualName] = {}
+        for key, val in kwargs.items():
+            self.spartDict['individuals'][individualName][key] = val
+        return self.spartDict
+
+    def addSpartition(self, label: str, **kwargs):
+        sparitionNumber = len(self.spartDict['spartitions']) + 1
+        self.spartDict['spartitions'][n2w(sparitionNumber) + ' sparition'] = {}
+        self.spartDict['spartitions'][n2w(sparitionNumber) + ' sparition']['label'] = label
+
+    def addSpartitionSubsets(self, label: str, numSubset: int, **kwargs):
+        for spartition in self.spartDict['spartitions'].keys():
+            self.spartDict['spartitions'][spartition]['subsets'] = {}
+            for tag in self.spartDict['spartitions'][spartition].keys():
+                if tag == 'label':
+                    if self.spartDict['spartitions'][spartition][tag] == label:
+                        for subNum in range(1, numSubset+ 1):
+                            self.spartDict['spartitions'][spartition]['subsets'][str(subNum)] = {}
+                            for key, val in kwargs.items():
+                                self.spartDict['spartitions'][spartition]['subsets'][key] = val
+
+    def addSubsetIndividuals(self, spartitionLabel: str, subsetNum: str, **kwargs):
+        for spartition in self.spartDict['spartitions'].keys():
+            for tag in self.spartDict['spartitions'][spartition].keys():
+                if tag == 'label':
+                    self.spartDict['spartitions'][spartition]['subsets'][subsetNum]['individuals'] = {}
+                    if self.spartDict['spartitions'][spartition][tag] == spartitionLabel:
+                        for key, val in kwargs.items():
+                            self.spartDict['spartitions'][spartition]['subsets'][subsetNum]['individuals'][key] = val
+
     def getIndividuals(self) -> list[str]:
         """Returns a list with the ids of each individual"""
-        raise NotImplementedError()
+        individuals_list = []
+        for individual in self.spartDict['individuals'].keys():
+            individuals_list.append(individual)
+
+        return individuals_list
 
     def getIndividualData(self, id: str) -> dict[str, object]:
         """Returns extra information about the given individual id"""
-        raise NotImplementedError()
+        if checkKey(self.spartDict['individuals'], id):
+            return self.spartDict['individuals'][id]
+        return {}
 
     def getSpartitions(self) -> list[str]:
         """Returns a list with the labels of each spartition"""
-        raise NotImplementedError()
+        labels_list = []
+        for spartition in self.spartDict['spartitions'].keys():
+            for tag in self.spartDict['spartitions'][spartition].keys():
+                if tag == 'label':
+                    labels_list.append(self.spartDict['spartitions'][spartition][tag])
+        return labels_list
 
     def getSpartitionData(self, label: str) -> dict[str, object]:
         """Returns extra information about the given spartition"""
-        raise NotImplementedError()
+        for spartition in self.spartDict['spartitions'].keys():
+            for tag in self.spartDict['spartitions'][spartition].keys():
+                if self.spartDict['spartitions'][spartition]['label'] == label:
+                    return self.spartDict['spartitions'][spartition]
 
     def getSpartitionSubsets(self, label: str) -> list[str]:
         """Returns a list with the labels of all subsets of the given spartition"""
-        raise NotImplementedError()
+        subsetLabel_list = []
+        for spartition in self.spartDict['spartitions'].keys():
+            for tag in self.spartDict['spartitions'][spartition].keys():
+                if tag == 'label':
+                    if self.spartDict['spartitions'][spartition][tag] == label:
+                        for subLabel in self.spartDict['spartitions'][spartition]['subsets'].keys():
+                            subsetLabel_list.append(subLabel)
+        return subsetLabel_list
 
-    def getSubsetIndividuals(self, spartition: str, subset: str) -> list[str]:
+    def getSubsetIndividuals(self, spartitionLabel: str, subsetNum: str) -> list[str]:
         """Returns a list of all individuals contained in the spartition
         and subset specified by the given labels."""
-        raise NotImplementedError()
-
-    def addIndividual(self, id: str, **kwargs) -> None:
-        """Add a new individual. Extra information (locality, voucher etc.)
-        is passed as keyword arguments."""
-        self.spartDict['individuals'] = {}
-        self.spartDict['individuals'][id] = {}
-        for key, val in kwargs.items():
-            self.spartDict['individuals'][id][key] = val
-        return self.spartDict
-
-    def addSpartition(self, label: str, **kwargs) -> None:
-        """Add a new spartition. Extra information (score, type etc.)
-        is passed as keyword arguments."""
-        raise NotImplementedError()
-
-    def addSubset(self, spartition: str, label: str, **kwargs) -> None:
-        """Add a new subset to the given spartition. Extra information
-        (score, taxon name etc.) is passed as keyword arguments."""
-        raise NotImplementedError()
-
-    def addSubsetIndividual(self, spartition: str, subset: str, individual: str, **kwargs) -> None:
-        """Add an existing individual to the subset of given spartition.
-        Extra information (score etc.) is passed as keyword arguments."""
-        raise NotImplementedError()
-
+        individuals_list = []
+        for spartition in self.spartDict['spartitions'].keys():
+            for tag in self.spartDict['spartitions'][spartition].keys():
+                if tag == 'label':
+                    if self.spartDict['spartitions'][spartition][tag] == spartitionLabel:
+                        for key, val in self.spartDict['spartitions'][spartition]['subsets'][subsetNum].items():
+                            if key =='individuals':
+                                for individual in self.spartDict['spartitions'][spartition]['subsets'][subsetNum]['individuals'].keys():
+                                    individuals_list.append(individual)
+        return individuals_list
 
 class SpartParser:
 
@@ -256,6 +289,7 @@ class SpartParser:
         for remarks in self.root.findall('spartitions/spartition'):
             remark = remarks.find('remarks')
             spartition[remark.text] = {}
+            spartition[remark.text]['subsets'] = {}
             spartition[remark.text]['concordances']= {}
             spartition[remark.text]['concordances']['concordance'] = {}
 
@@ -264,22 +298,22 @@ class SpartParser:
 
             for subsets in remarks.findall('subsets/subset'):
                 label = subsets.attrib['label']
-                spartition[remark.text][label] = {}
-                spartition[remark.text][label]['individuals'] = {}
+                spartition[remark.text]['subsets'][label] = {}
+                spartition[remark.text]['subsets'][label]['individuals'] = {}
                 #Subset
                 for index, val in subsets.attrib.items():
                     if index == 'label':
                         continue
-                    spartition[remark.text][label][index] = val
+                    spartition[remark.text]['subsets'][label][index] = val
 
                 #Subset individuals
                 for individuals in subsets.findall('individual'):
                     individual_id = individuals.attrib['ref']
-                    spartition[remark.text][label]['individuals'][individual_id]= {}
+                    spartition[remark.text]['subsets'][label]['individuals'][individual_id]= {}
                     for index, val in individuals.attrib.items():
                         if index == 'ref':
                             continue
-                        spartition[remark.text][label]['individuals'][individual_id][index] = val
+                        spartition[remark.text]['subsets'][label]['individuals'][individual_id][index] = val
 
             for concordances in remarks.findall('concordances/concordance'):
                 label = concordances.attrib['label']
@@ -297,6 +331,7 @@ class SpartParser:
                     spartition[remark.text]['concordances']['concordance'][label]['concordantsubsets'].append(subset.attrib['subsetnumber'])
 
         self.spartDict['spartitions'] = spartition
+        return spartition
 
     def generateData(self):
         self.getProjectinfo()
@@ -315,7 +350,6 @@ class SpartParserRegular:
             self.spartFile = f.readlines()
         self.keysDict = {}
         self.individualAssignments = {}
-
 
     def getKeys(self):
         for line in self.spartFile:
@@ -347,7 +381,6 @@ class SpartParserRegular:
                 break
             if startIndi and line.strip()[-1] == ';':
                 indi = line.strip().split(':')
-                print(indi)
                 self.spartDict['individuals'][indi[0].strip()] = {}
                 self.individualAssignments[indi[0].strip()] = indi[1][:-1].strip()
                 break
@@ -375,7 +408,6 @@ class SpartParserRegular:
             #spartitions
             result = re.search(f'({self.keysDict["n_spartitions"]}.*)', line)
             if result:
-                print(result.group(1))
                 getSubsets = result.group(1).split("=")[1].strip()
                 subset = getSubsets.split(":")
                 spartList =  subset[1].strip().split('/')
@@ -385,15 +417,15 @@ class SpartParserRegular:
 
         for spartion in range(1,numOfspart+1):
             spartionNumber = n2w(spartion) + ' spartition'
-            self.spartDict['spartitions'][spartionNumber] = {'Label' : spartList[spartion-1].strip()}
+            self.spartDict['spartitions'][spartionNumber] = {'label' : spartList[spartion-1].strip()}
+            self.spartDict['spartitions'][spartionNumber]['subsets'] = {}
             count = 0
             #create subsets
             if subsetCounttList[-1][0][-1] == ';':
                 subsetCounttList[-1][0] = subsetCounttList[-1][0][:-1]
-            print(subsetCounttList)
             for subset in range(int(subsetCounttList[spartion-1][0].strip())):
                 count += 1
-                self.spartDict['spartitions'][spartionNumber][count] = {}
+                self.spartDict['spartitions'][spartionNumber]['subsets'][str(count)] = {}
 
             count = 0
             #add subset score
@@ -401,8 +433,10 @@ class SpartParserRegular:
                 count += 1
                 if subsetCounttList[spartion-1][1] != '':
                     scoreList = subsetCounttList[spartion - 1][1].split(',')
-                    self.spartDict['spartitions'][spartionNumber][count] = {'score': scoreList[count-1]}
-                self.spartDict['spartitions'][spartionNumber][count]['individuals'] = {}
+                    if scoreList[-1][-1] == ';':
+                        scoreList[-1] = scoreList[-1][:-1]
+                    self.spartDict['spartitions'][spartionNumber]['subsets'][str(count)] = {'score': scoreList[count-1]}
+                self.spartDict['spartitions'][spartionNumber]['subsets'][str(count)]['individuals'] = {}
 
 
         for subsets in self.individualAssignments.keys():
@@ -410,7 +444,7 @@ class SpartParserRegular:
             count = 0
             for subset in range(1,numOfspart+1):
                 spartionNumber = n2w(subset) + ' spartition'
-                self.spartDict['spartitions'][spartionNumber][int(subsetList[count].strip())]['individuals'][subsets] = {}
+                self.spartDict['spartitions'][spartionNumber]['subsets'][str(subsetList[count].strip())]['individuals'][subsets] = {}
                 count +=1
         return self.spartDict
 
@@ -420,8 +454,6 @@ class SpartParserRegular:
         self.getindividuals()
         self.getSpartitions()
         return self.spartDict
-
-
 
 def n2w(n):
     num2words = {1: 'First', 2: 'Second', 3: 'Third', 4: 'Fourth', 5: 'Fifth', 6: 'Sixth', 7: 'Seventh', 8: 'Eight',
@@ -443,13 +475,11 @@ def n2w(n):
 def without_keys(d, keys):
     return {x: d[x] for x in d if x not in keys}
 
-
 def checkKey(dic, key):
     if key in dic.keys():
         return True
     else:
         return False
-
 
 def main():
     path = Path(argv[1])
@@ -462,7 +492,7 @@ def demo():
     demoDir = Path("demo")
     demoDir.mkdir(exist_ok=True)
 
-    exmDir = Path("examples")
+    exmDir = Path("..\..\..\examples")
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
     for src in exmDir.iterdir():
         spart = Spart.fromPath(src)
@@ -470,7 +500,6 @@ def demo():
         spart.toXML(dest_xml)
         dest_mat = demoDir / f'{src.name}.{timestamp}.spart'
         spart.toMatricial(dest_mat)
-
 
 if __name__ == '__main__':
     demo()
