@@ -66,7 +66,7 @@ class Spart:
             spartitionET = ET.SubElement(spartitions, "spartition", attrib=spartitionTags)
             remark = ET.SubElement(spartitionET, "remarks")
             remark.text = spartition
-            subsetsET = ET.SubElement(remark, "subsets")
+            subsetsET = ET.SubElement(spartitionET, "subsets")
             subsetTags = {}
             subIndividualTags = {}
             #Subsets/subset
@@ -132,7 +132,7 @@ class Spart:
                     for subCount in range(1, len(subCountDict) + 1):
                         n_subsets += n_subsets_strings[subCount-1][:-1]+ ' / '
 
-                    f.write(f'\n\nn_spartition = {n_spartition[:-3]};')
+                    f.write(f'\n\nn_spartitions = {n_spartition[:-3]};')
                     f.write(f'\n\nn_individuals = {n_individuals[:-3]};')
                     if n_subsets_scores:
                         f.write(f'\n\nn_subsets = {n_subsets[:-3]}:{n_subsets_scores[:-1]};')
@@ -165,40 +165,29 @@ class Spart:
         """Add a new spartition. Extra information (score, type etc.)
         is passed as keyword arguments."""
         sparitionNumber = len(self.spartDict['spartitions']) + 1
-        self.spartDict['spartitions'][n2w(sparitionNumber) + ' sparition'] = {}
-        self.spartDict['spartitions'][n2w(sparitionNumber) + ' sparition']['label'] = label
+        self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition'] = {}
+        self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition']['subsets'] = {}
+        self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition']['label'] = label
 
-    def addSpartitionSubsets(self, label: str, numSubset: int, **kwargs) -> None:
-        for spartition in self.spartDict['spartitions'].keys():
-            self.spartDict['spartitions'][spartition]['subsets'] = {}
-            for tag in self.spartDict['spartitions'][spartition].keys():
-                if tag == 'label':
-                    if self.spartDict['spartitions'][spartition][tag] == label:
-                        for subNum in range(1, numSubset+ 1):
-                            self.spartDict['spartitions'][spartition]['subsets'][str(subNum)] = {}
-                            for key, val in kwargs.items():
-                                self.spartDict['spartitions'][spartition]['subsets'][key] = val
-
-    def addSubsetIndividuals(self, spartitionLabel: str, subsetNum: str, **kwargs) -> None:
-        for spartition in self.spartDict['spartitions'].keys():
-            for tag in self.spartDict['spartitions'][spartition].keys():
-                if tag == 'label':
-                    self.spartDict['spartitions'][spartition]['subsets'][subsetNum]['individuals'] = {}
-                    if self.spartDict['spartitions'][spartition][tag] == spartitionLabel:
-                        for key, val in kwargs.items():
-                            self.spartDict['spartitions'][spartition]['subsets'][subsetNum]['individuals'][key] = val
-
-    def addSubset(self, spartition: str, label: str, **kwargs) -> None:
+    def addSubset(self, spartition: str, subsetLabel: str, **kwargs) -> None:
         """Add a new subset to the given spartition. Extra information
         (score, taxon name etc.) is passed as keyword arguments."""
-        # from addSpartitionSubsets ?
-        raise NotImplementedError()
+        for spartitionRemark in self.spartDict['spartitions'].keys():
+            for spartitionName in self.spartDict['spartitions'][spartitionRemark].keys():
+                if not spartition == self.spartDict['spartitions'][spartitionRemark]['label']:
+                    continue
+                if not spartitionName == 'subsets':
+                    continue
+                self.spartDict['spartitions'][spartitionRemark]['subsets'][subsetLabel] = {}
+                self.spartDict['spartitions'][spartitionRemark]['subsets'][subsetLabel]['individuals'] = {}
+                for key, val in kwargs.items():
+                    self.spartDict['spartitions'][spartitionRemark]['subsets'][key] = val
 
-    def addSubsetIndividual(self, spartition: str, subset: str, individual: str, **kwargs) -> None:
+    def addSubsetIndividual(self, spartitionLabel: str, subsetLabel: str, individual: str, **kwargs) -> None:
         """Add an existing individual to the subset of given spartition.
         Extra information (score etc.) is passed as keyword arguments."""
-        # from addSubsetIndividuals ?
-        raise NotImplementedError()
+        spartition = self.getSpartitionFromLabel(spartitionLabel)
+        spartition['subsets'][subsetLabel]['individuals'][individual] = kwargs
 
     def getIndividuals(self) -> list[str]:
         """Returns a list with the ids of each individual"""
@@ -299,6 +288,12 @@ class Spart:
     @date.setter
     def date(self, date: datetime):
         self.spartDict['date'] = date.isoformat()
+
+    def getSpartitionFromLabel(self, spartitionLabel):
+        for spartitionRemark, spartition in self.spartDict['spartitions'].items():
+            if spartition['label'] == spartitionLabel:
+                return spartition
+        return None
 
 
 class SpartParser:
