@@ -168,17 +168,17 @@ def spart_tagged(spart: Spart):
     subset_individuals = spart.getSubsetIndividuals('spartition_1', '1')
     assert len(subset_individuals) == 1
     assert 'individual_1' in subset_individuals
-    assert spart.getSubsetIndividualData('spartition_1', '1', 'individual_1')['score'] == 1.1
+    assert spart.getSubsetIndividualData('spartition_1', '1', 'individual_1')['score'] == "1.1"
 
     subset_individuals = spart.getSubsetIndividuals('spartition_1', '2')
     assert len(subset_individuals) == 1
     assert 'individual_2' in subset_individuals
-    assert spart.getSubsetIndividualData('spartition_1', '2', 'individual_2')['score'] == 1.2
+    assert spart.getSubsetIndividualData('spartition_1', '2', 'individual_2')['score'] == "1.2"
 
     subset_individuals = spart.getSubsetIndividuals('spartition_1', '3')
     assert len(subset_individuals) == 1
     assert 'individual_3' in subset_individuals
-    assert spart.getSubsetIndividualData('spartition_1', '3', 'individual_3')['score'] == 1.3
+    assert spart.getSubsetIndividualData('spartition_1', '3', 'individual_3')['score'] == "1.3"
 
     # Validate 'spartition_2'
 
@@ -186,13 +186,13 @@ def spart_tagged(spart: Spart):
     assert len(subset_individuals) == 2
     assert 'individual_1' in subset_individuals
     assert 'individual_2' in subset_individuals
-    assert spart.getSubsetIndividualData('spartition_2', '1', 'individual_1')['score'] == 2.1
-    assert spart.getSubsetIndividualData('spartition_2', '1', 'individual_2')['score'] == 2.2
+    assert spart.getSubsetIndividualData('spartition_2', '1', 'individual_1')['score'] == "2.1"
+    assert spart.getSubsetIndividualData('spartition_2', '1', 'individual_2')['score'] == "2.2"
 
     subset_individuals = spart.getSubsetIndividuals('spartition_2', '2')
     assert len(subset_individuals) == 1
     assert 'individual_3' in subset_individuals
-    assert spart.getSubsetIndividualData('spartition_2', '2', 'individual_3')['score'] == 2.3
+    assert spart.getSubsetIndividualData('spartition_2', '2', 'individual_3')['score'] == "2.3"
 
     # Validate 'spartition_3'
 
@@ -201,9 +201,9 @@ def spart_tagged(spart: Spart):
     assert 'individual_1' in subset_individuals
     assert 'individual_2' in subset_individuals
     assert 'individual_3' in subset_individuals
-    assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_1')['score'] == 3.1
-    assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_2')['score'] == 3.2
-    assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_3')['score'] == 3.3
+    assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_1')['score'] == "3.1"
+    assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_2')['score'] == "3.2"
+    assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_3')['score'] == "3.3"
 
 
 test_data = [

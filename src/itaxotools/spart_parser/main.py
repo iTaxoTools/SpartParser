@@ -261,12 +261,27 @@ class Spart:
 
     def getSubsetData(self, spartition: str, subset: str) -> dict[str, object]:
         """Returns extra information about the given subset"""
-        raise NotImplementedError()
+        spartData = {}
+        for spartitionName in self.spartDict['spartitions'].keys():
+            if not self.spartDict['spartitions'][spartitionName]['label'] == spartition:
+                continue
+            for subsetLabel in self.spartDict['spartitions'][spartitionName]['subsets'].keys():
+                if subsetLabel == subset:
+                    for tag, val in self.spartDict['spartitions'][spartitionName]['subsets'][subsetLabel].items():
+                        if tag not in ['individuals']:
+                            spartData[tag] = val
+        return spartData
 
     def getSubsetIndividualData(self, spartition: str, subset: str, individual: str) -> dict[str, object]:
         """Returns extra information about the given individual
         associated with the given subset."""
-        raise NotImplementedError()
+        """Returns extra information about the given subset"""
+        for spartitionName in self.spartDict['spartitions'].keys():
+            if not self.spartDict['spartitions'][spartitionName]['label'] == spartition:
+                continue
+            return self.spartDict['spartitions'][spartitionName]['subsets'][subset]['individuals'][individual]
+        raise Exception('No data present')
+
 
     @property
     def project_name(self) -> str:
