@@ -8,7 +8,7 @@
       <individual id="individual_3" locality="C"/>
    </individuals>
    <spartitions>
-      <spartition Label="spartition_1" source="M">
+      <spartition label="spartition_1" source="M">
         <remarks>First spartition</remarks>
         <subsets>
           <subset label="1" taxon="taxon_1_1">
@@ -22,7 +22,7 @@
           </subset>
         </subsets>
       </spartition>
-      <spartition Label="spartition_2" source="N">
+      <spartition label="spartition_2" source="N">
         <remarks>Second spartition</remarks>
         <subsets>
           <subset label="1" taxon="taxon_2_1">
@@ -34,7 +34,7 @@
           </subset>
         </subsets>
       </spartition>
-      <spartition Label="spartition_3" source="O">
+      <spartition label="spartition_3" source="O">
         <remarks>Third spartition</remarks>
         <subsets>
           <subset label="1" taxon="taxon_3_1">

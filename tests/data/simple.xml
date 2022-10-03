@@ -8,7 +8,7 @@
       <individual id="individual_3"/>
    </individuals>
    <spartitions>
-      <spartition Label="spartition_1">
+      <spartition label="spartition_1">
          <remarks>First spartition</remarks>
           <subsets>
             <subset label="1">
@@ -22,7 +22,7 @@
             </subset>
           </subsets>
       </spartition>
-      <spartition Label="spartition_2">
+      <spartition label="spartition_2">
          <remarks>Second spartition</remarks>
           <subsets>
             <subset label="1">
@@ -34,7 +34,7 @@
             </subset>
           </subsets>
       </spartition>
-      <spartition Label="spartition_3">
+      <spartition label="spartition_3">
          <remarks>Third spartition</remarks>
           <subsets>
             <subset label="1">

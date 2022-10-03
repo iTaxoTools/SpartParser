@@ -225,10 +225,14 @@ class Spart:
 
     def getSpartitionData(self, label: str) -> dict[str, object]:
         """Returns extra information about the given spartition"""
+        spartData = {}
         for spartition in self.spartDict['spartitions'].keys():
+            if not self.spartDict['spartitions'][spartition]['label'] == label:
+                continue
             for tag in self.spartDict['spartitions'][spartition].keys():
-                if self.spartDict['spartitions'][spartition]['label'] == label:
-                    return self.spartDict['spartitions'][spartition]
+                if tag not in ['subsets', 'concordances', 'label']:
+                    spartData[tag] = self.spartDict['spartitions'][spartition][tag]
+        return spartData
 
     def getSpartitionSubsets(self, label: str) -> list[str]:
         """Returns a list with the labels of all subsets of the given spartition"""
