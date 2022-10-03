@@ -265,20 +265,21 @@ class Spart:
         raise NotImplementedError()
 
     @property
-    def project_name(self):
-        raise NotImplementedError()
+    def project_name(self) -> str:
+        return self.spartDict['project_name']
 
     @project_name.setter
     def project_name(self, name: str):
-        raise NotImplementedError()
+        self.spartDict['project_name'] = name
 
     @property
-    def date(self):
-        raise NotImplementedError()
+    def date(self) -> datetime:
+        string = self.spartDict['date']
+        return datetime.fromisoformat(string)
 
     @date.setter
     def date(self, date: datetime):
-        raise NotImplementedError()
+        self.spartDict['date'] = date.isoformat()
 
 
 class SpartParser:
@@ -396,10 +397,10 @@ class SpartParserRegular:
 
     def getProjectinfo(self):
         for line in self.spartFile:
-            prjectName = re.search(self.keysDict['project_name'] + '\s?=\s?([^;]+);' , line)
+            prjectName = re.search(self.keysDict['project_name'] + r'\s?=\s?([^;]+);' , line)
             if prjectName:
                 self.spartDict["project_name"] = prjectName.group(1)
-            date = re.search(self.keysDict['date'] + '\s?=\s?([^;]+);' , line)
+            date = re.search(self.keysDict['date'] + r'\s?=\s?([^;]+);' , line)
             if date:
                 self.spartDict["date"] = date.group(1)
 

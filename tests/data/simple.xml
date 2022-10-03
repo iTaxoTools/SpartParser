@@ -11,38 +11,38 @@
       <spartition Label="spartition_1">
          <remarks>First spartition</remarks>
           <subsets>
-    				<subset label="1">
-    					<individual ref="individual_1"/>
-    				</subset>
-    				<subset label="2">
-    					<individual ref="individual_2"/>
-    				</subset>
-    				<subset label="3">
-    					<individual ref="individual_3"/>
-    				</subset>
-    			</subsets>
+            <subset label="1">
+              <individual ref="individual_1"/>
+            </subset>
+            <subset label="2">
+              <individual ref="individual_2"/>
+            </subset>
+            <subset label="3">
+              <individual ref="individual_3"/>
+            </subset>
+          </subsets>
       </spartition>
       <spartition Label="spartition_2">
          <remarks>Second spartition</remarks>
           <subsets>
-    				<subset label="1">
-    					<individual ref="individual_1"/>
+            <subset label="1">
+              <individual ref="individual_1"/>
               <individual ref="individual_2"/>
-    				</subset>
-    				<subset label="2">
-    					<individual ref="individual_3"/>
-    				</subset>
-    			</subsets>
+            </subset>
+            <subset label="2">
+              <individual ref="individual_3"/>
+            </subset>
+          </subsets>
       </spartition>
       <spartition Label="spartition_3">
          <remarks>Third spartition</remarks>
           <subsets>
-    				<subset label="1">
-    					<individual ref="individual_1"/>
+            <subset label="1">
+              <individual ref="individual_1"/>
               <individual ref="individual_2"/>
               <individual ref="individual_3"/>
-    				</subset>
-    			</subsets>
+            </subset>
+          </subsets>
       </spartition>
    </spartitions>
 </root>
