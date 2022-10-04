@@ -77,14 +77,13 @@ class Spart:
                         subsetTags[key] = val
                 subsetET = ET.SubElement(subsetsET, "subset", attrib=subsetTags)
                 #Subsets/subset/individual
-                for key, val in data['subsets'][subsetNum].items():
-                    if key == 'individuals':
-                        for indi, v in data['subsets'][subsetNum][key].items():
-                            subIndividualTags['ref'] = indi
-                            if data['subsets'][subsetNum][key][indi]:
-                                for k, v in data['subsets'][subsetNum][key][indi].items():
-                                    subIndividualTags[k] = v
-                            subindividualET = ET.SubElement(subsetET, "individual", attrib=subIndividualTags)
+                if subsetNum.isnumeric():
+                    for indi, val in data['subsets'][subsetNum]['individuals'].items():
+                        subIndividualTags['ref'] = indi
+                        if data['subsets'][subsetNum]['individuals'][indi]:
+                            for k, v in data['subsets'][subsetNum]['individuals'][indi].items():
+                                subIndividualTags[k] = v
+                        subindividualET = ET.SubElement(subsetET, "individual", attrib=subIndividualTags)
 
         #Write latlon  to xml
 
@@ -168,20 +167,21 @@ class Spart:
         self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition'] = {}
         self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition']['subsets'] = {}
         self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition']['label'] = label
-
+        for k, v in kwargs.items():
+            self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition'][k] = v
     def addSubset(self, spartition: str, subsetLabel: str, **kwargs) -> None:
         """Add a new subset to the given spartition. Extra information
         (score, taxon name etc.) is passed as keyword arguments."""
         for spartitionRemark in self.spartDict['spartitions'].keys():
             for spartitionName in self.spartDict['spartitions'][spartitionRemark].keys():
-                if not spartition == self.spartDict['spartitions'][spartitionRemark]['label']:
+                if checkKey(self.spartDict['spartitions'][spartitionRemark], 'label') and not spartition == self.spartDict['spartitions'][spartitionRemark]['label']:
                     continue
                 if not spartitionName == 'subsets':
                     continue
                 self.spartDict['spartitions'][spartitionRemark]['subsets'][subsetLabel] = {}
                 self.spartDict['spartitions'][spartitionRemark]['subsets'][subsetLabel]['individuals'] = {}
                 for key, val in kwargs.items():
-                    self.spartDict['spartitions'][spartitionRemark]['subsets'][key] = val
+                    self.spartDict['spartitions'][spartitionRemark]['subsets'][subsetLabel][key] = val
 
     def addSubsetIndividual(self, spartitionLabel: str, subsetLabel: str, individual: str, **kwargs) -> None:
         """Add an existing individual to the subset of given spartition.
@@ -291,7 +291,7 @@ class Spart:
 
     def getSpartitionFromLabel(self, spartitionLabel):
         for spartitionRemark, spartition in self.spartDict['spartitions'].items():
-            if spartition['label'] == spartitionLabel:
+            if checkKey(spartition, 'label') and spartition['label'] == spartitionLabel:
                 return spartition
         return None
 

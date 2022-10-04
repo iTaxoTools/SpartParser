@@ -3,7 +3,6 @@
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Callable
-
 import pytest
 import datetime
 
@@ -56,7 +55,7 @@ def spart_simple():
 
 def spart_tagged():
     spart = Spart()
-    spart.project_name = 'simple_test'
+    spart.project_name = 'tagged_test'
     spart.date = datetime.datetime(2022, 10, 2, 12, 0, 0)
 
     spart.addIndividual('individual_1', locality='A', voucher='X')
@@ -65,24 +64,24 @@ def spart_tagged():
 
     spart.addSpartition('spartition_1', source='M')
     spart.addSubset('spartition_1', '1', taxon='taxon_1_1')
-    spart.addSubsetIndividual('spartition_1', '1', 'individual_1', score=1.1)
+    spart.addSubsetIndividual('spartition_1', '1', 'individual_1', score="1.1")
     spart.addSubset('spartition_1', '2', taxon='taxon_1_2')
-    spart.addSubsetIndividual('spartition_1', '2', 'individual_2', score=1.2)
+    spart.addSubsetIndividual('spartition_1', '2', 'individual_2', score="1.2")
     spart.addSubset('spartition_1', '3', taxon='taxon_1_3')
-    spart.addSubsetIndividual('spartition_1', '3', 'individual_3', score=1.3)
+    spart.addSubsetIndividual('spartition_1', '3', 'individual_3', score="1.3")
 
     spart.addSpartition('spartition_2', source='N')
     spart.addSubset('spartition_2', '1', taxon='taxon_2_1')
-    spart.addSubsetIndividual('spartition_2', '1', 'individual_1', score=2.1)
-    spart.addSubsetIndividual('spartition_2', '1', 'individual_2', score=2.2)
-    spart.addSubset('spartition_2', '2', taxon='taxon_2_1')
-    spart.addSubsetIndividual('spartition_2', '2', 'individual_3', score=2.3)
+    spart.addSubsetIndividual('spartition_2', '1', 'individual_1', score="2.1")
+    spart.addSubsetIndividual('spartition_2', '1', 'individual_2', score="2.2")
+    spart.addSubset('spartition_2', '2', taxon='taxon_2_2')
+    spart.addSubsetIndividual('spartition_2', '2', 'individual_3', score="2.3")
 
     spart.addSpartition('spartition_3', source='O')
     spart.addSubset('spartition_3', '1', taxon='taxon_3_1')
-    spart.addSubsetIndividual('spartition_3', '1', 'individual_1', score=3.1)
-    spart.addSubsetIndividual('spartition_3', '1', 'individual_2', score=3.2)
-    spart.addSubsetIndividual('spartition_3', '1', 'individual_3', score=3.3)
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_1', score="3.1")
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_2', score="3.2")
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_3', score="3.3")
 
     return spart
 
@@ -101,3 +100,4 @@ def test_write(test: WriteTest, tmp_path: Path) -> None:
     spart = test.generator()
     test.writer(spart, test_path)
     assert_eq_files(test_path, output_path)
+
