@@ -70,9 +70,12 @@ class AppModel(PropertyObject):
         parsed_matricial = self.temp_path / f'{path.name}.parsed.spart'
         parsed_xml = self.temp_path / f'{path.name}.parsed.xml'
 
-        spart = Spart.fromPath(path)
-        spart.toMatricial(parsed_matricial)
-        spart.toXML(parsed_xml)
+        try:
+            spart = Spart.fromPath(path)
+            spart.toMatricial(parsed_matricial)
+            spart.toXML(parsed_xml)
+        except Exception as e:
+            raise Exception(f'Could not open file: {path.name}') from e
 
         self.work_dir = path.parent
         self.path_input = path
@@ -80,11 +83,8 @@ class AppModel(PropertyObject):
         self.path_xml = parsed_xml
         self.input_name = path.name
 
-        try:
-            self.individuals = len(spart.getIndividuals())
-            self.spartitions = len(spart.getSpartitions())
-        except NotImplementedError:
-            pass
+        self.individuals = len(spart.getIndividuals())
+        self.spartitions = len(spart.getSpartitions())
 
         self.spart = spart
         self.ready = True
