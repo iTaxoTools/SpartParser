@@ -169,6 +169,7 @@ class Spart:
         self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition']['label'] = label
         for k, v in kwargs.items():
             self.spartDict['spartitions'][n2w(sparitionNumber) + ' spartition'][k] = v
+
     def addSubset(self, spartition: str, subsetLabel: str, **kwargs) -> None:
         """Add a new subset to the given spartition. Extra information
         (score, taxon name etc.) is passed as keyword arguments."""
@@ -271,6 +272,14 @@ class Spart:
             return self.spartDict['spartitions'][spartitionName]['subsets'][subset]['individuals'][individual]
         raise Exception('No data present')
 
+    def getSpartitionScore(self, spartition: str) -> float:
+        raise NotImplementedError()
+
+    def getSubsetScore(self, spartition: str, subset: str) -> float:
+        raise NotImplementedError()
+
+    def getSubsetIndividualScore(self, spartition: str, subset: str, individual: str) -> float:
+        raise NotImplementedError()
 
     @property
     def project_name(self) -> str:

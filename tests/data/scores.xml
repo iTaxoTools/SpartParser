@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<root>
+   <project_name>scores_test</project_name>
+   <date>2022-10-02T12:00:00</date>
+   <individuals>
+      <individual id="individual_1"/>
+      <individual id="individual_2"/>
+      <individual id="individual_3"/>
+   </individuals>
+   <spartitions>
+      <spartition label="spartition_1" score="0.1">
+         <remarks>First spartition</remarks>
+          <subsets>
+            <subset label="1" score="1.1">
+              <individual ref="individual_1" score="1.1"/>
+            </subset>
+            <subset label="2" score="1.2">
+              <individual ref="individual_2" score="2.1"/>
+            </subset>
+            <subset label="3">
+              <individual ref="individual_3" score="3.1"/>
+            </subset>
+          </subsets>
+      </spartition>
+      <spartition label="spartition_2" score="0.2">
+         <remarks>Second spartition</remarks>
+          <subsets>
+            <subset label="1" score="2.1">
+              <individual ref="individual_1" score="1.2"/>
+              <individual ref="individual_2" score="2.2"/>
+            </subset>
+            <subset label="2" score="2.2">
+              <individual ref="individual_3" score="3.2"/>
+            </subset>
+          </subsets>
+      </spartition>
+      <spartition label="spartition_3">
+         <remarks>Third spartition</remarks>
+          <subsets>
+            <subset label="1" score="3.1">
+              <individual ref="individual_1"/>
+              <individual ref="individual_2" score="2.3"/>
+              <individual ref="individual_3" score="3.3"/>
+            </subset>
+          </subsets>
+      </spartition>
+   </spartitions>
+</root>

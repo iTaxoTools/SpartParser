@@ -322,6 +322,7 @@ test_data = [
     ReadTest('simple.spart', Spart.fromMatricial, spart_simple),
     ReadTest('tagged.xml', Spart.fromXML, spart_tagged),
     ReadTest('scores.spart', Spart.fromMatricial, spart_scores),
+    ReadTest('scores.xml', Spart.fromXML, spart_scores),
     ReadTest('scores_type.spart', Spart.fromMatricial, spart_scores_type),
     ReadTest('scores_type.xml', Spart.fromXML, spart_scores_type),
     ]

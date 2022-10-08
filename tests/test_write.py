@@ -85,11 +85,89 @@ def spart_tagged():
 
     return spart
 
+def spart_scores():
+    spart = Spart()
+    spart.project_name = 'scores_test'
+    spart.date = datetime.datetime(2022, 10, 2, 12, 0, 0)
+
+    spart.addIndividual('individual_1')
+    spart.addIndividual('individual_2')
+    spart.addIndividual('individual_3')
+
+    spart.addSpartition('spartition_1', score=0.1)
+    spart.addSubset('spartition_1', '1', score=1.1)
+    spart.addSubsetIndividual('spartition_1', '1', 'individual_1', score=1.1)
+    spart.addSubset('spartition_1', '2', score=1.2)
+    spart.addSubsetIndividual('spartition_1', '2', 'individual_2', score=2.1)
+    spart.addSubset('spartition_1', '3')
+    spart.addSubsetIndividual('spartition_1', '3', 'individual_3', score=3.1)
+
+    spart.addSpartition('spartition_2', score=0.2)
+    spart.addSubset('spartition_2', '1', score=2.1)
+    spart.addSubsetIndividual('spartition_2', '1', 'individual_1', score=1.2)
+    spart.addSubsetIndividual('spartition_2', '1', 'individual_2', score=2.2)
+    spart.addSubset('spartition_2', '2', score=2.2)
+    spart.addSubsetIndividual('spartition_2', '2', 'individual_3', score=3.2)
+
+    spart.addSpartition('spartition_3')
+    spart.addSubset('spartition_3', '1', score=3.1)
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_1')
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_2', score=2.3)
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_3', score=3.3)
+
+    return spart
+
+
+def spart_scores_type():
+    spart = Spart()
+    spart.project_name = 'score_type_test'
+    spart.date = datetime.datetime(2022, 10, 2, 12, 0, 0)
+
+    spart.addIndividual('individual_1')
+    spart.addIndividual('individual_2')
+    spart.addIndividual('individual_3')
+
+    spart.addSpartition(
+        'spartition_1',
+        individual_score_type='individual_score_1',
+        spartition_score_type='spartition_score_1',
+        subset_score_type='subset_score_1',
+        )
+    spart.addSubset('spartition_1', '1')
+    spart.addSubsetIndividual('spartition_1', '1', 'individual_1')
+    spart.addSubset('spartition_1', '2')
+    spart.addSubsetIndividual('spartition_1', '2', 'individual_2')
+    spart.addSubset('spartition_1', '3')
+    spart.addSubsetIndividual('spartition_1', '3', 'individual_3')
+
+    spart.addSpartition(
+        'spartition_2',
+        individual_score_type='individual_score_2',
+        spartition_score_type='spartition_score_2',
+        subset_score_type='subset_score_2',
+        )
+    spart.addSubset('spartition_2', '1')
+    spart.addSubsetIndividual('spartition_2', '1', 'individual_1')
+    spart.addSubsetIndividual('spartition_2', '1', 'individual_2')
+    spart.addSubset('spartition_2', '2')
+    spart.addSubsetIndividual('spartition_2', '2', 'individual_3')
+
+    spart.addSpartition('spartition_3')
+    spart.addSubset('spartition_3', '1')
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_1')
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_2')
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_3')
+
+    return spart
 
 test_data = [
     WriteTest('simple.xml', Spart.toXML, spart_simple),
     WriteTest('simple.spart', Spart.toMatricial, spart_simple),
     WriteTest('tagged.xml', Spart.toXML, spart_tagged),
+    WriteTest('scores.spart', Spart.toMatricial, spart_scores),
+    WriteTest('scores.xml', Spart.toXML, spart_scores),
+    WriteTest('scores_type.spart', Spart.toMatricial, spart_scores_type),
+    WriteTest('scores_type.xml', Spart.toXML, spart_scores_type),
     ]
 
 
@@ -100,4 +178,3 @@ def test_write(test: WriteTest, tmp_path: Path) -> None:
     spart = test.generator()
     test.writer(spart, test_path)
     assert_eq_files(test_path, output_path)
-
