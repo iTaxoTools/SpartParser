@@ -1,0 +1,48 @@
+<?xml version="1.0" ?>
+<root>
+   <project_name>score_type_test</project_name>
+   <date>2022-10-02T12:00:00</date>
+   <individuals>
+      <individual id="individual_1"/>
+      <individual id="individual_2"/>
+      <individual id="individual_3"/>
+   </individuals>
+   <spartitions>
+      <spartition label="spartition_1" individualScoreType ="individual_score_1" spartitionScoreType="spartition_score_1" subsetScoreType="subset_score_1">
+         <remarks>First spartition</remarks>
+          <subsets>
+            <subset label="1">
+              <individual ref="individual_1"/>
+            </subset>
+            <subset label="2">
+              <individual ref="individual_2"/>
+            </subset>
+            <subset label="3">
+              <individual ref="individual_3"/>
+            </subset>
+          </subsets>
+      </spartition>
+      <spartition label="spartition_2" individualScoreType ="individual_score_2" spartitionScoreType="spartition_score_2" subsetScoreType="subset_score_2">
+         <remarks>Second spartition</remarks>
+          <subsets>
+            <subset label="1">
+              <individual ref="individual_1"/>
+              <individual ref="individual_2"/>
+            </subset>
+            <subset label="2">
+              <individual ref="individual_3"/>
+            </subset>
+          </subsets>
+      </spartition>
+      <spartition label="spartition_3">
+         <remarks>Third spartition</remarks>
+          <subsets>
+            <subset label="1">
+              <individual ref="individual_1"/>
+              <individual ref="individual_2"/>
+              <individual ref="individual_3"/>
+            </subset>
+          </subsets>
+      </spartition>
+   </spartitions>
+</root>

@@ -297,12 +297,33 @@ def spart_scores(spart: Spart):
     assert spart.getSubsetIndividualScore('spartition_3', '1', 'individual_2') == 2.3
     assert spart.getSubsetIndividualScore('spartition_3', '1', 'individual_3') == 3.3
 
+def spart_scores_type(spart: Spart):
+
+    spartitions = spart.getSpartitions()
+    assert len(spartitions) == 3
+    assert 'spartition_1' in spartitions
+    assert 'spartition_2' in spartitions
+    assert 'spartition_3' in spartitions
+    assert spart.getSpartitionData('spartition_1')['subset_score_type'] == 'subset_score_1'
+    assert spart.getSpartitionData('spartition_1')['spartition_score_type'] == 'spartition_score_1'
+    assert spart.getSpartitionData('spartition_1')['individual_score_type'] == 'individual_score_1'
+
+    assert spart.getSpartitionData('spartition_2')['subset_score_type'] == 'subset_score_2'
+    assert spart.getSpartitionData('spartition_2')['spartition_score_type'] == 'spartition_score_2'
+    assert spart.getSpartitionData('spartition_2')['individual_score_type'] == 'individual_score_2'
+
+    assert spart.getSpartitionData('spartition_3')['subset_score_type'] == None
+    assert spart.getSpartitionData('spartition_3')['spartition_score_type'] == None
+    assert spart.getSpartitionData('spartition_3')['individual_score_type'] == None
+
 
 test_data = [
     ReadTest('simple.xml', Spart.fromXML, spart_simple),
     ReadTest('simple.spart', Spart.fromMatricial, spart_simple),
     ReadTest('tagged.xml', Spart.fromXML, spart_tagged),
     ReadTest('scores.spart', Spart.fromMatricial, spart_scores),
+    ReadTest('scores_type.spart', Spart.fromMatricial, spart_scores_type),
+    ReadTest('scores_type.xml', Spart.fromXML, spart_scores_type),
     ]
 
 
