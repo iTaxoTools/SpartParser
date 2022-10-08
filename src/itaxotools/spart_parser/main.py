@@ -487,7 +487,7 @@ class SpartParserRegular:
                     scoreList = subsetCounttList[spartion - 1][1].split(',')
                     if scoreList[-1][-1] == ';':
                         scoreList[-1] = scoreList[-1][:-1]
-                    self.spartDict['spartitions'][spartionNumber]['subsets'][str(count)] = {'score': scoreList[count-1]}
+                    self.spartDict['spartitions'][spartionNumber]['subsets'][str(count)] = {'score': scoreList[count-1].strip()}
                 self.spartDict['spartitions'][spartionNumber]['subsets'][str(count)]['individuals'] = {}
 
 
