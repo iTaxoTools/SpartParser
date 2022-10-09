@@ -4,22 +4,20 @@ project_name = score_type_test;
 
 date = 2022-10-02T12:00:00;
 
-n_spartitions = 3 : spartition_1 / spartition_2 / spartition_3 ;
+n_spartitions = 3 : spartition_1 / spartition_2 / spartition_3;
 
-n_individuals = 3 / 3 / 3 ;
+n_individuals = 3 / 3 / 3;
 
-n_subsets = 3 / 2 / 1 ;
+n_subsets = 3 / 2 / 1;
 
-Subset_score_type = subset_score_1 / subset_score_2 / ?;
+subset_score_type = subset_score_1 / subset_score_2 / ?;
 
-Spartition_score_type = spartition_score_1 / spartition_score_2 / ?;
+spartition_score_type = spartition_score_1 / spartition_score_2 / ?;
 
-Individual_score_type = individual_score_1 / individual_score_2 / ?;
+individual_score_type = individual_score_1 / individual_score_2 / ?;
 
 individual_assignment =
 individual_1 : 1 / 1 / 1
 individual_2 : 2 / 1 / 1
 individual_3 : 3 / 2 / 1 ;
-
-
 end;
