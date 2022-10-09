@@ -4,11 +4,11 @@ project_name = scores_test;
 
 date = 2022-10-02T12:00:00;
 
-n_spartitions = 3 : spartition_1, 0.1 / spartition_2, 0.2 / spartition_3, ? ;
+n_spartitions = 3 : spartition_1, 0.1 / spartition_2, 0.2 / spartition_3, ?;
 
-n_individuals = 3 / 3 / 3 ;
+n_individuals = 3 / 3 / 3;
 
-n_subsets = 3: 1.1, 1.2, ? / 2: 2.1, 2.2 / 1: 3.1 ;
+n_subsets = 3: 1.1, 1.2, ? / 2: 2.1, 2.2 / 1: 3.1;
 
 individual_assignment =
 individual_1 : 1 / 1 / 1
@@ -19,5 +19,4 @@ individual_scores =
 individual_1 : 1.1 / 1.2 / ?
 individual_2 : 2.1 / 2.2 / 2.3
 individual_3 : 3.1 / 3.2 / 3.3 ;
-
 end;

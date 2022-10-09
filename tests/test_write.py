@@ -94,7 +94,7 @@ def spart_scores():
     spart.addIndividual('individual_2')
     spart.addIndividual('individual_3')
 
-    spart.addSpartition('spartition_1', score=0.1)
+    spart.addSpartition('spartition_1', spartitionScore=0.1)
     spart.addSubset('spartition_1', '1', score=1.1)
     spart.addSubsetIndividual('spartition_1', '1', 'individual_1', score=1.1)
     spart.addSubset('spartition_1', '2', score=1.2)
@@ -102,7 +102,7 @@ def spart_scores():
     spart.addSubset('spartition_1', '3')
     spart.addSubsetIndividual('spartition_1', '3', 'individual_3', score=3.1)
 
-    spart.addSpartition('spartition_2', score=0.2)
+    spart.addSpartition('spartition_2', spartitionScore=0.2)
     spart.addSubset('spartition_2', '1', score=2.1)
     spart.addSubsetIndividual('spartition_2', '1', 'individual_1', score=1.2)
     spart.addSubsetIndividual('spartition_2', '1', 'individual_2', score=2.2)
@@ -111,7 +111,7 @@ def spart_scores():
 
     spart.addSpartition('spartition_3')
     spart.addSubset('spartition_3', '1', score=3.1)
-    spart.addSubsetIndividual('spartition_3', '1', 'individual_1')
+    spart.addSubsetIndividual('spartition_3', '1', 'individual_1', score=None)
     spart.addSubsetIndividual('spartition_3', '1', 'individual_2', score=2.3)
     spart.addSubsetIndividual('spartition_3', '1', 'individual_3', score=3.3)
 
