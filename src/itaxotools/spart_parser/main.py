@@ -597,9 +597,9 @@ class SpartParserRegular:
         #individuals
         startIndi = False
         count = 0
+        if not checkKey(self.keysDict, 'individual_scores'):
+            return False
         for line in self.spartFile:
-            if not checkKey(self.keysDict, 'individual_scores'):
-                return False
             result = re.search(f'({self.keysDict["individual_scores"]})', line)
             if result:
                 startIndi = True
@@ -684,8 +684,8 @@ class SpartParserRegular:
                     if individual_score_type_list[-1][-1] == ';':
                         individual_score_type_list[-1] = individual_score_type_list[-1][:-1]
 
-            if self.getindividualScores():
-                individualScoresPresent = True
+        if self.getindividualScores():
+            individualScoresPresent = True
 
         for spartion in range(1,numOfspart+1):
             spartionNumber = str(spartion)     #n2w(spartion) + ' spartition'
