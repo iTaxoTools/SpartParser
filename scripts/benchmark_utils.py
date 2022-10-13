@@ -1,5 +1,6 @@
 from time import perf_counter
 from os import getpid
+from os.path import getsize
 from psutil import Process
 
 
@@ -55,3 +56,8 @@ def print_memory_usage():
     process = Process(getpid())
     bytes = process.memory_info().rss
     print(f'Memory used: {sizeof_fmt(bytes)}')
+
+
+def print_file_size(path):
+    bytes = getsize(path)
+    print(f'File size: {sizeof_fmt(bytes)}')

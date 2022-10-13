@@ -4,7 +4,7 @@ from random import random
 from datetime import datetime
 
 from itaxotools.spart_parser import Spart
-from benchmark_utils import Timer, print_memory_usage
+from benchmark_utils import Timer, print_memory_usage, print_file_size
 
 
 numIndividuals = int(argv[1])
@@ -52,3 +52,4 @@ with Timer('export', 'Time to {}: {:.4f}s'):
         spart.toMatricial(file)
 
 print_memory_usage()
+print_file_size(file)

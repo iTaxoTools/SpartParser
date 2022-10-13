@@ -446,10 +446,10 @@ class SpartParser:
         self.spartDict["project_name"] = self.root.find("project_name").text
         self.spartDict["date"] = self.root.find("date").text
 
-    def getindividuals(self):
+    def getIndividuals(self):
         individuals = {}
         for individual in self.root.findall('individuals/individual'):
-            id = individual.attrib['id']
+            id = _str_(individual.get('id'))
             individuals[id] = without_keys(individual.attrib, "id")
         self.spartDict['individuals'] = individuals
 
@@ -475,68 +475,76 @@ class SpartParser:
 
     def getSpartitions(self):
         spartitionsTags = {'spartitionScore' : 'spartition_score', 'spartitionScoreType': 'spartition_score_type', 'individualScoreType' : 'individual_score_type', 'subsetScoreType': 'subset_score_type'}
-        spartition = {}
+        spartitions = {}
         spartition_num = 1
-        for remarks in self.root.findall('spartitions/spartition'):
-            remark = remarks.find('remarks')
-            spartition[str(spartition_num)] = {}
-            spartition[str(spartition_num)]['remarks'] = remark.text
-            spartition[str(spartition_num)]['subsets'] = {}
-            spartition[str(spartition_num)]['concordances']= {}
-            spartition[str(spartition_num)]['concordances']['concordance'] = {}
+        for spartition in self.root.findall('spartitions/spartition'):
+            remarks = spartition.find('remarks')
+            spartition_dict = {}
+            spartition_dict['remarks'] = remarks.text
+            spartition_dict['subsets'] = {}
+            spartition_dict['concordances']= {}
+            spartition_dict['concordances']['concordance'] = {}
 
-            for index, val in remarks.attrib.items():
+            for index, val in spartition.attrib.items():
                 if checkKey(spartitionsTags, index):
                     if index == 'spartitionScore':
                         val = float(val)
-                    spartition[str(spartition_num)][spartitionsTags[index]] = val
+                    spartition_dict[spartitionsTags[index]] = val
                 else:
-                    spartition[str(spartition_num)][index] = val
+                    spartition_dict[index] = val
 
-            for subsets in remarks.findall('subsets/subset'):
-                label = subsets.attrib['label']
-                spartition[str(spartition_num)]['subsets'][label] = {}
-                spartition[str(spartition_num)]['subsets'][label]['individuals'] = {}
+            for subset in spartition.findall('subsets/subset'):
+                subset_dict = {}
+                subset_dict['individuals'] = {}
+
                 #Subset
-                for index, val in subsets.attrib.items():
+                for index, val in subset.attrib.items():
                     if index == 'label':
                         continue
                     if index =='score':
                         val = float(val)
-                    spartition[str(spartition_num)]['subsets'][label][index] = val
+                    subset_dict[index] = val
 
                 #Subset individuals
-                for individuals in subsets.findall('individual'):
-                    individual_id = individuals.attrib['ref']
-                    spartition[str(spartition_num)]['subsets'][label]['individuals'][individual_id]= {}
-                    for index, val in individuals.attrib.items():
+                for individual in subset.findall('individual'):
+                    individual_dict = {}
+                    for index, val in individual.attrib.items():
                         if index == 'ref':
                             continue
                         if index == 'score':
                             val = float(val)
-                        spartition[str(spartition_num)]['subsets'][label]['individuals'][individual_id][index] = val
+                        individual_dict[index] = val
 
-            for concordances in remarks.findall('concordances/concordance'):
+                    individual_id = _str_(individual.get('ref'))
+                    subset_dict['individuals'][individual_id] = individual_dict
+
+                label = _str_(subset.get('label'))
+                spartition_dict['subsets'][label] = subset_dict
+
+            for concordances in spartition.findall('concordances/concordance'):
                 label = concordances.attrib['label']
-                spartition[str(spartition_num)]['concordances']['concordance'][label] = {}
+                spartition_dict['concordances']['concordance'][label] = {}
                 date = concordances.find('date')
                 concordantsubsets = concordances.findall('concordantsubsets')
-                spartition[str(spartition_num)]['concordances']['concordance'][label]['date'] = date.text
-                spartition[str(spartition_num)]['concordances']['concordance'][label]['concordantsubsets'] = []
+                spartition_dict['concordances']['concordance'][label]['date'] = date.text
+                spartition_dict['concordances']['concordance'][label]['concordantsubsets'] = []
                 for index, val in concordances.attrib.items():
                     if index == 'label':
                         continue
-                    spartition[str(spartition_num)]['concordances']['concordance'][label][index] = val
+                    spartition_dict['concordances']['concordance'][label][index] = val
 
                 for subset in concordantsubsets:
-                    spartition[str(spartition_num)]['concordances']['concordance'][label]['concordantsubsets'].append(subset.attrib['subsetnumber'])
+                    spartition_dict['concordances']['concordance'][label]['concordantsubsets'].append(subset.attrib['subsetnumber'])
+
+            spartitions[str(spartition_num)] = spartition_dict
             spartition_num += 1
-        self.spartDict['spartitions'] = spartition
-        return spartition
+
+        self.spartDict['spartitions'] = spartitions
+        return spartitions
 
     def generateData(self):
         self.getProjectinfo()
-        self.getindividuals()
+        self.getIndividuals()
         self.getSpartitions()
         self.getLatLon()
         self.getSequences()
@@ -783,6 +791,11 @@ def n2w(n):
             return num2word +'-'+num2words[n % 10].lower()
         except KeyError:
             raise
+
+
+def _str_(string):
+    """Memory hack to un-intern a string, thus avoiding ET leaks"""
+    return f'M{string}'[1:]
 
 
 def without_keys(d, keys):
