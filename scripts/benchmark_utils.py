@@ -1,7 +1,6 @@
 from time import perf_counter
 from os import getpid
 from os.path import getsize
-from psutil import Process
 
 
 class Timer:
@@ -44,7 +43,7 @@ class LoopTimer:
         print(msg.format(id, t))
 
 
-def sizeof_fmt(num, suffix="B"):
+def bytes_to_string(num, suffix="B"):
     for unit in ["", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei", "Zi"]:
         if abs(num) < 1024.0:
             return f"{num:3.1f}{unit}{suffix}"
@@ -52,12 +51,6 @@ def sizeof_fmt(num, suffix="B"):
     return f"{num:.1f}Yi{suffix}"
 
 
-def print_memory_usage():
-    process = Process(getpid())
-    bytes = process.memory_info().rss
-    print(f'Memory used: {sizeof_fmt(bytes)}')
-
-
 def print_file_size(path):
     bytes = getsize(path)
-    print(f'File size: {sizeof_fmt(bytes)}')
+    print(f'File size: {bytes_to_string(bytes)}')

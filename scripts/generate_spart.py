@@ -4,7 +4,7 @@ from random import random
 from datetime import datetime
 
 from itaxotools.spart_parser import Spart
-from benchmark_utils import Timer, print_memory_usage, print_file_size
+from benchmark_utils import Timer, print_file_size
 
 
 numIndividuals = int(argv[1])
@@ -16,7 +16,7 @@ file = Path(argv[5])
 extension = file.suffix
 
 
-with Timer('create', 'Time to {}: {:.4f}s'):
+with Timer('generate', 'Time to {}: {:.4f}s'):
 
     spart = Spart()
     spart.project_name = 'custom_generated_file'
@@ -51,5 +51,4 @@ with Timer('export', 'Time to {}: {:.4f}s'):
     elif extension.lower() == '.spart':
         spart.toMatricial(file)
 
-print_memory_usage()
 print_file_size(file)

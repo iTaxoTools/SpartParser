@@ -36,6 +36,13 @@ class Spart:
         return cls(spartDict)
 
     @classmethod
+    def fromXML_dev(cls, path: Path) -> Spart:
+        """Parse an XML spart file and return a Spart instance"""
+        parser = SpartParserXML(str(path))
+        spartDict = parser.generateData()
+        return cls(spartDict)
+
+    @classmethod
     def fromPath(cls, path: Path) -> Spart:
         """Parse any supported file and return a Spart instance"""
         if is_path_xml(path):
@@ -449,7 +456,7 @@ class SpartParser:
     def getIndividuals(self):
         individuals = {}
         for individual in self.root.findall('individuals/individual'):
-            id = _str_(individual.get('id'))
+            id = individual.get('id')
             individuals[id] = without_keys(individual.attrib, "id")
         self.spartDict['individuals'] = individuals
 
@@ -515,10 +522,10 @@ class SpartParser:
                             val = float(val)
                         individual_dict[index] = val
 
-                    individual_id = _str_(individual.get('ref'))
+                    individual_id = individual.get('ref')
                     subset_dict['individuals'][individual_id] = individual_dict
 
-                label = _str_(subset.get('label'))
+                label = subset.get('label')
                 spartition_dict['subsets'][label] = subset_dict
 
             for concordances in spartition.findall('concordances/concordance'):
@@ -549,6 +556,24 @@ class SpartParser:
         self.getLatLon()
         self.getSequences()
         return self.spartDict
+
+
+class SpartParserXML:
+
+    def __init__(self, spartFile):
+        self.spartFile = spartFile
+        self.spartDict = {}
+
+    def generateData(self):
+
+        for event, element in ET.iterparse(self.spartFile, events=('start', 'end')):
+            if (event, element.tag) == ('start', 'spartition'):
+                print('New spartition!', element.tag, element.attrib)
+            element.clear()
+            del element
+
+        return self.spartDict
+
 
 class SpartParserRegular:
 
@@ -791,11 +816,6 @@ def n2w(n):
             return num2word +'-'+num2words[n % 10].lower()
         except KeyError:
             raise
-
-
-def _str_(string):
-    """Memory hack to un-intern a string, thus avoiding ET leaks"""
-    return f'M{string}'[1:]
 
 
 def without_keys(d, keys):
