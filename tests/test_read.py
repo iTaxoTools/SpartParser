@@ -314,9 +314,55 @@ def spart_scores_type(spart: Spart):
     assert spart.getSpartitionScoreType('spartition_3') == None
     assert spart.getSubsetIndividualScoreType('spartition_3') == None
 
+def spart_individuals_latlon(spart: Spart):
+
+    individuals = spart.getIndividuals()
+    assert len(individuals) == 5
+    assert 'individual_1' in individuals
+    assert 'individual_2' in individuals
+    assert 'individual_3' in individuals
+    assert 'individual_4' in individuals
+    assert 'individual_5' in individuals
+
+    assert spart.getIndividualData('individual_2')['locality'] == 'locality_1'
+    assert spart.getIndividualData('individual_3')['locality'] == 'locality_1'
+    assert spart.getIndividualData('individual_4')['locality'] == 'locality_2_1'
+    assert spart.getIndividualData('individual_5')['locality'] == 'locality_3_1'
+
+    assert spart.getIndividualData('individual_1')['latitude'] == '1.1'
+    assert spart.getIndividualData('individual_2')['latitude'] == '2.2'
+
+    assert spart.getIndividualData('individual_1')['longitude'] == '1.2'
+    assert spart.getIndividualData('individual_2')['longitude'] == '2.3'
+
+    assert spart.getIndividualData('individual_1')['altitude'] == '1.3'
+    assert spart.getIndividualData('individual_2')['altitude'] == '2.1'
+
+    latlons = set(spart.getLatlon())
+
+    assert len(latlons) == 3
+    assert 'locality_1' in latlons
+    assert 'locality_2' in latlons
+    assert 'locality_3' in latlons
+
+    assert spart.getLatlonData('locality_1')['lat'] == '11.1'
+    assert spart.getLatlonData('locality_2')['lat'] == '22.1'
+    assert spart.getLatlonData('locality_3')['lat'] == '33.1'
+
+    assert spart.getLatlonData('locality_1')['lon'] == '11.2'
+    assert spart.getLatlonData('locality_2')['lon'] == '22.2'
+    assert spart.getLatlonData('locality_3')['lon'] == '33.2'
+
+    assert spart.getLatlonData('locality_1')['alt'] == '11.3'
+    assert spart.getLatlonData('locality_2')['alt'] == '22.3'
+    assert spart.getLatlonData('locality_3')['alt'] == '33.3'
+
+
+
 
 test_data = [
     ReadTest('simple.xml', Spart.fromXML, spart_simple),
+    ReadTest('latlon.xml', Spart.fromXML_dev, spart_individuals_latlon),
     ReadTest('simple.spart', Spart.fromMatricial, spart_simple),
     ReadTest('tagged.xml', Spart.fromXML, spart_tagged),
     ReadTest('scores.spart', Spart.fromMatricial, spart_scores),
