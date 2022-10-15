@@ -24,7 +24,7 @@ with Timer('generate', 'Time to {}: {:.4f}s'):
 
     #Add individual
     for indi in range(1, numIndividuals+1):
-        spart.addIndividual(f'individual_{indi}')
+        spart.addIndividual(f'individual_{indi}', lat=str(random()), lon=str(random()))
 
     count = 1
     spScore = 1.0
