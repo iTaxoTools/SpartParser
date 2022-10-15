@@ -321,20 +321,20 @@ class Spart:
             return self.spartDict['individuals'][id]
         return {}
 
-    def getIndividualLatlon(self, id: str) -> tuple[str,str] or None:
+    def getIndividualLatlon(self, id: str) -> tuple[float, float] or None:
         """Returns latlons information about the given individual id"""
         if checkKey(self.spartDict['individuals'], id):
             if checkKey(self.spartDict['individuals'][id], 'latitude') and checkKey(self.spartDict['individuals'][id], 'longitude'):
                 return (self.spartDict['individuals'][id]['latitude'], self.spartDict['individuals'][id]['longitude'])
+            if checkKey(self.spartDict['individuals'][id], 'locality'):
+                locality = self.getLatlonData(self.spartDict['individuals'][id]['locality'])
+                return (locality['latitude'], locality['longitude'])
         return None
 
     def getLatlon(self) -> iter[str]:
         """Returns a list with the ids of each latlon"""
-        # latlon_list = []
         for latlon in self.spartDict['latlons'].keys():
             yield latlon
-
-        # return latlon_list
 
     def getLatlonData(self, id: str) -> dict[str, object]:
         """Returns extra information about the given latlon id"""
@@ -462,6 +462,7 @@ class Spart:
                 return spartition
         return None
 
+
 class SpartParser:
 
     def __init__(self, spartFile):
@@ -586,19 +587,18 @@ class SpartParserXML:
         self.spartDict = {}
 
     def generateData(self):
-
         self.tokenizer = ET.iterparse(self.spartFile, events=('start', 'end'))
         self.parseRoot()
         return self.spartDict
 
     def parseRoot(self):
-
         for event, element in self.tokenizer:
             token = element.tag
             if (event, token) == ('start', 'individuals'):
                 self.parseIndividuals()
             if (event, token) == ('start', 'latlon'):
                 self.parseLatLon()
+            element.clear()
 
     def parseIndividuals(self):
         self.spartDict['individuals'] = {}
@@ -608,16 +608,12 @@ class SpartParserXML:
                 break
             elif (event, token) == ('start', 'individual'):
                 self.parseIndividual(element)
+            element.clear()
 
     def parseIndividual(self, element):
         id = element.get('id')
         elementDict = self.mapLatLonKeys(element, id)
         self.spartDict['individuals'][id] = elementDict
-        # for event, element in ET.iterparse(self.spartFile, events=('start', 'end')):
-        #     if (event, element.tag) == ('start', 'spartition'):
-        #         print('New spartition!', element.tag, element.attrib)
-        #     element.clear()
-        #     del element
 
     def parseLatLon(self):
         self.spartDict['latlons'] = {}
@@ -627,19 +623,29 @@ class SpartParserXML:
                 break
             elif (event, token) == ('start', 'coordinates'):
                 self.parseCoordinates(element)
+            element.clear()
+
     def parseCoordinates(self, element):
         id = element.get('locality')
         elementDict = self.mapLatLonKeys(element, id)
+        elementDict['latitude'] = float(elementDict['latitude'])
+
+        synonyms = elementDict.get('synonyms','').split(';')
+        for synonym in synonyms:
+            self.spartDict['latlons'][synonym] = elementDict
         self.spartDict['latlons'][id] = elementDict
 
     def mapLatLonKeys(self, element, id):
-        mappingsDict = {'alt': 'altitude', 'lat': 'latitude', 'lon': 'longitude'}
+        mappingsDict = {'alt': 'altitude', 'lat': 'latitude', 'lon': 'longitude', 'synonym': 'synonyms'}
         elementDict = {}
         for key, val in without_keys(element.attrib, id).items():
             if key in mappingsDict:
                 key = mappingsDict[key]
+            if key in ['altitude', 'longitude', 'latitude']:
+                val = float(val)
             elementDict[key] = val
         return elementDict
+
 
 class SpartParserRegular:
 
