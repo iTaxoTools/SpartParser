@@ -594,11 +594,25 @@ class SpartParserXML:
     def parseRoot(self):
         for event, element in self.tokenizer:
             token = element.tag
+            if (event, token) == ('start', 'project_name'):
+                self.parseProjectName(element)
+            if (event, token) == ('start', 'date'):
+                self.parseDate(element)
             if (event, token) == ('start', 'individuals'):
                 self.parseIndividuals()
+            if (event, token) == ('start', 'spartitions'):
+                self.parseSpartitions()
             if (event, token) == ('start', 'latlon'):
                 self.parseLatLon()
             element.clear()
+
+    def parseProjectName(self, element):
+        self.spartDict['project_name'] = element.text
+        element.clear()
+
+    def parseDate(self, element):
+        self.spartDict['date'] = element.text
+        element.clear()
 
     def parseIndividuals(self):
         self.spartDict['individuals'] = {}
@@ -612,9 +626,65 @@ class SpartParserXML:
 
     def parseIndividual(self, element):
         id = element.get('id')
-        elementDict = self.mapLatLonKeys(element, id)
+        elementDict = self.mapLatLonKeys(element, 'id')
         self.spartDict['individuals'][id] = elementDict
 
+    def parseSpartitions(self):
+        self.spartDict['spartitions'] = {}
+        for event, element in self.tokenizer:
+            token = element.tag
+            if (event, token) == ('end', 'spartitions'):
+                break
+            elif (event, token) == ('start', 'spartition'):
+                self.parseSpartition(element)
+            print(self.spartDict['spartitions'])
+            element.clear()
+
+    def parseSpartition(self, elem):
+        sparitionNumber = str(len(self.spartDict['spartitions']) + 1)
+        self.spartDict['spartitions'][sparitionNumber] = elem.attrib
+        for event, element in self.tokenizer:
+            token = element.tag
+            if (event, token) == ('end', 'spartition'):
+                break
+            if (event, token) == ('start', 'remarks'):
+                self.parseRemark(element, sparitionNumber)
+            if (event, token) == ('start', 'subsets'):
+                self.parseSubsets(sparitionNumber)
+            element.clear()
+
+    def parseSubsets(self, sparitionNumber):
+        self.spartDict['spartitions'][sparitionNumber]['subsets'] = {}
+        for event, element in self.tokenizer:
+            token = element.tag
+            if (event, token) == ('end', 'subsets'):
+                break
+            elif (event, token) == ('start', 'subset'):
+                self.parseSubset(element, sparitionNumber)
+            element.clear()
+
+    def parseSubset(self, elem, sparitionNumber):
+        subsetNumber = elem.get('label')
+        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber] = self.mapLatLonKeys(elem, 'label')
+        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber]['individuals'] = {}
+        for event, element in self.tokenizer:
+            token = element.tag
+            if (event, token) == ('end', 'subset'):
+                break
+            elif (event, token) == ('start', 'individual'):
+                self.parseSubsetIndividual(element, sparitionNumber, subsetNumber)
+            element.clear()
+
+
+    def parseSubsetIndividual(self, element, sparitionNumber, subsetNumber):
+        id = element.get('ref')
+        elementDict = self.mapLatLonKeys(element, 'ref')
+        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber]['individuals'][id] = elementDict
+
+    def parseRemark(self, element, sparitionNumber):
+        self.spartDict['spartitions'][sparitionNumber]['remarks'] = element.text
+        element.clear()
+        
     def parseLatLon(self):
         self.spartDict['latlons'] = {}
         for event, element in self.tokenizer:
@@ -627,7 +697,7 @@ class SpartParserXML:
 
     def parseCoordinates(self, element):
         id = element.get('locality')
-        elementDict = self.mapLatLonKeys(element, id)
+        elementDict = self.mapLatLonKeys(element, 'locality')
         elementDict['latitude'] = float(elementDict['latitude'])
 
         synonyms = elementDict.get('synonyms','').split(';')
