@@ -329,7 +329,9 @@ def spart_individuals_latlon(spart: Spart):
     assert spart.getIndividualData('individual_4')['locality'] == 'locality_2_1'
     assert spart.getIndividualData('individual_5')['locality'] == 'locality_3_1'
 
+    print(spart.getIndividualData('individual_1')['latitude'])
     assert spart.getIndividualData('individual_1')['latitude'] == '1.1'
+    print(spart.getIndividualData('individual_2'))
     assert spart.getIndividualData('individual_2')['latitude'] == '2.2'
 
     assert spart.getIndividualData('individual_1')['longitude'] == '1.2'
@@ -338,6 +340,9 @@ def spart_individuals_latlon(spart: Spart):
     assert spart.getIndividualData('individual_1')['altitude'] == '1.3'
     assert spart.getIndividualData('individual_2')['altitude'] == '2.1'
 
+    assert spart.getIndividualLatlon('individual_1') == ('1.1', '1.2')
+
+
     latlons = set(spart.getLatlon())
 
     assert len(latlons) == 3
@@ -345,17 +350,17 @@ def spart_individuals_latlon(spart: Spart):
     assert 'locality_2' in latlons
     assert 'locality_3' in latlons
 
-    assert spart.getLatlonData('locality_1')['lat'] == '11.1'
-    assert spart.getLatlonData('locality_2')['lat'] == '22.1'
-    assert spart.getLatlonData('locality_3')['lat'] == '33.1'
+    assert spart.getLatlonData('locality_1')['latitude'] == '11.1'
+    assert spart.getLatlonData('locality_2')['latitude'] == '22.1'
+    assert spart.getLatlonData('locality_3')['latitude'] == '33.1'
 
-    assert spart.getLatlonData('locality_1')['lon'] == '11.2'
-    assert spart.getLatlonData('locality_2')['lon'] == '22.2'
-    assert spart.getLatlonData('locality_3')['lon'] == '33.2'
+    assert spart.getLatlonData('locality_1')['longitude'] == '11.2'
+    assert spart.getLatlonData('locality_2')['longitude'] == '22.2'
+    assert spart.getLatlonData('locality_3')['longitude'] == '33.2'
 
-    assert spart.getLatlonData('locality_1')['alt'] == '11.3'
-    assert spart.getLatlonData('locality_2')['alt'] == '22.3'
-    assert spart.getLatlonData('locality_3')['alt'] == '33.3'
+    assert spart.getLatlonData('locality_1')['altitude'] == '11.3'
+    assert spart.getLatlonData('locality_2')['altitude'] == '22.3'
+    assert spart.getLatlonData('locality_3')['altitude'] == '33.3'
 
 
 
