@@ -565,14 +565,36 @@ class SpartParserXML:
         self.spartDict = {}
 
     def generateData(self):
-
-        for event, element in ET.iterparse(self.spartFile, events=('start', 'end')):
-            if (event, element.tag) == ('start', 'spartition'):
-                print('New spartition!', element.tag, element.attrib)
-            element.clear()
-            del element
-
+        self.tokenizer = ET.iterparse(self.spartFile, events=('start', 'end'))
+        self.getRootTokens()
         return self.spartDict
+
+    def parseRoot(self):
+        event, element = next(self.tokenizer)
+        token = element.tag
+
+        if (event, token) == ('start', 'individuals'):
+            self.parseIndividuals()
+        if (event, token) == ('start', 'latlon'):
+            self.parseLatLon()
+
+    def parseIndividuals(self):
+        for event, element in self.tokenizer:
+            token = element.tag
+            if (event, token) == ('end', 'individuals'):
+                break
+            elif (event, token) == ('start', 'individual'):
+                self.parseIndividual(element)
+
+    def parseIndividual(self, element):
+        ...
+
+        # for event, element in ET.iterparse(self.spartFile, events=('start', 'end')):
+        #     if (event, element.tag) == ('start', 'spartition'):
+        #         print('New spartition!', element.tag, element.attrib)
+        #     element.clear()
+        #     del element
+
 
 
 class SpartParserRegular:
