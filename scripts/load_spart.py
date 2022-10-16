@@ -15,11 +15,10 @@ Memory benchmark using memory_profiler & matplotlib:
 
 path = Path(argv[1])
 
-extension = ''.join(path.suffixes)
+extension = path.suffix
 
 parser = {
     '.xml': Spart.fromXML,
-    '.dev.xml': Spart.fromXML_dev,
     '.spart': Spart.fromMatricial,
 }[extension]
 
