@@ -1,6 +1,7 @@
 from __future__ import annotations
 import collections, time, re, os
 import xml.etree.ElementTree as ET
+from xml.sax.saxutils import XMLGenerator, quoteattr
 from xml.dom import minidom
 from datetime import datetime
 from sys import argv
@@ -42,6 +43,10 @@ class Spart:
             return cls.fromXML(path)
         else:
             return cls.fromMatricial(path)
+
+    def toXML_dev(self, path: Path) -> None:
+        writer = SpartWriterXML()
+        writer.writeData(self, path)
 
     def toXML(self, path: Path) -> None:
         """Convert Spart instance to XML file"""
@@ -578,6 +583,7 @@ class SpartParser:
         self.getSequences()
         return self.spartDict
 
+
 class SpartParserXML:
 
     def __init__(self, spartFile):
@@ -728,6 +734,7 @@ class SpartParserXML:
                 val = float(val)
             elementDict[key] = val
         return elementDict
+
 
 class SpartParserRegular:
 
@@ -952,6 +959,75 @@ class SpartParserRegular:
         self.getindividuals()
         self.getSpartitions()
         return self.spartDict
+
+
+class PrettyXMLGenerator(XMLGenerator):
+    """Extends the ContentHandler interface"""
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self._indent = 0
+
+    def startDocument(self):
+        # self._write(f'<?xml version="1.0" encoding="{self._encoding}"?>\n')
+        self._write(f'<?xml version="1.0" ?>')
+
+    def indent(self, diff=0):
+        if diff < 0:
+            self._indent += diff
+        self.ignorableWhitespace('\n')
+        self.ignorableWhitespace('\t'*self._indent)
+        if diff > 0:
+            self._indent += diff
+
+    def startElement(self, name, attrs=None):
+        self.indent(1)
+        if not attrs:
+            attrs = {}
+        super().startElement(name, attrs)
+
+    def endElement(self, name):
+        self.indent(-1)
+        super().endElement(name)
+
+    def startEndElement(self, name, attrs=None, characters=None):
+        self.indent()
+        if not attrs:
+            attrs = {}
+        self._finish_pending_start_element()
+        self._write('<' + name)
+        for (name, value) in attrs.items():
+            self._write(' %s=%s' % (name, quoteattr(value)))
+
+        if characters:
+            self._write(">")
+            self.characters(characters)
+            super().endElement(name)
+        else:
+            self._write("/>")
+
+
+class SpartWriterXML:
+    def __init__(self):
+        self.handler = None
+        self.spart = None
+
+    def writeData(self, spart: Spart, path: Path):
+        self.spart = spart
+        with open(path, 'w') as file:
+            self.handler = PrettyXMLGenerator(file, 'UTF-8')
+            self.handler.startDocument()
+            self.writeRoot()
+            self.handler.endDocument()
+
+    def writeRoot(self):
+        self.handler.startElement("root", {})
+        self.handler.startEndElement("project_name", characters='XXXXX')
+        self.handler.startElement("individuals")
+        for _ in range(100000):
+            self.handler.startEndElement("individual", {'id': 'DDDD', 'voucher': 'VVVV'})
+        self.handler.endElement("individuals")
+        self.handler.endElement("root")
 
 
 def n2w(n):
