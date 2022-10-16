@@ -331,6 +331,12 @@ class Spart:
                 return (locality['latitude'], locality['longitude'])
         return None
 
+    def getIndividualTypes(self, id: str) -> iter[str]:
+        raise NotImplementedError()
+
+    def getIndividualTypeData(self, id: str, type: str) -> dict[str, str]:
+        raise NotImplementedError()
+
     def getLocations(self) -> iter[str]:
         """Returns a list with the ids of each location"""
         for latlon in self.spartDict['latlons'].keys():

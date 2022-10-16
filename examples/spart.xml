@@ -5,16 +5,38 @@
 	<!-- WARNING: The sample names below may have been changed to fit SPART specification (only alphanumeric characters and _ ) -->
  	<!-- user comment: this analysis was generated based on a single ML tree obtained in MEGA 7 -->
 	<individuals>
-		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe" altitude="950" latitude="45.3" longitude="-23.4" typestatus="HT" namepublishedinyear="1893" originalnameusage ="Mantella aurantiaca"/>
-		<individual id="aura_ZCMV1235" locality="Andasibe" altitude="950" latitude="45.3" longitude="-23.4"/>
-		<individual id="aura_ZCMV1236" locality="Andasibe" altitude="950" latitude="45.3" longitude="-23.4"/>
-		<individual id="aura_ZCMV1237" locality="Andasibe" altitude="950" latitude="45.3" longitude="-23.4"/>
-		<individual id="aura_ZCMV1238" locality="Andasibe" altitude="950" latitude="45.3" longitude="-23.4"/>
-		<individual id="aura_ZCMV1239" locality="Andasibe" altitude="950" latitude="45.3" longitude="-23.4"/>
+		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe">
+			<type status="Holotype"
+				nameBearingStatus="Yes"
+				namePublishedInYear="1889"
+				scientificNameAuthorship="Boulenger"
+				originalNameUsage="Dendrobates aurantiacus"
+				verbatimTypeLocality="Perinet"
+			/>
+		</individual>
+		<individual id="crocea_ZCMV235" locality="Torotorofotsy">
+			<type status="Paratype"
+				nameBearingStatus="No"
+				namePublishedInYear="1889"
+				scientificNameAuthorship="Boulenger"
+				originalNameUsage="Dendrobates aurantiacus"
+				verbatimTypeLocality="Torotorofotsy"
+			/>
+			<type	status="Neotype"
+				nameBearingStatus="Yes"
+				namePublishedInYear="2023"
+				scientificNameAuthorship="Vences"
+				originalNameUsage="Mantella inexistens"
+			/>
+		</individual>
+		<individual id="aura_ZCMV1235" locality="Andasibe"/>
+		<individual id="aura_ZCMV1236" locality="Andasibe"/>
+		<individual id="aura_ZCMV1237" locality="Andasibe"/>
+		<individual id="aura_ZCMV1238" locality="Andasibe"/>
+		<individual id="aura_ZCMV1239" locality="Andasibe"/>
 		<individual id="aura_FGZC987" locality="Torotorofotsy" />
 		<individual id="aura_FGZC986" locality="Torotorofotsy"/>
 		<individual id="crocea_ZCMV234" locality="Andreba"/>
-		<individual id="crocea_ZCMV235" locality="Torotorofotsy"/>
 		<individual id="miloty_ACZC324" locality="Fierenana" />
 		<individual id="miloty_ACZC329" locality="Fierenana"/>
 		<individual id="crocea_ZCMV236" locality="Andreba"/>
@@ -59,7 +81,7 @@
 
 
 <!-- MV COMMENT  This next block is to  provide concordance values of subsets, separate for the kind of evidence: the spartition is compared e.g. with another molecular marker,  -->
-<!-- MV COMMENT  and those subsets supported by the independent evidence are list-->
+<!-- MV COMMENT  and those subsets supported by the independent evidence are listed -->
 <!-- MV COMMENT  This has the advantage that new blocks can easily be added after each analysis without modifying the previous blocks -->
 
 			<concordances>
@@ -124,10 +146,16 @@
 
 
 
-	<latlon>
-		<coordinates locality="Fierenana" lat="43.1234" lon="-21.341" alt="1456 m" synonym="Fiherenana" accuracy="100 km" GCS="WGS84"/>
-		<coordinates locality="Andasibe" lat="45.3" lon="-23.4" alt="950"/>
-	</latlon>
+<!-- MV COMMENT  As a convention, I suggest to add these additional blocks with metadata and  raw data at the end, after the spartition information, so if the file gets very large, with many sequences, -->
+<!-- MV COMMENT  a program probably can more easily retrieve the spartition information without first searching through thousands of lines with DNA sequences. -->
+<!-- MV COMMENT  Default Geographic Coordinate System (CGCS) will be WGS84 if not specified -->
+<!-- MV COMMENT  Note: In Spartmapper, if coordinates are provided in a second file, separatately from the SpartXML file, then the info in the SpartXML will be overridden-->
+<!-- MV COMMENT  But if the user provides only the SpartXML file, then the coordinates will be read from the SpartXML file-->
+
+	<Locations>
+		<coordinates locality="Fierenana" decimalLatitude="43.1234" decimalLongitude="-21.341" elevation="1456" synonym="Fiherenana" measurementAccuracy="100000" elevationAccuracy="10" verbatimCoordinateSystem="WGS84"/>
+		<coordinates locality="Andasibe" decimalLatitude="45.3" decimalLongitude="-23.4" elevation="950"/>
+	</Locations>
 
 
 <!-- MV COMMENT  If SPART-XML provides DNA sequences (which will rarely be the case) then the syntax proposed here follows the syntax of the barcoding consortium BOL  -->

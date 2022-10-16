@@ -1,0 +1,34 @@
+<?xml version="1.0" ?>
+<root>
+
+	<individuals>
+		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe">
+			<type
+				status="Holotype"
+				nameBearingStatus="Yes"
+				namePublishedInYear="1889"
+				scientificNameAuthorship="Boulenger"
+				originalNameUsage="Dendrobates aurantiacus"
+				verbatimTypeLocality="Perinet"
+			/>
+		</individual>
+		<individual id="crocea_ZCMV235" locality="Torotorofotsy">
+			<type
+				status="Paratype"
+				nameBearingStatus="No"
+				namePublishedInYear="1889"
+				scientificNameAuthorship="Boulenger"
+				originalNameUsage="Dendrobates aurantiacus"
+				verbatimTypeLocality="Torotorofotsy"
+			/>
+			<type
+				status="Neotype"
+				nameBearingStatus="Yes"
+				namePublishedInYear="2023"
+				scientificNameAuthorship="Vences"
+				originalNameUsage="Mantella inexistens"
+			/>
+		</individual>
+	</individuals>
+
+</root>

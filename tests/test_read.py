@@ -112,6 +112,7 @@ def spart_simple(spart: Spart):
     assert not spart.getSubsetIndividualData('spartition_3', '1', 'individual_2')
     assert not spart.getSubsetIndividualData('spartition_3', '1', 'individual_3')
 
+
 def spart_tagged(spart: Spart):
     assert spart.project_name == 'tagged_test'
     assert spart.date == datetime.datetime(2022, 10, 2, 12, 0, 0)
@@ -204,6 +205,7 @@ def spart_tagged(spart: Spart):
     assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_2')['score'] == 3.2
     assert spart.getSubsetIndividualData('spartition_3', '1', 'individual_3')['score'] == 3.3
 
+
 def spart_scores(spart: Spart):
     assert spart.project_name == 'scores_test'
     assert spart.date == datetime.datetime(2022, 10, 2, 12, 0, 0)
@@ -295,6 +297,7 @@ def spart_scores(spart: Spart):
     assert spart.getSubsetIndividualScore('spartition_3', '1', 'individual_2') == 2.3
     assert spart.getSubsetIndividualScore('spartition_3', '1', 'individual_3') == 3.3
 
+
 def spart_scores_type(spart: Spart):
 
     spartitions = spart.getSpartitions()
@@ -313,6 +316,7 @@ def spart_scores_type(spart: Spart):
     assert spart.getSubsetScoreType('spartition_3') == None
     assert spart.getSpartitionScoreType('spartition_3') == None
     assert spart.getSubsetIndividualScoreType('spartition_3') == None
+
 
 def spart_latlon(spart: Spart):
 
@@ -382,9 +386,47 @@ def spart_latlon(spart: Spart):
     assert spart.getIndividualLatlon('individual_7') == (7.1, 7.2)
 
 
+def spart_types(spart: Spart):
+
+    individuals = spart.getIndividuals()
+    assert len(individuals) == 2
+    assert 'aura_ZCMV1234' in individuals
+    assert 'crocea_ZCMV235' in individuals
+
+    types = set(spart.getIndividualTypes('aura_ZCMV1234'))
+    assert len(types) == 1
+    assert 'Holotype' in types
+
+    type = spart.getIndividualTypeData('aura_ZCMV1234', 'Holotype')
+    assert type['namebearingstatus'] == 'Yes'
+    assert type['namepublishedinyear'] == '1889'
+    assert type['scientificnameauthorship'] == 'Boulenger'
+    assert type['originalnameusage'] == 'Dendrobates aurantiacus'
+    assert type['verbatimtypelocality'] == 'Perinet'
+
+    types = set(spart.getIndividualTypes('crocea_ZCMV235'))
+    assert len(types) == 2
+    assert 'Paratype' in types
+    assert 'Neotype' in types
+
+    type = spart.getIndividualTypeData('crocea_ZCMV235', 'Paratype')
+    assert type['namebearingstatus'] == 'No'
+    assert type['namepublishedinyear'] == '1889'
+    assert type['scientificnameauthorship'] == 'Boulenger'
+    assert type['originalnameusage'] == 'Dendrobates aurantiacus'
+    assert type['verbatimtypelocality'] == 'Torotorofotsy'
+
+    type = spart.getIndividualTypeData('crocea_ZCMV235', 'Neotype')
+    assert type['namebearingstatus'] == 'Yes'
+    assert type['namepublishedinyear'] == '2023'
+    assert type['scientificnameauthorship'] == 'Vences'
+    assert type['originalnameusage'] == 'Mantella inexistens'
+
+
 test_data = [
     ReadTest('simple.xml', Spart.fromXML_dev, spart_simple),
     ReadTest('latlon.xml', Spart.fromXML_dev, spart_latlon),
+    ReadTest('types.xml', Spart.fromXML_dev, spart_types),
     ReadTest('simple.spart', Spart.fromMatricial, spart_simple),
     ReadTest('tagged.xml', Spart.fromXML_dev, spart_tagged),
     ReadTest('scores.spart', Spart.fromMatricial, spart_scores),
