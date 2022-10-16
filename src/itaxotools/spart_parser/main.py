@@ -684,7 +684,7 @@ class SpartParserXML:
     def parseRemark(self, element, sparitionNumber):
         self.spartDict['spartitions'][sparitionNumber]['remarks'] = element.text
         element.clear()
-        
+
     def parseLatLon(self):
         self.spartDict['latlons'] = {}
         for event, element in self.tokenizer:
@@ -973,7 +973,8 @@ def checkKey(dic, key):
 
 def is_path_xml(path: Path) -> bool:
     try:
-        ET.parse(path)
+        for _, element in ET.iterparse(path):
+            element.clear()
         return True
     except ET.ParseError:
         return False
