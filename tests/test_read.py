@@ -32,9 +32,6 @@ def spart_simple(spart: Spart):
     assert 'individual_1' in individuals
     assert 'individual_2' in individuals
     assert 'individual_3' in individuals
-    assert not spart.getIndividualData('individual_1')
-    assert not spart.getIndividualData('individual_2')
-    assert not spart.getIndividualData('individual_3')
 
     # Validate spartition list
 
@@ -349,11 +346,10 @@ def spart_latlon(spart: Spart):
     assert spart.getIndividualData('individual_7')['altitude'] == 7.3
 
     assert spart.getIndividualData('individual_6')['measurementaccuracy'] == 100
-    assert spart.getIndividualData('individual_6')['elevationAccuracy'] == 10
+    assert spart.getIndividualData('individual_6')['elevationaccuracy'] == 10
 
 
     locations = set(spart.getLocations())
-    assert len(latlons) == 4
     assert 'locality_1' in locations
     assert 'locality_2' in locations
     assert 'locality_3' in locations
@@ -374,7 +370,7 @@ def spart_latlon(spart: Spart):
     assert spart.getLocationData('locality_4')['altitude'] == 44.3
 
     assert spart.getLocationData('locality_1')['measurementaccuracy'] == 100
-    assert spart.getLocationData('locality_1')['elevationAccuracy'] == 10
+    assert spart.getLocationData('locality_1')['elevationaccuracy'] == 10
 
 
     assert spart.getIndividualLatlon('individual_1') == (1.1, 1.2)
@@ -433,15 +429,15 @@ def spart_types(spart: Spart):
 
 
 test_data = [
-    ReadTest('simple.xml', Spart.fromXML_dev, spart_simple),
-    ReadTest('latlon.xml', Spart.fromXML_dev, spart_latlon),
-    ReadTest('types.xml', Spart.fromXML_dev, spart_types),
+    ReadTest('simple.xml', Spart.fromXML, spart_simple),
+    ReadTest('latlon.xml', Spart.fromXML, spart_latlon),
+    ReadTest('types.xml', Spart.fromXML, spart_types),
     ReadTest('simple.spart', Spart.fromMatricial, spart_simple),
-    ReadTest('tagged.xml', Spart.fromXML_dev, spart_tagged),
+    ReadTest('tagged.xml', Spart.fromXML, spart_tagged),
     ReadTest('scores.spart', Spart.fromMatricial, spart_scores),
-    ReadTest('scores.xml', Spart.fromXML_dev, spart_scores),
+    ReadTest('scores.xml', Spart.fromXML, spart_scores),
     ReadTest('scores_type.spart', Spart.fromMatricial, spart_scores_type),
-    ReadTest('scores_type.xml', Spart.fromXML_dev, spart_scores_type),
+    ReadTest('scores_type.xml', Spart.fromXML, spart_scores_type),
     ]
 
 

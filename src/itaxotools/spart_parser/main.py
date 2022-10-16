@@ -31,13 +31,6 @@ class Spart:
     @classmethod
     def fromXML(cls, path: Path) -> Spart:
         """Parse an XML spart file and return a Spart instance"""
-        parser = SpartParser(str(path))
-        spartDict = parser.generateData()
-        return cls(spartDict)
-
-    @classmethod
-    def fromXML_dev(cls, path: Path) -> Spart:
-        """Parse an XML spart file and return a Spart instance"""
         parser = SpartParserXML(str(path))
         spartDict = parser.generateData()
         return cls(spartDict)
@@ -282,7 +275,6 @@ class Spart:
                 k = spartitionsTags[k]
             self.spartDict['spartitions'][str(sparitionNumber)][k] = v
 
-
     def addSubset(self, spartition: str, subsetLabel: str, **kwargs) -> None:
         """Add a new subset to the given spartition. Extra information
         (score, taxon name etc.) is passed as keyword arguments."""
@@ -318,7 +310,7 @@ class Spart:
     def getIndividualData(self, id: str) -> dict[str, object]:
         """Returns extra information about the given individual id"""
         if checkKey(self.spartDict['individuals'], id):
-            return self.spartDict['individuals'][id]
+            return without_keys(self.spartDict['individuals'][id], 'types')
         return {}
 
     def getIndividualLatlon(self, id: str) -> tuple[float, float] or None:
@@ -332,20 +324,27 @@ class Spart:
         return None
 
     def getIndividualTypes(self, id: str) -> iter[str]:
-        raise NotImplementedError()
+        """Returns extra information about the given individual types"""
+        individualTypes_list = []
+        for types in self.spartDict['individuals'][id]['types'].keys():
+            individualTypes_list.append(types)
+        return individualTypes_list
 
     def getIndividualTypeData(self, id: str, type: str) -> dict[str, str]:
-        raise NotImplementedError()
+        if checkKey(self.spartDict['individuals'], id):
+            if checkKey(self.spartDict['individuals'][id]['types'], type):
+                return self.spartDict['individuals'][id]['types'][type]
+        return {}
 
     def getLocations(self) -> iter[str]:
         """Returns a list with the ids of each location"""
-        for latlon in self.spartDict['latlons'].keys():
+        for latlon in self.spartDict['locations'].keys():
             yield latlon
 
     def getLocationData(self, id: str) -> dict[str, object]:
         """Returns extra information about the given latlon id"""
-        if checkKey(self.spartDict['latlons'], id):
-            return self.spartDict['latlons'][id]
+        if checkKey(self.spartDict['locations'], id):
+            return self.spartDict['locations'][id]
         return {}
 
     def getSpartitions(self) -> list[str]:
@@ -468,7 +467,7 @@ class Spart:
                 return spartition
         return None
 
-
+#DEPRICATED USE SpartParserXML
 class SpartParser:
 
     def __init__(self, spartFile):
@@ -585,7 +584,6 @@ class SpartParser:
         self.getSequences()
         return self.spartDict
 
-
 class SpartParserXML:
 
     def __init__(self, spartFile):
@@ -599,7 +597,7 @@ class SpartParserXML:
 
     def parseRoot(self):
         for event, element in self.tokenizer:
-            token = element.tag
+            token = element.tag.lower()
             if (event, token) == ('start', 'project_name'):
                 self.parseProjectName(element)
             if (event, token) == ('start', 'date'):
@@ -608,8 +606,8 @@ class SpartParserXML:
                 self.parseIndividuals()
             if (event, token) == ('start', 'spartitions'):
                 self.parseSpartitions()
-            if (event, token) == ('start', 'latlon'):
-                self.parseLatLon()
+            if (event, token) == ('start', 'locations'):
+                self.parseLocations()
             element.clear()
 
     def parseProjectName(self, element):
@@ -623,34 +621,50 @@ class SpartParserXML:
     def parseIndividuals(self):
         self.spartDict['individuals'] = {}
         for event, element in self.tokenizer:
-            token = element.tag
-            if (event, token) == ('end', 'individuals'):
+            token = element.tag.lower()
+            if (event, token.lower()) == ('end', 'individuals'):
                 break
             elif (event, token) == ('start', 'individual'):
                 self.parseIndividual(element)
             element.clear()
+        print(self.spartDict['individuals'])
 
-    def parseIndividual(self, element):
-        id = element.get('id')
-        elementDict = self.mapLatLonKeys(element, 'id')
+    def parseIndividual(self, elem):
+        element_lower = {k.lower():v for k,v in elem.attrib.items()}
+        id = element_lower.get('id')
+        elementDict = self.mapKeys(elem, 'id')
         self.spartDict['individuals'][id] = elementDict
+        self.spartDict['individuals'][id]['types'] = {}
+        for event, element in self.tokenizer:
+            token = element.tag.lower()
+            if (event, token) == ('end', 'individual'):
+                break
+            elif (event, token) == ('start', 'type'):
+                print('entered')
+                self.parseIndividualType(element, id)
+            element.clear()
+
+
+    def parseIndividualType(self, element, id):
+        element_lower = {k.lower(): v for k, v in element.attrib.items()}
+        status = element_lower.get('status')
+        self.spartDict['individuals'][id]['types'][status] = self.mapKeys(element, 'status')
 
     def parseSpartitions(self):
         self.spartDict['spartitions'] = {}
         for event, element in self.tokenizer:
-            token = element.tag
+            token = element.tag.lower()
             if (event, token) == ('end', 'spartitions'):
                 break
             elif (event, token) == ('start', 'spartition'):
                 self.parseSpartition(element)
-            print(self.spartDict['spartitions'])
             element.clear()
 
     def parseSpartition(self, elem):
         sparitionNumber = str(len(self.spartDict['spartitions']) + 1)
-        self.spartDict['spartitions'][sparitionNumber] = elem.attrib
+        self.spartDict['spartitions'][sparitionNumber] = self.mapKeys(elem, ' ')
         for event, element in self.tokenizer:
-            token = element.tag
+            token = element.tag.lower()
             if (event, token) == ('end', 'spartition'):
                 break
             if (event, token) == ('start', 'remarks'):
@@ -662,7 +676,7 @@ class SpartParserXML:
     def parseSubsets(self, sparitionNumber):
         self.spartDict['spartitions'][sparitionNumber]['subsets'] = {}
         for event, element in self.tokenizer:
-            token = element.tag
+            token = element.tag.lower()
             if (event, token) == ('end', 'subsets'):
                 break
             elif (event, token) == ('start', 'subset'):
@@ -671,57 +685,60 @@ class SpartParserXML:
 
     def parseSubset(self, elem, sparitionNumber):
         subsetNumber = elem.get('label')
-        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber] = self.mapLatLonKeys(elem, 'label')
+        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber] = self.mapKeys(elem, 'label')
         self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber]['individuals'] = {}
         for event, element in self.tokenizer:
-            token = element.tag
+            token = element.tag.lower()
             if (event, token) == ('end', 'subset'):
                 break
             elif (event, token) == ('start', 'individual'):
                 self.parseSubsetIndividual(element, sparitionNumber, subsetNumber)
             element.clear()
 
-
     def parseSubsetIndividual(self, element, sparitionNumber, subsetNumber):
-        id = element.get('ref')
-        elementDict = self.mapLatLonKeys(element, 'ref')
+        element_lower = {k.lower(): v for k, v in element.attrib.items()}
+        id = element_lower.get('ref')
+        elementDict = self.mapKeys(element, 'ref')
         self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber]['individuals'][id] = elementDict
 
     def parseRemark(self, element, sparitionNumber):
         self.spartDict['spartitions'][sparitionNumber]['remarks'] = element.text
         element.clear()
 
-    def parseLatLon(self):
-        self.spartDict['latlons'] = {}
+    def parseLocations(self):
+        self.spartDict['locations'] = {}
         for event, element in self.tokenizer:
-            token = element.tag
-            if (event, token) == ('end', 'latlon'):
+            token = element.tag.lower()
+            if (event, token) == ('end', 'locations'):
                 break
             elif (event, token) == ('start', 'coordinates'):
                 self.parseCoordinates(element)
             element.clear()
 
     def parseCoordinates(self, element):
-        id = element.get('locality')
-        elementDict = self.mapLatLonKeys(element, 'locality')
-        elementDict['latitude'] = float(elementDict['latitude'])
+        element_lower = {k.lower(): v for k, v in element.attrib.items()}
+        id = element_lower.get('locality')
+        elementDict = self.mapKeys(element, 'locality')
 
         synonyms = elementDict.get('synonyms','').split(';')
         for synonym in synonyms:
-            self.spartDict['latlons'][synonym] = elementDict
-        self.spartDict['latlons'][id] = elementDict
+            if synonym:
+                self.spartDict['locations'][synonym] = elementDict
+        self.spartDict['locations'][id] = elementDict
+        print(self.spartDict['locations'])
 
-    def mapLatLonKeys(self, element, id):
-        mappingsDict = {'alt': 'altitude', 'lat': 'latitude', 'lon': 'longitude', 'synonym': 'synonyms'}
+    def mapKeys(self, element, id):
+        mappingsDict = {'alt': 'altitude', 'lat': 'latitude', 'lon': 'longitude', 'synonym': 'synonyms', 'decimallatitude': 'latitude', 'decimallongitude' : 'longitude', 'elevation': 'altitude',
+                        'subsetscoretype' : 'subset_score_type', 'spartitionscoretype' : 'spartition_score_type', 'individualscoretype' : 'individual_score_type', 'spartitionscore' : 'spartition_score'}
         elementDict = {}
         for key, val in without_keys(element.attrib, id).items():
+            key = key.lower()
             if key in mappingsDict:
                 key = mappingsDict[key]
-            if key in ['altitude', 'longitude', 'latitude']:
+            if key in ['altitude', 'longitude', 'latitude', 'spartition_score', 'score', 'measurementaccuracy', 'elevationaccuracy']:
                 val = float(val)
             elementDict[key] = val
         return elementDict
-
 
 class SpartParserRegular:
 
