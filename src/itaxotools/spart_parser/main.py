@@ -19,6 +19,7 @@ class Spart:
             self.spartDict['date'] = ''
             self.spartDict['individuals'] = {}
             self.spartDict['spartitions'] = {}
+            self.spartDict['locations'] = {}
         else:
             self.spartDict = spartDict
 
@@ -46,7 +47,7 @@ class Spart:
 
     def toXML_dev(self, path: Path) -> None:
         writer = SpartWriterXML()
-        writer.writeData(self, path)
+        writer.toPath(self, path)
 
     def toXML(self, path: Path) -> None:
         """Convert Spart instance to XML file"""
@@ -253,7 +254,7 @@ class Spart:
     def addIndividual(self, individualName: str, **kwargs) -> None:
         """Add a new individual. Extra information (locality, voucher etc.)
         is passed as keyword arguments."""
-        self.spartDict['individuals'][individualName] = {}
+        self.spartDict['individuals'][individualName] = {'types': {}}
         for key, val in kwargs.items():
             self.spartDict['individuals'][individualName][key] = val
 
@@ -270,6 +271,7 @@ class Spart:
         self.spartDict['spartitions'][str(sparitionNumber)] = {}
         self.spartDict['spartitions'][str(sparitionNumber)]['subsets'] = {}
         self.spartDict['spartitions'][str(sparitionNumber)]['label'] = label
+        self.spartDict['spartitions'][str(sparitionNumber)]['remarks'] = None
 
         for spNum in range(1, sparitionNumber):
             if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartition_score'):
@@ -371,6 +373,12 @@ class Spart:
                 if tag not in ['subsets', 'concordances', 'label', 'remarks']:
                     spartData[tag] = self.spartDict['spartitions'][spartition][tag]
         return spartData
+
+    def getSpartitionRemarks(self, label: str) -> str:
+        for spartition in self.spartDict['spartitions'].keys():
+            if not self.spartDict['spartitions'][spartition]['label'] == label:
+                continue
+            return self.spartDict['spartitions'][spartition]['remarks']
 
     def getSpartitionSubsets(self, label: str) -> list[str]:
         """Returns a list with the labels of all subsets of the given spartition"""
@@ -964,9 +972,10 @@ class SpartParserRegular:
 class PrettyXMLGenerator(XMLGenerator):
     """Extends the ContentHandler interface"""
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._indent = 0
+    def __init__(self, out=None, encoding="iso-8859-1", indent='\t', short_empty_elements=False):
+        super().__init__(out, encoding, short_empty_elements)
+        self._indent_str = indent
+        self._indent_level = 0
 
     def startDocument(self):
         # self._write(f'<?xml version="1.0" encoding="{self._encoding}"?>\n')
@@ -974,11 +983,11 @@ class PrettyXMLGenerator(XMLGenerator):
 
     def indent(self, diff=0):
         if diff < 0:
-            self._indent += diff
+            self._indent_level += diff
         self.ignorableWhitespace('\n')
-        self.ignorableWhitespace('\t'*self._indent)
+        self.ignorableWhitespace(self._indent_str * self._indent_level)
         if diff > 0:
-            self._indent += diff
+            self._indent_level += diff
 
     def startElement(self, name, attrs=None):
         self.indent(1)
@@ -1012,22 +1021,97 @@ class SpartWriterXML:
         self.handler = None
         self.spart = None
 
-    def writeData(self, spart: Spart, path: Path):
+    def toPath(self, spart: Spart, path: Path):
         self.spart = spart
         with open(path, 'w') as file:
-            self.handler = PrettyXMLGenerator(file, 'UTF-8')
+            self.handler = PrettyXMLGenerator(file, 'UTF-8', '\t')
             self.handler.startDocument()
             self.writeRoot()
             self.handler.endDocument()
 
     def writeRoot(self):
-        self.handler.startElement("root", {})
-        self.handler.startEndElement("project_name", characters='XXXXX')
-        self.handler.startElement("individuals")
-        for _ in range(100000):
-            self.handler.startEndElement("individual", {'id': 'DDDD', 'voucher': 'VVVV'})
-        self.handler.endElement("individuals")
-        self.handler.endElement("root")
+        self.handler.startElement('root')
+        self.writeProjectInfo()
+        self.writeIndividuals()
+        self.writeSpartitions()
+        self.writeLocations()
+        self.handler.endElement('root')
+
+    def writeProjectInfo(self):
+        project_name = self.spart.project_name
+        self.handler.startEndElement('project_name', characters=project_name)
+        date = self.spart.date.isoformat()
+        self.handler.startEndElement('date', characters=date)
+
+    def writeIndividuals(self):
+        self.handler.startElement('individuals')
+        for individual in self.spart.getIndividuals():
+            self.writeIndividual(individual)
+        self.handler.endElement('individuals')
+
+    def writeIndividual(self, individual: str):
+        data = self.spart.getIndividualData(individual)
+        data = {'id': individual, **data}
+        types = self.spart.getIndividualTypes(individual)
+        if not types:
+            self.handler.startEndElement('individual', data)
+        else:
+            self.handler.startElement('individual', data)
+            for type in types:
+                typeData = self.spart.getIndividualTypeData(individual, type)
+                self.handler.startEndElement('type', typeData)
+            self.handler.endElement('individual')
+
+    def writeSpartitions(self):
+        self.handler.startElement('spartitions')
+        for spartition in self.spart.getSpartitions():
+            self.writeSpartition(spartition)
+        self.handler.endElement('spartitions')
+
+    def writeSpartition(self, spartition: str):
+        data = self.spart.getSpartitionData(spartition)
+        data = {k: str(v) for k, v in data.items()}
+        data = {'label': spartition, **data}
+        remarks = self.spart.getSpartitionRemarks(spartition)
+        self.handler.startElement('spartition', data)
+        if remarks:
+            self.handler.startEndElement('remarks', characters=remarks)
+        self.writeSubsets(spartition)
+        self.writeConcordances(spartition)
+        self.handler.endElement('spartition')
+
+    def writeSubsets(self, spartition: str):
+        self.handler.startElement('subsets')
+        for subset in self.spart.getSpartitionSubsets(spartition):
+            self.writeSubset(spartition, subset)
+        self.handler.endElement('subsets')
+
+    def writeSubset(self, spartition: str, subset: str):
+        data = self.spart.getSubsetData(spartition, subset)
+        data = {k: str(v) for k, v in data.items()}
+        data = {'label': subset, **data}
+        self.handler.startElement('subset', data)
+        for individual in self.spart.getSubsetIndividuals(spartition, subset):
+            individualData = self.spart.getSubsetIndividualData(spartition, subset, individual)
+            individualData = {k: str(v) for k, v in individualData.items()}
+            individualData = {'ref': individual, **individualData}
+            self.handler.startEndElement('individual', individualData)
+        self.handler.endElement('subset')
+
+    def writeConcordances(self, spartition: str):
+        ...
+
+    def writeLocations(self):
+        self.handler.startElement('locations')
+        for location in self.spart.getLocations():
+            self.writeLocation(location)
+        self.handler.endElement('locations')
+
+    def writeLocation(self, location: str):
+        data = self.spart.getLocationData(location)
+        data = {k: str(v) for k, v in data.items()}
+        data = {'locality': location, **data}
+        self.handler.startEndElement('coordinates', data)
 
 
 def n2w(n):
