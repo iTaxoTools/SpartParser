@@ -314,13 +314,10 @@ def spart_scores_type(spart: Spart):
     assert spart.getSpartitionScoreType('spartition_3') == None
     assert spart.getSubsetIndividualScoreType('spartition_3') == None
 
-def spart_individuals_latlon(spart: Spart):
-
-    assert spart.project_name == 'latlon_test'
-    assert spart.date == datetime.datetime(2022, 10, 2, 12, 0, 0)
+def spart_latlon(spart: Spart):
 
     individuals = spart.getIndividuals()
-    assert len(individuals) == 5
+    assert len(individuals) == 7
     assert 'individual_1' in individuals
     assert 'individual_2' in individuals
     assert 'individual_3' in individuals
@@ -332,125 +329,68 @@ def spart_individuals_latlon(spart: Spart):
     assert spart.getIndividualData('individual_4')['locality'] == 'locality_2_1'
     assert spart.getIndividualData('individual_5')['locality'] == 'locality_3_1'
 
-    # Validate spartition list
-
-    spartitions = spart.getSpartitions()
-    assert len(spartitions) == 3
-    assert 'spartition_1' in spartitions
-    assert 'spartition_2' in spartitions
-    assert 'spartition_3' in spartitions
-    assert not spart.getSpartitionData('spartition_1')
-    assert not spart.getSpartitionData('spartition_2')
-    assert not spart.getSpartitionData('spartition_3')
-
-    # Validate subset lists
-
-    subsets = spart.getSpartitionSubsets('spartition_1')
-    assert len(subsets) == 3
-    assert '1' in subsets
-    assert '2' in subsets
-    assert '3' in subsets
-    assert not spart.getSubsetData('spartition_1', '1')
-    assert not spart.getSubsetData('spartition_1', '2')
-    assert not spart.getSubsetData('spartition_1', '3')
-
-    subsets = spart.getSpartitionSubsets('spartition_2')
-    assert len(subsets) == 2
-    assert '1' in subsets
-    assert '2' in subsets
-    assert not spart.getSubsetData('spartition_2', '1')
-    assert not spart.getSubsetData('spartition_2', '2')
-
-    subsets = spart.getSpartitionSubsets('spartition_3')
-    assert len(subsets) == 1
-    assert '1' in subsets
-    assert not spart.getSubsetData('spartition_3', '1')
-
-    # Validate 'spartition_1'
-
-    subset_individuals = spart.getSubsetIndividuals('spartition_1', '1')
-    assert len(subset_individuals) == 1
-    assert 'individual_1' in subset_individuals
-    assert not spart.getSubsetIndividualData('spartition_1', '1', 'individual_1')
-
-    subset_individuals = spart.getSubsetIndividuals('spartition_1', '2')
-    assert len(subset_individuals) == 1
-    assert 'individual_2' in subset_individuals
-    assert not spart.getSubsetIndividualData('spartition_1', '2', 'individual_2')
-
-    subset_individuals = spart.getSubsetIndividuals('spartition_1', '3')
-    assert len(subset_individuals) == 1
-    assert 'individual_3' in subset_individuals
-    assert not spart.getSubsetIndividualData('spartition_1', '3', 'individual_3')
-
-    # Validate 'spartition_2'
-
-    subset_individuals = spart.getSubsetIndividuals('spartition_2', '1')
-    assert len(subset_individuals) == 2
-    assert 'individual_1' in subset_individuals
-    assert 'individual_2' in subset_individuals
-    assert not spart.getSubsetIndividualData('spartition_2', '1', 'individual_1')
-    assert not spart.getSubsetIndividualData('spartition_2', '1', 'individual_2')
-
-    subset_individuals = spart.getSubsetIndividuals('spartition_2', '2')
-    assert len(subset_individuals) == 1
-    assert 'individual_3' in subset_individuals
-    assert not spart.getSubsetIndividualData('spartition_2', '2', 'individual_3')
-
-    # Validate 'spartition_3'
-
-    subset_individuals = spart.getSubsetIndividuals('spartition_3', '1')
-    assert len(subset_individuals) == 3
-    assert 'individual_1' in subset_individuals
-    assert 'individual_2' in subset_individuals
-    assert 'individual_3' in subset_individuals
-    assert not spart.getSubsetIndividualData('spartition_3', '1', 'individual_1')
-    assert not spart.getSubsetIndividualData('spartition_3', '1', 'individual_2')
-    assert not spart.getSubsetIndividualData('spartition_3', '1', 'individual_3')
-
     assert spart.getIndividualData('individual_1')['latitude'] == 1.1
     assert spart.getIndividualData('individual_2')['latitude'] == 2.2
+    assert spart.getIndividualData('individual_6')['latitude'] == 6.1
+    assert spart.getIndividualData('individual_7')['latitude'] == 7.1
 
     assert spart.getIndividualData('individual_1')['longitude'] == 1.2
     assert spart.getIndividualData('individual_2')['longitude'] == 2.3
+    assert spart.getIndividualData('individual_6')['longitude'] == 6.2
+    assert spart.getIndividualData('individual_7')['longitude'] == 7.2
 
     assert spart.getIndividualData('individual_1')['altitude'] == 1.3
     assert spart.getIndividualData('individual_2')['altitude'] == 2.1
+    assert spart.getIndividualData('individual_6')['altitude'] == 6.3
+    assert spart.getIndividualData('individual_7')['altitude'] == 7.3
+
+    assert spart.getIndividualData('individual_6')['measurementaccuracy'] == 100
+    assert spart.getIndividualData('individual_6')['elevationAccuracy'] == 10
+
+
+    locations = set(spart.getLocations())
+    assert len(latlons) == 4
+    assert 'locality_1' in locations
+    assert 'locality_2' in locations
+    assert 'locality_3' in locations
+
+    assert spart.getLocationData('locality_1')['latitude'] == 11.1
+    assert spart.getLocationData('locality_2')['latitude'] == 22.1
+    assert spart.getLocationData('locality_3')['latitude'] == 33.1
+    assert spart.getLocationData('locality_4')['latitude'] == 44.1
+
+    assert spart.getLocationData('locality_1')['longitude'] == 11.2
+    assert spart.getLocationData('locality_2')['longitude'] == 22.2
+    assert spart.getLocationData('locality_3')['longitude'] == 33.2
+    assert spart.getLocationData('locality_4')['longitude'] == 44.2
+
+    assert spart.getLocationData('locality_1')['altitude'] == 11.3
+    assert spart.getLocationData('locality_2')['altitude'] == 22.3
+    assert spart.getLocationData('locality_3')['altitude'] == 33.3
+    assert spart.getLocationData('locality_4')['altitude'] == 44.3
+
+    assert spart.getLocationData('locality_1')['measurementaccuracy'] == 100
+    assert spart.getLocationData('locality_1')['elevationAccuracy'] == 10
+
 
     assert spart.getIndividualLatlon('individual_1') == (1.1, 1.2)
     assert spart.getIndividualLatlon('individual_2') == (2.2, 2.3)
     assert spart.getIndividualLatlon('individual_3') == (11.1, 11.2)
     assert spart.getIndividualLatlon('individual_4') == (22.1, 22.2)
     assert spart.getIndividualLatlon('individual_5') == (33.1, 33.2)
-
-    latlons = set(spart.getLatlon())
-
-    assert 'locality_1' in latlons
-    assert 'locality_2' in latlons
-    assert 'locality_3' in latlons
-
-    assert spart.getLatlonData('locality_1')['latitude'] == 11.1
-    assert spart.getLatlonData('locality_2')['latitude'] == 22.1
-    assert spart.getLatlonData('locality_3')['latitude'] == 33.1
-
-    assert spart.getLatlonData('locality_1')['longitude'] == 11.2
-    assert spart.getLatlonData('locality_2')['longitude'] == 22.2
-    assert spart.getLatlonData('locality_3')['longitude'] == 33.2
-
-    assert spart.getLatlonData('locality_1')['altitude'] == 11.3
-    assert spart.getLatlonData('locality_2')['altitude'] == 22.3
-    assert spart.getLatlonData('locality_3')['altitude'] == 33.3
+    assert spart.getIndividualLatlon('individual_6') == (6.1, 6.2)
+    assert spart.getIndividualLatlon('individual_7') == (7.1, 7.2)
 
 
 test_data = [
-    ReadTest('simple.xml', Spart.fromXML, spart_simple),
-    ReadTest('latlon.xml', Spart.fromXML_dev, spart_individuals_latlon),
+    ReadTest('simple.xml', Spart.fromXML_dev, spart_simple),
+    ReadTest('latlon.xml', Spart.fromXML_dev, spart_latlon),
     ReadTest('simple.spart', Spart.fromMatricial, spart_simple),
-    ReadTest('tagged.xml', Spart.fromXML, spart_tagged),
+    ReadTest('tagged.xml', Spart.fromXML_dev, spart_tagged),
     ReadTest('scores.spart', Spart.fromMatricial, spart_scores),
-    ReadTest('scores.xml', Spart.fromXML, spart_scores),
+    ReadTest('scores.xml', Spart.fromXML_dev, spart_scores),
     ReadTest('scores_type.spart', Spart.fromMatricial, spart_scores_type),
-    ReadTest('scores_type.xml', Spart.fromXML, spart_scores_type),
+    ReadTest('scores_type.xml', Spart.fromXML_dev, spart_scores_type),
     ]
 
 

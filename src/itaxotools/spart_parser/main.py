@@ -327,16 +327,16 @@ class Spart:
             if checkKey(self.spartDict['individuals'][id], 'latitude') and checkKey(self.spartDict['individuals'][id], 'longitude'):
                 return (self.spartDict['individuals'][id]['latitude'], self.spartDict['individuals'][id]['longitude'])
             if checkKey(self.spartDict['individuals'][id], 'locality'):
-                locality = self.getLatlonData(self.spartDict['individuals'][id]['locality'])
+                locality = self.getLocationData(self.spartDict['individuals'][id]['locality'])
                 return (locality['latitude'], locality['longitude'])
         return None
 
-    def getLatlon(self) -> iter[str]:
-        """Returns a list with the ids of each latlon"""
+    def getLocations(self) -> iter[str]:
+        """Returns a list with the ids of each location"""
         for latlon in self.spartDict['latlons'].keys():
             yield latlon
 
-    def getLatlonData(self, id: str) -> dict[str, object]:
+    def getLocationData(self, id: str) -> dict[str, object]:
         """Returns extra information about the given latlon id"""
         if checkKey(self.spartDict['latlons'], id):
             return self.spartDict['latlons'][id]
