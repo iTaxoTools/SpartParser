@@ -422,6 +422,15 @@ def spart_types(spart: Spart):
     assert type['scientificnameauthorship'] == 'Vences'
     assert type['originalnameusage'] == 'Mantella inexistens'
 
+    data = spart.getIndividualData('aura_ZCMV1234')
+    assert len(data) == 2
+    assert 'voucher' in data
+    assert 'locality' in data
+
+    data = spart.getIndividualData('crocea_ZCMV235')
+    assert len(data) == 1
+    assert 'locality' in data
+
 
 test_data = [
     ReadTest('simple.xml', Spart.fromXML_dev, spart_simple),

@@ -1,9 +1,13 @@
 <?xml version="1.0" ?>
 <root>
+
 	<project_name>Mantella.fas</project_name>
 	<date>2021-01-29T18:13:35</date>
+
+
 	<!-- WARNING: The sample names below may have been changed to fit SPART specification (only alphanumeric characters and _ ) -->
  	<!-- user comment: this analysis was generated based on a single ML tree obtained in MEGA 7 -->
+
 	<individuals>
 		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe">
 			<type status="Holotype"
@@ -46,7 +50,6 @@
 		<individual id="miloty_ZCMV479" locality="Fierenana"/>
 		<individual id="miloty_ZCMV480" locality="Fierenana"/>
 	</individuals>
-
 
 
 	<spartitions>
@@ -97,17 +100,11 @@
 					<concordantsubsets subsetnumber= "1"/>
 					<concordantsubsets subsetnumber= "2"/>
 				</concordance>
-
 			</concordances>
-
-
-
-
 
 		</spartition>
 		<spartition label="analysis_P2" spartitionScoreType="likelihood" spartitionScore="1.0345E-06" >
-		<remarks>Second spartition</remarks>
-
+			<remarks>Second spartition</remarks>
 			<subsets>
 				<subset label="1">
 					<individual ref="aura_ZCMV1234" />
@@ -138,12 +135,8 @@
 					<individual ref="miloty_ZCMV480" />
 				</subset>
 			</subsets>
-
-
-
 		</spartition>
 	</spartitions>
-
 
 
 <!-- MV COMMENT  As a convention, I suggest to add these additional blocks with metadata and  raw data at the end, after the spartition information, so if the file gets very large, with many sequences, -->
@@ -161,7 +154,6 @@
 <!-- MV COMMENT  If SPART-XML provides DNA sequences (which will rarely be the case) then the syntax proposed here follows the syntax of the barcoding consortium BOL  -->
 <!-- MV COMMENT  It is fully compatible with BOL syntax, with information on indivual added to "notes" -->
 
-
 	<sequences>
 		<sequence>
 			<notes individual="miloty_ZCMV480"/>
@@ -169,9 +161,6 @@
 			<markercode>cytochrome_b</markercode>
 			<nucleotides> ------AAACTGAAAACCCCTTTAGTTAnnnnnAAGTk</nucleotides>
 		</sequence>
-
-
 	</sequences>
-
 
 </root>
