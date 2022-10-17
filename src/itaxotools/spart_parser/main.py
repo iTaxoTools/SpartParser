@@ -514,6 +514,12 @@ class SpartParserXML:
         return self.spartDict
 
     def parseRoot(self):
+        self.spartDict['project_name'] = ''
+        self.spartDict['date'] = ''
+        self.spartDict['individuals'] = {}
+        self.spartDict['spartitions'] = {}
+        self.spartDict['locations'] = {}
+        self.spartDict['location_synonyms'] = {}
         for event, element in self.tokenizer:
             token = self.translate(element.tag)
             if (event, token) == ('start', 'project_name'):
@@ -576,6 +582,8 @@ class SpartParserXML:
         _, attrs = self.processElement(element)
         spartitionNumber = str(len(self.spartDict['spartitions']) + 1)
         self.spartDict['spartitions'][spartitionNumber] = attrs
+        self.spartDict['spartitions'][spartitionNumber]['remarks'] = None
+        self.spartDict['spartitions'][spartitionNumber]['subsets'] = {}
         for event, element in self.tokenizer:
             token = self.translate(element.tag)
             if (event, token) == ('end', 'spartition'):
