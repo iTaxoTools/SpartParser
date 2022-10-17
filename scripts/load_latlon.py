@@ -20,7 +20,6 @@ extension = ''.join(path.suffixes)
 
 parser = {
     '.xml': Spart.fromXML,
-    '.dev.xml': Spart.fromXML_dev,
     '.spart': Spart.fromMatricial,
 }[extension]
 

@@ -26,7 +26,7 @@ class Spart:
     @classmethod
     def fromMatricial(cls, path: Path) -> Spart:
         """Parse a matricial spart file and return a Spart instance"""
-        parser = SpartParserRegular(str(path))
+        parser = SpartParserMatricial(str(path))
         spartDict = parser.generateData()
         return cls(spartDict)
 
@@ -45,76 +45,10 @@ class Spart:
         else:
             return cls.fromMatricial(path)
 
-    def toXML_dev(self, path: Path) -> None:
-        writer = SpartWriterXML()
-        writer.toPath(self, path)
-
     def toXML(self, path: Path) -> None:
         """Convert Spart instance to XML file"""
-        root = ET.Element("root")
-        project_name = ET.SubElement(root, 'project_name').text = self.spartDict['project_name']
-        date = ET.SubElement(root, 'date').text = self.spartDict['date']
-
-        #Write Individuals to xml
-        individuals = ET.SubElement(root, "individuals")
-        for individual, data in self.spartDict['individuals'].items():
-            ET.SubElement(individuals, "individual", id=individual, attrib=data)
-
-        #Write Spartitions to xml
-        spartitions = ET.SubElement(root, "spartitions")
-        spartitionTags = {}
-        spartitionsKeys = {'spartition_score': 'spartitionScore', 'spartition_score_type': 'spartitionScoreType',
-                           'individual_score_type': 'individualScoreType', 'subset_score_type': 'subsetScoreType'}
-        for spartition, data in self.spartDict['spartitions'].items():
-            for tag, val in data.items():
-                if tag == 'subsets' or tag == 'concordances':
-                    continue
-                else:
-                    if tag in spartitionsKeys:
-                        tag = spartitionsKeys[tag]
-                    if val:
-                        spartitionTags[tag] = str(val)
-
-            spartitionET = ET.SubElement(spartitions, "spartition", attrib=spartitionTags)
-            spartitionTags = {}
-            remark = ET.SubElement(spartitionET, "remarks")
-            if not checkKey(self.spartDict['spartitions'][spartition], 'remarks'):
-                remark.text = n2w(int(spartition)) + ' spartition'
-            else:
-                remark.text = self.spartDict['spartitions'][spartition]['remarks']
-            subsetsET = ET.SubElement(spartitionET, "subsets")
-            subsetTags = {}
-            subIndividualTags = {}
-            #Subsets/subset
-            for subsetNum, val in data['subsets'].items():
-                subsetTags['label'] = subsetNum
-                for key, val in data['subsets'][subsetNum].items():
-                    if key != 'individuals':
-                        if val:
-                            subsetTags[key] = str(val)
-
-                subsetET = ET.SubElement(subsetsET, "subset", attrib=subsetTags)
-                subsetTags = {}
-                #Subsets/subset/individual
-                if subsetNum.isnumeric():
-                    for indi, val in data['subsets'][subsetNum]['individuals'].items():
-                        subIndividualTags['ref'] = indi
-                        if data['subsets'][subsetNum]['individuals'][indi]:
-                            for k, v in data['subsets'][subsetNum]['individuals'][indi].items():
-                                if v:
-                                    subIndividualTags[k] = str(v)
-
-                        subindividualET = ET.SubElement(subsetET, "individual", attrib=subIndividualTags)
-                        subsetTags = {}
-
-        #Write latlon  to xml
-
-        #Write Sequences to xml
-
-        #Create XML file
-        xmlstr = minidom.parseString(ET.tostring(root)).toprettyxml(indent="   ")
-        with open(path, "w") as f:
-            f.write(xmlstr)
+        writer = SpartWriterXML()
+        writer.toPath(self, path)
 
     def toMatricial(self, path: Path) -> None:
         """Convert Spart instance to matricial spart file"""
@@ -474,123 +408,6 @@ class Spart:
                 return spartition
         return None
 
-#DEPRICATED USE SpartParserXML
-class SpartParser:
-
-    def __init__(self, spartFile):
-        self.spartFile = spartFile
-        self.spartDict = {}
-        self.tree = ET.parse(self.spartFile)
-        self.root = self.tree.getroot()
-
-    def getProjectinfo(self):
-        self.spartDict["project_name"] = self.root.find("project_name").text
-        self.spartDict["date"] = self.root.find("date").text
-
-    def getIndividuals(self):
-        individuals = {}
-        for individual in self.root.findall('individuals/individual'):
-            id = individual.get('id')
-            individuals[id] = without_keys(individual.attrib, "id")
-        self.spartDict['individuals'] = individuals
-
-    def getSequences(self):
-        sequences = {}
-        for individual in self.root.findall('sequences/sequence'):
-            id = individual.find('notes').attrib['individual']
-            bank_accession = individual.find('genbank_accession')
-            markercode = individual.find('markercode')
-            nucleotides = individual.find('nucleotides')
-            sequences[id] = {}
-            sequences[id]['genbank_accession'] = bank_accession.text
-            sequences[id]['markercode'] = markercode.text
-            sequences[id]['nucleotides'] = nucleotides.text
-        self.spartDict['sequences'] = sequences
-
-    def getLatLon(self):
-        latlon = {}
-        for individual in self.root.findall('latlon/coordinates'):
-            id = individual.attrib['locality']
-            latlon[id] = without_keys(individual.attrib, "locality")
-        self.spartDict['latlon'] = latlon
-
-    def getSpartitions(self):
-        spartitionsTags = {'spartitionScore' : 'spartition_score', 'spartitionScoreType': 'spartition_score_type', 'individualScoreType' : 'individual_score_type', 'subsetScoreType': 'subset_score_type'}
-        spartitions = {}
-        spartition_num = 1
-        for spartition in self.root.findall('spartitions/spartition'):
-            remarks = spartition.find('remarks')
-            spartition_dict = {}
-            spartition_dict['remarks'] = remarks.text
-            spartition_dict['subsets'] = {}
-            spartition_dict['concordances']= {}
-            spartition_dict['concordances']['concordance'] = {}
-
-            for index, val in spartition.attrib.items():
-                if checkKey(spartitionsTags, index):
-                    if index == 'spartitionScore':
-                        val = float(val)
-                    spartition_dict[spartitionsTags[index]] = val
-                else:
-                    spartition_dict[index] = val
-
-            for subset in spartition.findall('subsets/subset'):
-                subset_dict = {}
-                subset_dict['individuals'] = {}
-
-                #Subset
-                for index, val in subset.attrib.items():
-                    if index == 'label':
-                        continue
-                    if index =='score':
-                        val = float(val)
-                    subset_dict[index] = val
-
-                #Subset individuals
-                for individual in subset.findall('individual'):
-                    individual_dict = {}
-                    for index, val in individual.attrib.items():
-                        if index == 'ref':
-                            continue
-                        if index == 'score':
-                            val = float(val)
-                        individual_dict[index] = val
-
-                    individual_id = individual.get('ref')
-                    subset_dict['individuals'][individual_id] = individual_dict
-
-                label = subset.get('label')
-                spartition_dict['subsets'][label] = subset_dict
-
-            for concordances in spartition.findall('concordances/concordance'):
-                label = concordances.attrib['label']
-                spartition_dict['concordances']['concordance'][label] = {}
-                date = concordances.find('date')
-                concordantsubsets = concordances.findall('concordantsubsets')
-                spartition_dict['concordances']['concordance'][label]['date'] = date.text
-                spartition_dict['concordances']['concordance'][label]['concordantsubsets'] = []
-                for index, val in concordances.attrib.items():
-                    if index == 'label':
-                        continue
-                    spartition_dict['concordances']['concordance'][label][index] = val
-
-                for subset in concordantsubsets:
-                    spartition_dict['concordances']['concordance'][label]['concordantsubsets'].append(subset.attrib['subsetnumber'])
-
-            spartitions[str(spartition_num)] = spartition_dict
-            spartition_num += 1
-
-        self.spartDict['spartitions'] = spartitions
-        return spartitions
-
-    def generateData(self):
-        self.getProjectinfo()
-        self.getIndividuals()
-        self.getSpartitions()
-        self.getLatLon()
-        self.getSequences()
-        return self.spartDict
-
 
 class SpartParserXML:
 
@@ -744,7 +561,7 @@ class SpartParserXML:
         return elementDict
 
 
-class SpartParserRegular:
+class SpartParserMatricial:
 
     def __init__(self, fileName):
         self.fileName = fileName

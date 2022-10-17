@@ -161,13 +161,13 @@ def spart_scores_type():
     return spart
 
 test_data = [
-    WriteTest('simple.xml', Spart.toXML_dev, spart_simple),
+    WriteTest('simple.xml', Spart.toXML, spart_simple),
     WriteTest('simple.spart', Spart.toMatricial, spart_simple),
-    WriteTest('tagged.xml', Spart.toXML_dev, spart_tagged),
+    WriteTest('tagged.xml', Spart.toXML, spart_tagged),
     WriteTest('scores.spart', Spart.toMatricial, spart_scores),
-    WriteTest('scores.xml', Spart.toXML_dev, spart_scores),
+    WriteTest('scores.xml', Spart.toXML, spart_scores),
     WriteTest('scores_type.spart', Spart.toMatricial, spart_scores_type),
-    WriteTest('scores_type.xml', Spart.toXML_dev, spart_scores_type),
+    WriteTest('scores_type.xml', Spart.toXML, spart_scores_type),
     ]
 
 
