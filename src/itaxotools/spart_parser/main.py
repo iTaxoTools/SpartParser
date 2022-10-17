@@ -80,38 +80,38 @@ class Spart:
                 #label
                 if checkKey(self.spartDict['spartitions'][str(spNum)], 'label'):
                     #spartition_score
-                    if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartition_score'):
+                    if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartitionScore'):
                         n_spartition += self.spartDict['spartitions'][str(spNum)]['label'] + ', '
-                        if not self.spartDict['spartitions'][str(spNum)]['spartition_score'] is None:
-                            n_spartition += f"{str(self.spartDict['spartitions'][str(spNum)]['spartition_score'])}  / "
+                        if not self.spartDict['spartitions'][str(spNum)]['spartitionScore'] is None:
+                            n_spartition += f"{str(self.spartDict['spartitions'][str(spNum)]['spartitionScore'])}  / "
                         else:
                             n_spartition += "? / "
                     else:
                         n_spartition += self.spartDict['spartitions'][str(spNum)]['label'] + ' / '
                 #subset_score_type
 
-                if checkKey(self.spartDict['spartitions'][str(spNum)], 'subset_score_type'):
+                if checkKey(self.spartDict['spartitions'][str(spNum)], 'subsetScoreType'):
                     hasSubset_score_type = True
-                    if self.spartDict['spartitions'][str(spNum)]['subset_score_type']:
-                        subset_score_type += self.spartDict['spartitions'][str(spNum)]['subset_score_type'] +' / '
+                    if self.spartDict['spartitions'][str(spNum)]['subsetScoreType']:
+                        subset_score_type += self.spartDict['spartitions'][str(spNum)]['subsetScoreType'] +' / '
                 else:
                     if hasSubset_score_type:
                         subset_score_type += '? / '
                 #spartition_score_type
-                if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartition_score_type'):
+                if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartitionScoreType'):
                     hasSpartition_score_type = True
-                    if self.spartDict['spartitions'][str(spNum)]['spartition_score_type']:
-                        spartition_score_type += self.spartDict['spartitions'][str(spNum)]['spartition_score_type'] +' / '
+                    if self.spartDict['spartitions'][str(spNum)]['spartitionScoreType']:
+                        spartition_score_type += self.spartDict['spartitions'][str(spNum)]['spartitionScoreType'] +' / '
                 else:
                     if hasSpartition_score_type:
                         spartition_score_type += '? / '
 
                 #individual_score_type
                 # spartition_score_type
-                if checkKey(self.spartDict['spartitions'][str(spNum)], 'individual_score_type'):
+                if checkKey(self.spartDict['spartitions'][str(spNum)], 'individualScoreType'):
                     hasIndividual_score_type = True
-                    if self.spartDict['spartitions'][str(spNum)]['individual_score_type']:
-                        individual_score_type += self.spartDict['spartitions'][str(spNum)]['individual_score_type'] + ' / '
+                    if self.spartDict['spartitions'][str(spNum)]['individualScoreType']:
+                        individual_score_type += self.spartDict['spartitions'][str(spNum)]['individualScoreType'] + ' / '
                 else:
                     if hasIndividual_score_type:
                         individual_score_type += '? / '
@@ -199,26 +199,26 @@ class Spart:
     def addSpartition(self, label: str, remarks: str = None, **kwargs) -> None:
         """Add a new spartition. Extra information (score, type etc.)
         is passed as keyword arguments."""
-        spartitionsTags = {'spartitionScore': 'spartition_score',
-                           'spartitionScoreType': 'spartition_score_type',
-                           'individualScoreType': 'individual_score_type',
-                           'subsetScoreType': 'subset_score_type'}
+        spartitionsTags = {'spartition_score': 'spartitionScore',
+                           'spartition_score_type': 'spartitionScoreType',
+                           'individual_score_type': 'individualScoreType',
+                           'subset_score_type': 'subsetScoreType'}
 
-        sparitionNumber = len(self.spartDict['spartitions']) + 1
+        spartitionNumber = len(self.spartDict['spartitions']) + 1
 
-        self.spartDict['spartitions'][str(sparitionNumber)] = {}
-        self.spartDict['spartitions'][str(sparitionNumber)]['subsets'] = {}
-        self.spartDict['spartitions'][str(sparitionNumber)]['label'] = label
-        self.spartDict['spartitions'][str(sparitionNumber)]['remarks'] = remarks
+        self.spartDict['spartitions'][str(spartitionNumber)] = {}
+        self.spartDict['spartitions'][str(spartitionNumber)]['subsets'] = {}
+        self.spartDict['spartitions'][str(spartitionNumber)]['label'] = label
+        self.spartDict['spartitions'][str(spartitionNumber)]['remarks'] = remarks
 
-        for spNum in range(1, sparitionNumber):
-            if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartition_score'):
-                    self.spartDict['spartitions'][str(sparitionNumber)]['spartition_score'] = None
+        for spNum in range(1, spartitionNumber):
+            if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartitionScore'):
+                self.spartDict['spartitions'][str(spartitionNumber)]['spartitionScore'] = None
 
         for k, v in kwargs.items():
             if k in spartitionsTags:
                 k = spartitionsTags[k]
-            self.spartDict['spartitions'][str(sparitionNumber)][k] = v
+            self.spartDict['spartitions'][str(spartitionNumber)][k] = v
 
     def addSubset(self, spartition: str, subsetLabel: str, **kwargs) -> None:
         """Add a new subset to the given spartition. Extra information
@@ -268,11 +268,11 @@ class Spart:
     def getIndividualLatlon(self, id: str) -> tuple[float, float] or None:
         """Returns latlons information about the given individual id"""
         if checkKey(self.spartDict['individuals'], id):
-            if checkKey(self.spartDict['individuals'][id], 'latitude') and checkKey(self.spartDict['individuals'][id], 'longitude'):
-                return (self.spartDict['individuals'][id]['latitude'], self.spartDict['individuals'][id]['longitude'])
+            if checkKey(self.spartDict['individuals'][id], 'decimalLatitude') and checkKey(self.spartDict['individuals'][id], 'decimalLongitude'):
+                return (self.spartDict['individuals'][id]['decimalLatitude'], self.spartDict['individuals'][id]['decimalLongitude'])
             if checkKey(self.spartDict['individuals'][id], 'locality'):
                 locality = self.getLocationData(self.spartDict['individuals'][id]['locality'])
-                return (locality['latitude'], locality['longitude'])
+                return (locality['decimalLatitude'], locality['decimalLongitude'])
         return None
 
     def getIndividualTypes(self, id: str) -> iter[str]:
@@ -374,7 +374,7 @@ class Spart:
 
     def getSpartitionScore(self, spartitionLabel: str) -> float:
         spartition = self.getSpartitionFromLabel(spartitionLabel)
-        score = spartition.get('spartition_score')
+        score = spartition.get('spartitionScore')
         return score
 
     def getSubsetScore(self, spartition: str, subset: str) -> float:
@@ -386,15 +386,15 @@ class Spart:
 
     def getSpartitionScoreType(self, spartitionLabel: str) -> str:
         spartition = self.getSpartitionFromLabel(spartitionLabel)
-        scoreType = spartition.get('spartition_score_type')
+        scoreType = spartition.get('spartitionScoreType')
         return scoreType
 
     def getSubsetScoreType(self, spartition: str) -> str:
-        suScore = self.getSpartitionFromLabel(spartition).get('subset_score_type')
+        suScore = self.getSpartitionFromLabel(spartition).get('subsetScoreType')
         return suScore
 
     def getSubsetIndividualScoreType(self, spartition: str) -> str:
-        return self.getSpartitionFromLabel(spartition).get('individual_score_type')
+        return self.getSpartitionFromLabel(spartition).get('individualScoreType')
 
     @property
     def project_name(self) -> str:
@@ -424,6 +424,79 @@ class Spart:
 
 class SpartParserXML:
 
+    castMap = {
+        'decimalLatitude': float,
+        'decimalLongitude': float,
+        'elevation': float,
+        'measurementAccuracy': int,
+        'elevationAccuracy': int,
+        'spartitionScore': float,
+        'score': float,
+    }
+
+    keyMap = {
+        'project_name': [],
+        'date': [],
+
+        'individuals': [],
+        'individual': [],
+        'id': [],
+        'locality': [],
+        'decimalLatitude': ['latitude', 'lat'],
+        'decimalLongitude': ['longitude', 'lon'],
+        'elevation': ['altitude', 'alt'],
+        'measurementAccuracy': [],
+        'elevationAccuracy': [],
+
+        'type': [],
+        'status': [],
+        'nameBearingStatus': [],
+        'namePublishedInYear': [],
+        'scientificNameAuthorship': [],
+        'originalNameUsage': [],
+        'verbatimTypeLocality': [],
+
+        'spartitions': [],
+        'spartition': [],
+        'label': [],
+        'spartitionScore': [],
+        'spartitionScoreType': [],
+        'subsetScoreType': [],
+        'subsetScoreSource': [],
+        'individualScoreType': [],
+        'individualScoreSource': [],
+        'remarks': [],
+
+        'subsets': [],
+        'subset': [],
+        'ref': [],
+
+        'locations': [],
+        'coordinates': [],
+        'synonyms': ['synonym'],
+    }
+
+    keyMapInverse = {
+        synonym.lower(): key
+        for key, synonyms in keyMap.items()
+        for synonym in synonyms + [key.lower()]
+        }
+
+    @classmethod
+    def translate(cls, key: str):
+        return cls.keyMapInverse.get(key.lower(), key)
+
+    @classmethod
+    def cast(cls, key: str, value):
+        return cls.castMap.get(key, str)(value)
+
+    @classmethod
+    def processElement(cls, element: ET.Element, key: str = None):
+        attributes = {cls.translate(k): v for k, v in element.attrib.items()}
+        attributes = {k: cls.cast(k, v) for k, v in attributes.items()}
+        keyValue = attributes.pop(key, None)
+        return keyValue, attributes
+
     def __init__(self, spartFile):
         self.spartFile = spartFile
         self.spartDict = {}
@@ -435,7 +508,7 @@ class SpartParserXML:
 
     def parseRoot(self):
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('start', 'project_name'):
                 self.parseProjectName(element)
             if (event, token) == ('start', 'date'):
@@ -459,90 +532,86 @@ class SpartParserXML:
     def parseIndividuals(self):
         self.spartDict['individuals'] = {}
         for event, element in self.tokenizer:
-            token = element.tag.lower()
-            if (event, token.lower()) == ('end', 'individuals'):
+            token = self.translate(element.tag)
+            if (event, self.translate(token)) == ('end', 'individuals'):
                 break
             elif (event, token) == ('start', 'individual'):
                 self.parseIndividual(element)
             element.clear()
 
-    def parseIndividual(self, elem):
-        element_lower = {k.lower():v for k,v in elem.attrib.items()}
-        id = element_lower.get('id')
-        elementDict = self.mapKeys(elem, 'id')
-        self.spartDict['individuals'][id] = elementDict
+    def parseIndividual(self, element):
+        id, attrs = self.processElement(element, 'id')
+        self.spartDict['individuals'][id] = attrs
         self.spartDict['individuals'][id]['types'] = {}
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('end', 'individual'):
                 break
             elif (event, token) == ('start', 'type'):
                 self.parseIndividualType(element, id)
             element.clear()
 
-    def parseIndividualType(self, element, id):
-        element_lower = {k.lower(): v for k, v in element.attrib.items()}
-        status = element_lower.get('status')
-        self.spartDict['individuals'][id]['types'][status] = self.mapKeys(element, 'status')
+    def parseIndividualType(self, element, id: str):
+        status, attrs = self.processElement(element, 'status')
+        self.spartDict['individuals'][id]['types'][status] = attrs
 
     def parseSpartitions(self):
         self.spartDict['spartitions'] = {}
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('end', 'spartitions'):
                 break
             elif (event, token) == ('start', 'spartition'):
                 self.parseSpartition(element)
             element.clear()
 
-    def parseSpartition(self, elem):
-        sparitionNumber = str(len(self.spartDict['spartitions']) + 1)
-        self.spartDict['spartitions'][sparitionNumber] = self.mapKeys(elem, ' ')
+    def parseSpartition(self, element):
+        _, attrs = self.processElement(element)
+        spartitionNumber = str(len(self.spartDict['spartitions']) + 1)
+        self.spartDict['spartitions'][spartitionNumber] = attrs
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('end', 'spartition'):
                 break
             if (event, token) == ('start', 'remarks'):
-                self.parseRemark(element, sparitionNumber)
+                self.parseRemark(element, spartitionNumber)
             if (event, token) == ('start', 'subsets'):
-                self.parseSubsets(sparitionNumber)
+                self.parseSubsets(spartitionNumber)
             element.clear()
 
-    def parseSubsets(self, sparitionNumber):
-        self.spartDict['spartitions'][sparitionNumber]['subsets'] = {}
+    def parseSubsets(self, spartition):
+        self.spartDict['spartitions'][spartition]['subsets'] = {}
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('end', 'subsets'):
                 break
             elif (event, token) == ('start', 'subset'):
-                self.parseSubset(element, sparitionNumber)
+                self.parseSubset(element, spartition)
             element.clear()
 
-    def parseSubset(self, elem, sparitionNumber):
-        subsetNumber = elem.get('label')
-        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber] = self.mapKeys(elem, 'label')
-        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber]['individuals'] = {}
+    def parseSubset(self, element, spartition):
+        label, attrs = self.processElement(element, 'label')
+        self.spartDict['spartitions'][spartition]['subsets'][label] = attrs
+        self.spartDict['spartitions'][spartition]['subsets'][label]['individuals'] = {}
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('end', 'subset'):
                 break
             elif (event, token) == ('start', 'individual'):
-                self.parseSubsetIndividual(element, sparitionNumber, subsetNumber)
+                self.parseSubsetIndividual(element, spartition, label)
             element.clear()
 
-    def parseSubsetIndividual(self, element, sparitionNumber, subsetNumber):
-        element_lower = {k.lower(): v for k, v in element.attrib.items()}
-        id = element_lower.get('ref')
-        elementDict = self.mapKeys(element, 'ref')
-        self.spartDict['spartitions'][sparitionNumber]['subsets'][subsetNumber]['individuals'][id] = elementDict
+    def parseSubsetIndividual(self, element, spartition, subset):
+        ref, attrs = self.processElement(element, 'ref')
+        self.spartDict['spartitions'][spartition]['subsets'][subset]['individuals'][ref] = attrs
 
-    def parseRemark(self, element, sparitionNumber):
-        self.spartDict['spartitions'][sparitionNumber]['remarks'] = element.text
+    def parseRemark(self, element, spartition):
+        self.spartDict['spartitions'][spartition]['remarks'] = element.text
 
     def parseLocations(self):
         self.spartDict['locations'] = {}
         for event, element in self.tokenizer:
-            token = element.tag.lower()
+            token = self.translate(element.tag)
             if (event, token) == ('end', 'locations'):
                 break
             elif (event, token) == ('start', 'coordinates'):
@@ -550,28 +619,11 @@ class SpartParserXML:
             element.clear()
 
     def parseCoordinates(self, element):
-        element_lower = {k.lower(): v for k, v in element.attrib.items()}
-        id = element_lower.get('locality')
-        elementDict = self.mapKeys(element, 'locality')
-
-        synonyms = elementDict.get('synonyms','').split(';')
+        id, attrs = self.processElement(element, 'locality')
+        synonyms = attrs.get('synonyms','').split(';')
         for synonym in synonyms:
-            if synonym:
-                self.spartDict['locations'][synonym] = elementDict
-        self.spartDict['locations'][id] = elementDict
-
-    def mapKeys(self, element, id):
-        mappingsDict = {'alt': 'altitude', 'lat': 'latitude', 'lon': 'longitude', 'synonym': 'synonyms', 'decimallatitude': 'latitude', 'decimallongitude' : 'longitude', 'elevation': 'altitude',
-                        'subsetscoretype' : 'subset_score_type', 'spartitionscoretype' : 'spartition_score_type', 'individualscoretype' : 'individual_score_type', 'spartitionscore' : 'spartition_score'}
-        elementDict = {}
-        for key, val in without_keys(element.attrib, id).items():
-            key = key.lower()
-            if key in mappingsDict:
-                key = mappingsDict[key]
-            if key in ['altitude', 'longitude', 'latitude', 'spartition_score', 'score', 'measurementaccuracy', 'elevationaccuracy']:
-                val = float(val)
-            elementDict[key] = val
-        return elementDict
+            self.spartDict['locations'][synonym] = attrs
+        self.spartDict['locations'][id] = attrs
 
 
 class SpartParserMatricial:
@@ -731,28 +783,28 @@ class SpartParserMatricial:
             #score types
             if not len(subset_score_type_list) < 1:
                 if subset_score_type_list[spartion-1].strip() == '?':
-                    self.spartDict['spartitions'][spartionNumber]['subset_score_type'] = None
+                    self.spartDict['spartitions'][spartionNumber]['subsetScoreType'] = None
                 else:
-                    self.spartDict['spartitions'][spartionNumber]['subset_score_type'] = subset_score_type_list[spartion-1].strip()
+                    self.spartDict['spartitions'][spartionNumber]['subsetScoreType'] = subset_score_type_list[spartion-1].strip()
 
             if not len(spartition_score_type_list) < 1:
                 if spartition_score_type_list[spartion-1].strip() == '?':
-                    self.spartDict['spartitions'][spartionNumber]['spartition_score_type'] = None
+                    self.spartDict['spartitions'][spartionNumber]['spartitionScoreType'] = None
                 else:
-                    self.spartDict['spartitions'][spartionNumber]['spartition_score_type'] = spartition_score_type_list[spartion-1].strip()
+                    self.spartDict['spartitions'][spartionNumber]['spartitionScoreType'] = spartition_score_type_list[spartion-1].strip()
 
             if not len(individual_score_type_list) < 1:
                 if individual_score_type_list[spartion-1].strip() == '?':
-                    self.spartDict['spartitions'][spartionNumber]['individual_score_type'] = None
+                    self.spartDict['spartitions'][spartionNumber]['individualScoreType'] = None
                 else:
-                    self.spartDict['spartitions'][spartionNumber]['individual_score_type'] = individual_score_type_list[spartion-1].strip()
+                    self.spartDict['spartitions'][spartionNumber]['individualScoreType'] = individual_score_type_list[spartion-1].strip()
 
             #spartition score
 
             if spartionLabel[-1].strip() == '?':
-                self.spartDict['spartitions'][spartionNumber]['spartition_score'] = None
+                self.spartDict['spartitions'][spartionNumber]['spartitionScore'] = None
             elif len(spartionLabel) > 1:
-                self.spartDict['spartitions'][spartionNumber]['spartition_score'] = float(spartionLabel[1].strip())
+                self.spartDict['spartitions'][spartionNumber]['spartitionScore'] = float(spartionLabel[1].strip())
 
             count = 0
             #create subsets

@@ -302,6 +302,7 @@ def spart_scores_type(spart: Spart):
     assert 'spartition_1' in spartitions
     assert 'spartition_2' in spartitions
     assert 'spartition_3' in spartitions
+    print(spart.spartDict['spartitions']['1'].keys())
     assert spart.getSubsetScoreType('spartition_1') == 'subset_score_1'
     assert spart.getSpartitionScoreType('spartition_1') == 'spartition_score_1'
     assert spart.getSubsetIndividualScoreType('spartition_1') == 'individual_score_1'
@@ -330,23 +331,23 @@ def spart_latlon(spart: Spart):
     assert spart.getIndividualData('individual_4')['locality'] == 'locality_2_1'
     assert spart.getIndividualData('individual_5')['locality'] == 'locality_3_1'
 
-    assert spart.getIndividualData('individual_1')['latitude'] == 1.1
-    assert spart.getIndividualData('individual_2')['latitude'] == 2.2
-    assert spart.getIndividualData('individual_6')['latitude'] == 6.1
-    assert spart.getIndividualData('individual_7')['latitude'] == 7.1
+    assert spart.getIndividualData('individual_1')['decimalLatitude'] == 1.1
+    assert spart.getIndividualData('individual_2')['decimalLatitude'] == 2.2
+    assert spart.getIndividualData('individual_6')['decimalLatitude'] == 6.1
+    assert spart.getIndividualData('individual_7')['decimalLatitude'] == 7.1
 
-    assert spart.getIndividualData('individual_1')['longitude'] == 1.2
-    assert spart.getIndividualData('individual_2')['longitude'] == 2.3
-    assert spart.getIndividualData('individual_6')['longitude'] == 6.2
-    assert spart.getIndividualData('individual_7')['longitude'] == 7.2
+    assert spart.getIndividualData('individual_1')['decimalLongitude'] == 1.2
+    assert spart.getIndividualData('individual_2')['decimalLongitude'] == 2.3
+    assert spart.getIndividualData('individual_6')['decimalLongitude'] == 6.2
+    assert spart.getIndividualData('individual_7')['decimalLongitude'] == 7.2
 
-    assert spart.getIndividualData('individual_1')['altitude'] == 1.3
-    assert spart.getIndividualData('individual_2')['altitude'] == 2.1
-    assert spart.getIndividualData('individual_6')['altitude'] == 6.3
-    assert spart.getIndividualData('individual_7')['altitude'] == 7.3
+    assert spart.getIndividualData('individual_1')['elevation'] == 1.3
+    assert spart.getIndividualData('individual_2')['elevation'] == 2.1
+    assert spart.getIndividualData('individual_6')['elevation'] == 6.3
+    assert spart.getIndividualData('individual_7')['elevation'] == 7.3
 
-    assert spart.getIndividualData('individual_6')['measurementaccuracy'] == 100
-    assert spart.getIndividualData('individual_6')['elevationaccuracy'] == 10
+    assert spart.getIndividualData('individual_6')['measurementAccuracy'] == 100
+    assert spart.getIndividualData('individual_6')['elevationAccuracy'] == 10
 
 
     locations = set(spart.getLocations())
@@ -354,23 +355,23 @@ def spart_latlon(spart: Spart):
     assert 'locality_2' in locations
     assert 'locality_3' in locations
 
-    assert spart.getLocationData('locality_1')['latitude'] == 11.1
-    assert spart.getLocationData('locality_2')['latitude'] == 22.1
-    assert spart.getLocationData('locality_3')['latitude'] == 33.1
-    assert spart.getLocationData('locality_4')['latitude'] == 44.1
+    assert spart.getLocationData('locality_1')['decimalLatitude'] == 11.1
+    assert spart.getLocationData('locality_2')['decimalLatitude'] == 22.1
+    assert spart.getLocationData('locality_3')['decimalLatitude'] == 33.1
+    assert spart.getLocationData('locality_4')['decimalLatitude'] == 44.1
 
-    assert spart.getLocationData('locality_1')['longitude'] == 11.2
-    assert spart.getLocationData('locality_2')['longitude'] == 22.2
-    assert spart.getLocationData('locality_3')['longitude'] == 33.2
-    assert spart.getLocationData('locality_4')['longitude'] == 44.2
+    assert spart.getLocationData('locality_1')['decimalLongitude'] == 11.2
+    assert spart.getLocationData('locality_2')['decimalLongitude'] == 22.2
+    assert spart.getLocationData('locality_3')['decimalLongitude'] == 33.2
+    assert spart.getLocationData('locality_4')['decimalLongitude'] == 44.2
 
-    assert spart.getLocationData('locality_1')['altitude'] == 11.3
-    assert spart.getLocationData('locality_2')['altitude'] == 22.3
-    assert spart.getLocationData('locality_3')['altitude'] == 33.3
-    assert spart.getLocationData('locality_4')['altitude'] == 44.3
+    assert spart.getLocationData('locality_1')['elevation'] == 11.3
+    assert spart.getLocationData('locality_2')['elevation'] == 22.3
+    assert spart.getLocationData('locality_3')['elevation'] == 33.3
+    assert spart.getLocationData('locality_4')['elevation'] == 44.3
 
-    assert spart.getLocationData('locality_1')['measurementaccuracy'] == 100
-    assert spart.getLocationData('locality_1')['elevationaccuracy'] == 10
+    assert spart.getLocationData('locality_1')['measurementAccuracy'] == 100
+    assert spart.getLocationData('locality_1')['elevationAccuracy'] == 10
 
 
     assert spart.getIndividualLatlon('individual_1') == (1.1, 1.2)
@@ -394,11 +395,11 @@ def spart_types(spart: Spart):
     assert 'Holotype' in types
 
     type = spart.getIndividualTypeData('aura_ZCMV1234', 'Holotype')
-    assert type['namebearingstatus'] == 'Yes'
-    assert type['namepublishedinyear'] == '1889'
-    assert type['scientificnameauthorship'] == 'Boulenger'
-    assert type['originalnameusage'] == 'Dendrobates aurantiacus'
-    assert type['verbatimtypelocality'] == 'Perinet'
+    assert type['nameBearingStatus'] == 'Yes'
+    assert type['namePublishedInYear'] == '1889'
+    assert type['scientificNameAuthorship'] == 'Boulenger'
+    assert type['originalNameUsage'] == 'Dendrobates aurantiacus'
+    assert type['verbatimTypeLocality'] == 'Perinet'
 
     types = set(spart.getIndividualTypes('crocea_ZCMV235'))
     assert len(types) == 2
@@ -406,17 +407,17 @@ def spart_types(spart: Spart):
     assert 'Neotype' in types
 
     type = spart.getIndividualTypeData('crocea_ZCMV235', 'Paratype')
-    assert type['namebearingstatus'] == 'No'
-    assert type['namepublishedinyear'] == '1889'
-    assert type['scientificnameauthorship'] == 'Boulenger'
-    assert type['originalnameusage'] == 'Dendrobates aurantiacus'
-    assert type['verbatimtypelocality'] == 'Torotorofotsy'
+    assert type['nameBearingStatus'] == 'No'
+    assert type['namePublishedInYear'] == '1889'
+    assert type['scientificNameAuthorship'] == 'Boulenger'
+    assert type['originalNameUsage'] == 'Dendrobates aurantiacus'
+    assert type['verbatimTypeLocality'] == 'Torotorofotsy'
 
     type = spart.getIndividualTypeData('crocea_ZCMV235', 'Neotype')
-    assert type['namebearingstatus'] == 'Yes'
-    assert type['namepublishedinyear'] == '2023'
-    assert type['scientificnameauthorship'] == 'Vences'
-    assert type['originalnameusage'] == 'Mantella inexistens'
+    assert type['nameBearingStatus'] == 'Yes'
+    assert type['namePublishedInYear'] == '2023'
+    assert type['scientificNameAuthorship'] == 'Vences'
+    assert type['originalNameUsage'] == 'Mantella inexistens'
 
     data = spart.getIndividualData('aura_ZCMV1234')
     assert len(data) == 2
