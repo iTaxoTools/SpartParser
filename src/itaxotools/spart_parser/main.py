@@ -240,6 +240,13 @@ class Spart:
         spartition['subsets'][subsetLabel]['individuals'][individual] = {}
         spartition['subsets'][subsetLabel]['individuals'][individual] = kwargs
 
+    def addLocation(self, locality: str, synonyms: list[str] = [], **kwargs) -> None:
+        """Add a new location. Extra information (latitude, longitude etc.)
+        is passed as keyword arguments."""
+        self.spartDict['locations'][locality] = kwargs
+        for synonym in synonyms:
+            self.spartDict['locations'][synonym] = kwargs
+
     def getIndividuals(self) -> list[str]:
         """Returns a list with the ids of each individual"""
         individuals_list = []
@@ -396,7 +403,9 @@ class Spart:
     @property
     def date(self) -> datetime:
         string = self.spartDict['date']
-        return datetime.fromisoformat(string)
+        if string:
+            return datetime.fromisoformat(string)
+        return None
 
     @date.setter
     def date(self, date: datetime):
@@ -868,9 +877,11 @@ class SpartWriterXML:
 
     def writeProjectInfo(self):
         project_name = self.spart.project_name
-        self.handler.startEndElement('project_name', characters=project_name)
-        date = self.spart.date.isoformat()
-        self.handler.startEndElement('date', characters=date)
+        if project_name:
+            self.handler.startEndElement('project_name', characters=project_name)
+        date = self.spart.date
+        if date:
+            self.handler.startEndElement('date', characters=date.isoformat())
 
     def writeIndividuals(self):
         self.handler.startElement('individuals')
@@ -880,7 +891,7 @@ class SpartWriterXML:
 
     def writeIndividual(self, individual: str):
         data = self.spart.getIndividualData(individual)
-        data = {'id': individual, **data}
+        data = self.formatData(data, 'id', individual)
         types = self.spart.getIndividualTypes(individual)
         if not types:
             self.handler.startEndElement('individual', data)

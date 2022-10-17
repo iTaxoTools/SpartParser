@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<root>
+
+	<individuals>
+		<individual id="individual_1" decimalLatitude="1.1" decimalLongitude="1.2" elevation="1.3"
+			measurementAccuracy="100" elevationAccuracy="10"/>
+	</individuals>
+
+	<locations>
+		<coordinates locality="locality_1" decimalLatitude="11.1" decimalLongitude="11.2" elevation="11.3"
+			measurementAccuracy="100" elevationAccuracy="10" GCS="WGS84"/>
+	</locations>
+
+</root>

@@ -18,7 +18,7 @@ class WriteTest:
     output: str
     writer: Callable
     generator: Callable
-
+    case_sensitive: bool = True
 
 def spart_simple():
     spart = Spart()
@@ -84,6 +84,7 @@ def spart_tagged():
     spart.addSubsetIndividual('spartition_3', '1', 'individual_3', score="3.3")
 
     return spart
+
 
 def spart_scores():
     spart = Spart()
@@ -160,6 +161,32 @@ def spart_scores_type():
 
     return spart
 
+
+def spart_latlon():
+    spart = Spart()
+
+    spart.addIndividual(
+        'individual_1',
+        decimalLatitude=1.1,
+        decimalLongitude=1.2,
+        elevation=1.3,
+        measurementAccuracy=100,
+        elevationAccuracy=10,
+    )
+
+    spart.addLocation(
+        'locality_1',
+        decimalLatitude=11.1,
+        decimalLongitude=11.2,
+        elevation=11.3,
+        measurementAccuracy=100,
+        elevationAccuracy=10,
+        GCS='WGS84',
+    )
+
+    return spart
+
+
 test_data = [
     WriteTest('simple.xml', Spart.toXML, spart_simple),
     WriteTest('simple.spart', Spart.toMatricial, spart_simple),
@@ -168,6 +195,8 @@ test_data = [
     WriteTest('scores.xml', Spart.toXML, spart_scores),
     WriteTest('scores_type.spart', Spart.toMatricial, spart_scores_type),
     WriteTest('scores_type.xml', Spart.toXML, spart_scores_type),
+    WriteTest('latlon_written.xml', Spart.toXML, spart_latlon, case_sensitive=False),
+    # WriteTest('types.xml', Spart.toXML, spart_types),
     ]
 
 
@@ -177,4 +206,4 @@ def test_write(test: WriteTest, tmp_path: Path) -> None:
     test_path = tmp_path / test.output
     spart = test.generator()
     test.writer(spart, test_path)
-    assert_eq_files(test_path, output_path)
+    assert_eq_files(test_path, output_path, test.case_sensitive)
