@@ -258,7 +258,7 @@ class Spart:
         for key, val in kwargs.items():
             self.spartDict['individuals'][individualName][key] = val
 
-    def addSpartition(self, label: str, **kwargs) -> None:
+    def addSpartition(self, label: str, remarks: str = None, **kwargs) -> None:
         """Add a new spartition. Extra information (score, type etc.)
         is passed as keyword arguments."""
         spartitionsTags = {'spartitionScore': 'spartition_score',
@@ -271,7 +271,7 @@ class Spart:
         self.spartDict['spartitions'][str(sparitionNumber)] = {}
         self.spartDict['spartitions'][str(sparitionNumber)]['subsets'] = {}
         self.spartDict['spartitions'][str(sparitionNumber)]['label'] = label
-        self.spartDict['spartitions'][str(sparitionNumber)]['remarks'] = None
+        self.spartDict['spartitions'][str(sparitionNumber)]['remarks'] = remarks
 
         for spNum in range(1, sparitionNumber):
             if checkKey(self.spartDict['spartitions'][str(spNum)], 'spartition_score'):
@@ -748,7 +748,11 @@ class SpartParserRegular:
 
     def __init__(self, fileName):
         self.fileName = fileName
-        self.spartDict = {}
+        self.spartDict = {
+            'individuals': {},
+            'spartitions': {},
+            'locations': {},
+        }
         with open(fileName, 'r+') as f:
             self.spartFile = f.readlines()
         self.keysDict = {}
@@ -770,7 +774,7 @@ class SpartParserRegular:
             if date:
                 self.spartDict["date"] = date.group(1)
 
-    def getindividuals(self):
+    def getIndividuals(self):
         self.spartDict['individuals'] = {}
         #individuals
         startIndi = False
@@ -785,17 +789,17 @@ class SpartParserRegular:
                 break
             if startIndi and line.strip()[-1] == ';':
                 indi = line.strip().split(':')
-                self.spartDict['individuals'][indi[0].strip()] = {}
+                self.spartDict['individuals'][indi[0].strip()] = {'types': {}}
                 self.individualAssignments[indi[0].strip()] = indi[1][:-1].strip()
                 break
             elif startIndi:
                 indi = line.strip().split(':')
-                self.spartDict['individuals'][indi[0].strip()] = {}
+                self.spartDict['individuals'][indi[0].strip()] = {'types': {}}
                 self.individualAssignments[indi[0].strip()] = indi[1].strip()
 
         return self.spartDict
 
-    def getindividualScores(self):
+    def getIndividualScores(self):
         #individuals
         startIndi = False
         count = 0
@@ -886,13 +890,13 @@ class SpartParserRegular:
                     if individual_score_type_list[-1][-1] == ';':
                         individual_score_type_list[-1] = individual_score_type_list[-1][:-1]
 
-        if self.getindividualScores():
+        if self.getIndividualScores():
             individualScoresPresent = True
 
         for spartion in range(1,numOfspart+1):
             spartionNumber = str(spartion)     #n2w(spartion) + ' spartition'
             spartionLabel = spartList[spartion-1].strip().split(',')
-            self.spartDict['spartitions'][spartionNumber] = {'label' : spartionLabel[0]}
+            self.spartDict['spartitions'][spartionNumber] = {'label' : spartionLabel[0], 'remarks': None}
 
             #score types
             if not len(subset_score_type_list) < 1:
@@ -964,7 +968,7 @@ class SpartParserRegular:
     def generateData(self):
         self.getKeys()
         self.getProjectinfo()
-        self.getindividuals()
+        self.getIndividuals()
         self.getSpartitions()
         return self.spartDict
 
@@ -1017,6 +1021,14 @@ class PrettyXMLGenerator(XMLGenerator):
 
 
 class SpartWriterXML:
+
+    keyMap = {
+        'spartition_score': 'spartitionScore',
+        'spartition_score_type': 'spartitionScoreType',
+        'individual_score_type': 'individualScoreType',
+        'subset_score_type': 'subsetScoreType'
+    }
+
     def __init__(self):
         self.handler = None
         self.spart = None
@@ -1063,6 +1075,8 @@ class SpartWriterXML:
             self.handler.endElement('individual')
 
     def writeSpartitions(self):
+        if not any(self.spart.getSpartitions()):
+            return
         self.handler.startElement('spartitions')
         for spartition in self.spart.getSpartitions():
             self.writeSpartition(spartition)
@@ -1070,8 +1084,7 @@ class SpartWriterXML:
 
     def writeSpartition(self, spartition: str):
         data = self.spart.getSpartitionData(spartition)
-        data = {k: str(v) for k, v in data.items()}
-        data = {'label': spartition, **data}
+        data = self.formatData(data, 'label', spartition)
         remarks = self.spart.getSpartitionRemarks(spartition)
         self.handler.startElement('spartition', data)
         if remarks:
@@ -1081,6 +1094,8 @@ class SpartWriterXML:
         self.handler.endElement('spartition')
 
     def writeSubsets(self, spartition: str):
+        if not any(self.spart.getSpartitionSubsets(spartition)):
+            return
         self.handler.startElement('subsets')
         for subset in self.spart.getSpartitionSubsets(spartition):
             self.writeSubset(spartition, subset)
@@ -1088,13 +1103,11 @@ class SpartWriterXML:
 
     def writeSubset(self, spartition: str, subset: str):
         data = self.spart.getSubsetData(spartition, subset)
-        data = {k: str(v) for k, v in data.items()}
-        data = {'label': subset, **data}
+        data = self.formatData(data, 'label', subset)
         self.handler.startElement('subset', data)
         for individual in self.spart.getSubsetIndividuals(spartition, subset):
             individualData = self.spart.getSubsetIndividualData(spartition, subset, individual)
-            individualData = {k: str(v) for k, v in individualData.items()}
-            individualData = {'ref': individual, **individualData}
+            individualData = self.formatData(individualData, 'ref', individual)
             self.handler.startEndElement('individual', individualData)
         self.handler.endElement('subset')
 
@@ -1102,6 +1115,8 @@ class SpartWriterXML:
         ...
 
     def writeLocations(self):
+        if not any(self.spart.getLocations()):
+            return
         self.handler.startElement('locations')
         for location in self.spart.getLocations():
             self.writeLocation(location)
@@ -1109,9 +1124,12 @@ class SpartWriterXML:
 
     def writeLocation(self, location: str):
         data = self.spart.getLocationData(location)
-        data = {k: str(v) for k, v in data.items()}
-        data = {'locality': location, **data}
+        data = self.formatData(data, 'locality', location)
         self.handler.startEndElement('coordinates', data)
+
+    def formatData(self, data: dict, key: str, value: str):
+        data = {self.keyMap.get(k, k): str(v) for k, v in data.items() if v is not None}
+        return {key: value, **data}
 
 
 def n2w(n):

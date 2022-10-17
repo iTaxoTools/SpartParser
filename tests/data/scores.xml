@@ -9,7 +9,6 @@
    </individuals>
    <spartitions>
       <spartition label="spartition_1" spartitionScore="0.1">
-         <remarks>First spartition</remarks>
           <subsets>
             <subset label="1" score="1.1">
               <individual ref="individual_1" score="1.1"/>
@@ -23,7 +22,6 @@
           </subsets>
       </spartition>
       <spartition label="spartition_2" spartitionScore="0.2">
-         <remarks>Second spartition</remarks>
           <subsets>
             <subset label="1" score="2.1">
               <individual ref="individual_1" score="1.2"/>
@@ -35,7 +33,6 @@
           </subsets>
       </spartition>
       <spartition label="spartition_3">
-         <remarks>Third spartition</remarks>
           <subsets>
             <subset label="1" score="3.1">
               <individual ref="individual_1"/>

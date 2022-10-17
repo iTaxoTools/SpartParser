@@ -62,7 +62,7 @@ def spart_tagged():
     spart.addIndividual('individual_2', locality='B')
     spart.addIndividual('individual_3', locality='C')
 
-    spart.addSpartition('spartition_1', source='M')
+    spart.addSpartition('spartition_1', source='M', remarks='First spartition')
     spart.addSubset('spartition_1', '1', taxon='taxon_1_1')
     spart.addSubsetIndividual('spartition_1', '1', 'individual_1', score="1.1")
     spart.addSubset('spartition_1', '2', taxon='taxon_1_2')
@@ -70,14 +70,14 @@ def spart_tagged():
     spart.addSubset('spartition_1', '3', taxon='taxon_1_3')
     spart.addSubsetIndividual('spartition_1', '3', 'individual_3', score="1.3")
 
-    spart.addSpartition('spartition_2', source='N')
+    spart.addSpartition('spartition_2', source='N', remarks='Second spartition')
     spart.addSubset('spartition_2', '1', taxon='taxon_2_1')
     spart.addSubsetIndividual('spartition_2', '1', 'individual_1', score="2.1")
     spart.addSubsetIndividual('spartition_2', '1', 'individual_2', score="2.2")
     spart.addSubset('spartition_2', '2', taxon='taxon_2_2')
     spart.addSubsetIndividual('spartition_2', '2', 'individual_3', score="2.3")
 
-    spart.addSpartition('spartition_3', source='O')
+    spart.addSpartition('spartition_3', source='O', remarks='Third spartition')
     spart.addSubset('spartition_3', '1', taxon='taxon_3_1')
     spart.addSubsetIndividual('spartition_3', '1', 'individual_1', score="3.1")
     spart.addSubsetIndividual('spartition_3', '1', 'individual_2', score="3.2")
@@ -161,13 +161,13 @@ def spart_scores_type():
     return spart
 
 test_data = [
-    WriteTest('simple.xml', Spart.toXML, spart_simple),
+    WriteTest('simple.xml', Spart.toXML_dev, spart_simple),
     WriteTest('simple.spart', Spart.toMatricial, spart_simple),
-    WriteTest('tagged.xml', Spart.toXML, spart_tagged),
+    WriteTest('tagged.xml', Spart.toXML_dev, spart_tagged),
     WriteTest('scores.spart', Spart.toMatricial, spart_scores),
-    WriteTest('scores.xml', Spart.toXML, spart_scores),
+    WriteTest('scores.xml', Spart.toXML_dev, spart_scores),
     WriteTest('scores_type.spart', Spart.toMatricial, spart_scores_type),
-    WriteTest('scores_type.xml', Spart.toXML, spart_scores_type),
+    WriteTest('scores_type.xml', Spart.toXML_dev, spart_scores_type),
     ]
 
 
