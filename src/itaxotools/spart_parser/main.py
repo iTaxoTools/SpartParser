@@ -20,6 +20,7 @@ class Spart:
             self.spartDict['individuals'] = {}
             self.spartDict['spartitions'] = {}
             self.spartDict['locations'] = {}
+            self.spartDict['location_synonyms'] = {}
         else:
             self.spartDict = spartDict
 
@@ -249,7 +250,7 @@ class Spart:
         is passed as keyword arguments."""
         self.spartDict['locations'][locality] = kwargs
         for synonym in synonyms:
-            self.spartDict['locations'][synonym] = kwargs
+            self.spartDict['location_synonyms'][synonym] = locality
 
     def getIndividuals(self) -> list[str]:
         """Returns a list with the ids of each individual"""
@@ -265,15 +266,21 @@ class Spart:
             return without_keys(self.spartDict['individuals'][id], 'types')
         return {}
 
-    def getIndividualLatlon(self, id: str) -> tuple[float, float] or None:
-        """Returns latlons information about the given individual id"""
-        if checkKey(self.spartDict['individuals'], id):
-            if checkKey(self.spartDict['individuals'][id], 'decimalLatitude') and checkKey(self.spartDict['individuals'][id], 'decimalLongitude'):
-                return (self.spartDict['individuals'][id]['decimalLatitude'], self.spartDict['individuals'][id]['decimalLongitude'])
-            if checkKey(self.spartDict['individuals'][id], 'locality'):
-                locality = self.getLocationData(self.spartDict['individuals'][id]['locality'])
-                return (locality['decimalLatitude'], locality['decimalLongitude'])
-        return None
+    def getIndividualLatLon(self, id: str) -> tuple[float, float] or None:
+        """Returns lat/lon information about the given individual id"""
+        individual = self.spartDict['individuals'][id]
+        lat = individual.get('decimalLatitude', None)
+        lon = individual.get('decimalLongitude', None)
+        if lat and lon:
+            return (lat, lon)
+        locality = individual.get('locality', None)
+        if not locality:
+            return None
+        locality = self.spartDict['location_synonyms'].get(locality, locality)
+        location = self.spartDict['locations'][locality]
+        lat = location.get('decimalLatitude', None)
+        lon = location.get('decimalLongitude', None)
+        return (lat, lon)
 
     def getIndividualTypes(self, id: str) -> iter[str]:
         """Returns extra information about the given individual types"""
@@ -610,6 +617,7 @@ class SpartParserXML:
 
     def parseLocations(self):
         self.spartDict['locations'] = {}
+        self.spartDict['location_synonyms'] = {}
         for event, element in self.tokenizer:
             token = self.translate(element.tag)
             if (event, token) == ('end', 'locations'):
@@ -622,7 +630,8 @@ class SpartParserXML:
         id, attrs = self.processElement(element, 'locality')
         synonyms = attrs.get('synonyms','').split(';')
         for synonym in synonyms:
-            self.spartDict['locations'][synonym] = attrs
+            if synonym:
+                self.spartDict['location_synonyms'][synonym] = id
         self.spartDict['locations'][id] = attrs
 
 

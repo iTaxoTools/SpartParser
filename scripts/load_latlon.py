@@ -14,9 +14,10 @@ Memory benchmark using memory_profiler & matplotlib:
 
 """
 
-path = Path(argv[1])
+input = Path(argv[1])
+output = Path(argv[2])
 
-extension = ''.join(path.suffixes)
+extension = ''.join(input.suffixes)
 
 parser = {
     '.xml': Spart.fromXML,
@@ -25,19 +26,17 @@ parser = {
 
 
 with Timer('load', 'Time to {}: {:.4f}s'):
-    spart = parser(path)
+    spart = parser(input)
 
 with Timer('pandas', 'Time to {}: {:.4f}s'):
     data = {'id': [], 'lat': [], 'lon':[]}
     for id in spart.getIndividuals():
-        lat, lon = spart.getIndividualLatlon(id)
+        lat, lon = spart.getIndividualLatLon(id)
         data['id'].append(id)
         data['lat'].append(lat)
         data['lon'].append(lon)
 
-    f = pd.DataFrame(data)
-    f = f.set_index('id')
+    df = pd.DataFrame(data)
+    df = df.set_index('id')
 
-# f.to_csv('dump.csv')
-
-input('Press ENTER to exit...')
+df.to_csv(output)

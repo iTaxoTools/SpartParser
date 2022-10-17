@@ -351,9 +351,11 @@ def spart_latlon(spart: Spart):
 
 
     locations = set(spart.getLocations())
+    assert len(locations) == 4
     assert 'locality_1' in locations
     assert 'locality_2' in locations
     assert 'locality_3' in locations
+    assert 'locality_4' in locations
 
     assert spart.getLocationData('locality_1')['decimalLatitude'] == 11.1
     assert spart.getLocationData('locality_2')['decimalLatitude'] == 22.1
@@ -374,13 +376,13 @@ def spart_latlon(spart: Spart):
     assert spart.getLocationData('locality_1')['elevationAccuracy'] == 10
 
 
-    assert spart.getIndividualLatlon('individual_1') == (1.1, 1.2)
-    assert spart.getIndividualLatlon('individual_2') == (2.2, 2.3)
-    assert spart.getIndividualLatlon('individual_3') == (11.1, 11.2)
-    assert spart.getIndividualLatlon('individual_4') == (22.1, 22.2)
-    assert spart.getIndividualLatlon('individual_5') == (33.1, 33.2)
-    assert spart.getIndividualLatlon('individual_6') == (6.1, 6.2)
-    assert spart.getIndividualLatlon('individual_7') == (7.1, 7.2)
+    assert spart.getIndividualLatLon('individual_1') == (1.1, 1.2)
+    assert spart.getIndividualLatLon('individual_2') == (2.2, 2.3)
+    assert spart.getIndividualLatLon('individual_3') == (11.1, 11.2)
+    assert spart.getIndividualLatLon('individual_4') == (22.1, 22.2)
+    assert spart.getIndividualLatLon('individual_5') == (33.1, 33.2)
+    assert spart.getIndividualLatLon('individual_6') == (6.1, 6.2)
+    assert spart.getIndividualLatLon('individual_7') == (7.1, 7.2)
 
 
 def spart_types(spart: Spart):
