@@ -185,12 +185,16 @@ class Spart:
             f.write('\nend;')
             f.close()
 
-    def addIndividual(self, individualName: str, **kwargs) -> None:
+    def addIndividual(self, id: str, **kwargs) -> None:
         """Add a new individual. Extra information (locality, voucher etc.)
         is passed as keyword arguments."""
-        self.spartDict['individuals'][individualName] = {'types': {}}
-        for key, val in kwargs.items():
-            self.spartDict['individuals'][individualName][key] = val
+        self.spartDict['individuals'][id] = {'types': {}, **kwargs}
+
+    def addIndividualType(self, individual: str, status: str, **kwargs) -> None:
+        """Add a new type with the provided status to the individual with the
+        provided id. Extra information (nameBearingStatus, originalNameUsage
+        etc.) is passed as keyword arguments."""
+        self.spartDict['individuals'][individual]['types'][status] = kwargs
 
     def addSpartition(self, label: str, remarks: str = None, **kwargs) -> None:
         """Add a new spartition. Extra information (score, type etc.)
@@ -899,6 +903,7 @@ class SpartWriterXML:
             self.handler.startElement('individual', data)
             for type in types:
                 typeData = self.spart.getIndividualTypeData(individual, type)
+                typeData = self.formatData(typeData, 'status', type)
                 self.handler.startEndElement('type', typeData)
             self.handler.endElement('individual')
 

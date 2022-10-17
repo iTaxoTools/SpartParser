@@ -187,6 +187,46 @@ def spart_latlon():
     return spart
 
 
+def spart_types():
+    spart = Spart()
+
+    spart.addIndividual(
+        id='aura_ZCMV1234',
+        voucher='ZSM23/721',
+        locality='Andasibe',
+    )
+    spart.addIndividual(
+        id='crocea_ZCMV235',
+        locality='Torotorofotsy',
+    )
+
+    spart.addIndividualType(
+        'aura_ZCMV1234', 'Holotype',
+        nameBearingStatus='Yes',
+        namePublishedInYear='1889',
+        scientificNameAuthorship='Boulenger',
+        originalNameUsage='Dendrobates aurantiacus',
+        verbatimTypeLocality='Perinet',
+    )
+    spart.addIndividualType(
+        'crocea_ZCMV235', 'Paratype',
+        nameBearingStatus='No',
+        namePublishedInYear='1889',
+        scientificNameAuthorship='Boulenger',
+        originalNameUsage='Dendrobates aurantiacus',
+        verbatimTypeLocality='Torotorofotsy',
+    )
+    spart.addIndividualType(
+        'crocea_ZCMV235', 'Neotype',
+        nameBearingStatus='Yes',
+        namePublishedInYear='2023',
+        scientificNameAuthorship='Vences',
+        originalNameUsage='Mantella inexistens',
+    )
+
+    return spart
+
+
 test_data = [
     WriteTest('simple.xml', Spart.toXML, spart_simple),
     WriteTest('simple.spart', Spart.toMatricial, spart_simple),
@@ -196,7 +236,7 @@ test_data = [
     WriteTest('scores_type.spart', Spart.toMatricial, spart_scores_type),
     WriteTest('scores_type.xml', Spart.toXML, spart_scores_type),
     WriteTest('latlon_written.xml', Spart.toXML, spart_latlon, case_sensitive=False),
-    # WriteTest('types.xml', Spart.toXML, spart_types),
+    WriteTest('types.xml', Spart.toXML, spart_types),
     ]
 
 
