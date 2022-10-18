@@ -1,0 +1,78 @@
+<?xml version="1.0" ?>
+<root>
+
+	<individuals>
+		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe"/>
+		<individual id="aura_ZCMV1235" locality="Andasibe" decimalLatitude="-18.9355" decimalLongitude="48.41455"/>
+		<individual id="aura_ZCMV1236" locality="Andasibe" decimalLatitude="-18.9366" decimalLongitude="48.41466"/>
+		<individual id="aura_FGZC987" locality="Torotorofotsy" decimalLatitude="-18.8677" decimalLongitude="48.3677"/>
+		<individual id="aura_FGZC986" locality="Torotorofotsy"/>
+		<individual id="miloty_ACZC324" locality="Fierenana" />
+		<individual id="miloty_ACZC329" locality="Fierenana"/>
+		<individual id="crocea_ZCMV234" locality="Andreba" lat="-17.6344" lon="48.5044"/>
+		<individual id="crocea_ZCMV236" locality="Andreba"/>
+		<individual id="crocea_ZCMV237" locality="Andreba"/>
+	</individuals>
+
+
+	<spartitions>
+		<spartition label="Mantella_bPTP" spartitionScore="1.234E-6" spartitionScoreType="logLikelihood" subsetScoreType = "posterior" subsetScoreSource= "BEAST analysis 2021-03-02" individualScoreType="probability" individualScoreSource="BEAST analysis 2021-03-02" >
+			<remarks>First spartition</remarks>
+			<subsets>
+				<subset label="1" score="1.23E-6" taxonname="Mantella aurantiaca" taxonlabel="species">
+					<individual ref="aura_ZCMV1234"/>
+					<individual ref="aura_ZCMV1235"/>
+					<individual ref="aura_ZCMV1236"/>
+					<individual ref="aura_FGZC987"/>
+					<individual ref="aura_FGZC986"/>
+				</subset>
+				<subset label="2" score="7.34E-6" taxonname="Mantella crocea" taxonlabel="species">
+					<individual ref="crocea_ZCMV234"/>
+					<individual ref="crocea_ZCMV236"/>
+					<individual ref="crocea_ZCMV237"/>
+				</subset>
+				<subset label="3" score="1.01E-5" taxonname="Mantella crocea milotympanum" taxonlabel="subspecies">
+					<individual ref="miloty_ACZC324"/>
+					<individual ref="miloty_ACZC329"/>
+				</subset>
+			</subsets>
+		</spartition>
+
+		<spartition label="analysis_P2" spartitionScoreType="likelihood" spartitionScore="1.0345E-06" >
+			<remarks>Second spartition</remarks>
+			<subsets>
+				<subset label="1">
+					<individual ref="aura_ZCMV1234" score="0.111"/>
+					<individual ref="aura_ZCMV1235" score="0.112"/>
+					<individual ref="aura_ZCMV1236" score="0.113"/>
+				</subset>
+				<subset label="2">
+					<individual ref="aura_FGZC987" score="0.121"/>
+					<individual ref="aura_FGZC986" score="0.122"/>
+				</subset>
+				<subset label="3">
+					<individual ref="crocea_ZCMV234" score="0.131"/>
+					<individual ref="crocea_ZCMV236" score="0.132"/>
+					<individual ref="crocea_ZCMV237" score="0.133"/>
+				</subset>
+				<subset label="4">
+					<individual ref="miloty_ACZV679" score="0.141"/>
+					<individual ref="miloty_ZCMV479" score="0.142"/>
+				</subset>
+				<subset label="5">
+					<individual ref="miloty_ACZC324" score="0.151"/>
+					<individual ref="miloty_ACZC329" score="0.152"/>
+				</subset>
+			</subsets>
+		</spartition>
+
+	</spartitions>
+
+	<Locations>
+		<coordinates locality="Fierenana" decimalLatitude="-18.4859" decimalLongitude="48.40157" elevation="1456" synonym="Fiherenana" measurementAccuracy="100000" elevationAccuracy="10" verbatimCoordinateSystem="WGS84"/>
+		<coordinates locality="Andasibe" decimalLatitude="-18.9351" decimalLongitude="48.41454"/> ,
+		<coordinates locality="Torotorofotsy" decimalLatitude="-18.8607" decimalLongitude="48.3642"/>
+		<coordinates locality="Andreba" decimalLatitude="-17.6331" decimalLongitude="48.5091"/>
+	</Locations>
+
+</root>
