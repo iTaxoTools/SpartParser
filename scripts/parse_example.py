@@ -5,7 +5,6 @@ import pandas as pd
 from itaxotools.spart_parser import Spart
 
 
-
 def print_tree(spart):
     for spartition in spart.getSpartitions():
         data = [f'{k}="{v}"' for k, v in spart.getSpartitionData(spartition).items()]
@@ -19,6 +18,7 @@ def print_tree(spart):
                 data += [f'{k}="{v}"' for k, v in spart.getSubsetIndividualData(spartition, subset, individual).items()]
                 print('|-+', f'<{individual}>', *data)
         print(' ')
+
 
 def print_latlon(spart):
     data = [

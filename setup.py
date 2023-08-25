@@ -26,12 +26,14 @@ setup(
     ],
     extras_require={
         "dev": [
-            "pytest>=6.2.5",
+            "pytest>=6.2.5,<6.5",
             "pyinstaller>=4.5.1",
+            "memory-profiler",
+            "matplotlib",
         ],
         "gui": [
             "PySide6>=6.3.2",
-            "itaxotools-common==0.2.dev4",
+            "itaxotools-common==0.2.4",
         ],
     },
     entry_points={

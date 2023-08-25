@@ -130,4 +130,5 @@ testfiles/
 pyrightconfig.json
 helpers/
 
+mprofile_*.dat
 demo/
