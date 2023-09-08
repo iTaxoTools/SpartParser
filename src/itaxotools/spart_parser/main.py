@@ -167,7 +167,7 @@ class Spart:
                 return False
 
             if has_individual_scores():
-                f.write(f'\n\nindividual_scores = ')
+                f.write(f'\n\nindividual_score = ')
 
                 for indiName in self.spartDict["individuals"].keys():
                     inSub = []
@@ -702,10 +702,10 @@ class SpartParserMatricial:
         #individuals
         startIndi = False
         count = 0
-        if not checkKey(self.keysDict, 'individual_scores'):
+        if not checkKey(self.keysDict, 'individual_score'):
             return False
         for line in self.spartFile:
-            result = re.search(f'({self.keysDict["individual_scores"]})', line)
+            result = re.search(f'({self.keysDict["individual_score"]})', line)
             if result:
                 startIndi = True
                 continue
