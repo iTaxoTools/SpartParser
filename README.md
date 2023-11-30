@@ -23,9 +23,8 @@ pip install git+https://github.com/iTaxoTools/SpartParser.git
 To install for development with GUI dependencies:
 
 ```
-git clone https://github.com/iTaxoTools/SpartParser.git
-cd SpartParser
-pip install -e ".[dev,gui]" -f packages.html
+pip install git+https://github.com/iTaxoTools/itt-common.git
+pip install "itaxotools-spart-parser[dev] @ git+https://github.com/iTaxoTools/SpartParser.git"
 ```
 
 ## Usage
