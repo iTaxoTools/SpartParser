@@ -12,8 +12,10 @@ jobs:
     runs-on: windows-2019
 
     steps:
-      - name: Chekout
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -35,16 +37,7 @@ jobs:
           pytest
 
       - name: Build executable
-        run: |
-          pip install pyinstaller setuptools-git-versioning
-          VERSION=$(setuptools-git-versioning)
-          PLAT=$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
-          ARCH=$(echo ${{ runner.arch }} | tr '[:upper:]' '[:lower:]')
-          echo ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-          echo $VERSION $PLAT $ARCH
-          setuptools-git-versioning
-          echo ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
-          sh ./scripts/pack/make-executable.sh $VERSION $PLAT $ARCH
+        uses: ./.github/actions/make-executable
 
       - uses: actions/upload-artifact@v3
         with:

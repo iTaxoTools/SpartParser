@@ -1,5 +1,7 @@
 name: Build a Windows executable
-description: Create a single .exe self-extracting binary
+description: |
+  Create a single .exe self-extracting binary
+  Tags must be pre-fetched and package must be installed.
 
 runs:
   using: composite
