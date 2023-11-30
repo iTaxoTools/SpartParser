@@ -1,4 +1,70 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "wheel"]
+requires = ["setuptools>=40.8.0", "wheel", "setuptools-git-versioning"]
 build-backend = "setuptools.build_meta"
 
+[project]
+name = "itaxotools-spart-parser"
+dynamic = ["version"]
+description = "Parse and write SPART files"
+readme = "README.md"
+requires-python = ">=3.10.2, <4"
+keywords = []
+authors = [
+    { name = "Khushil Prajapati" },
+    { name = "StefanPatman", email = "stefanpatman91@gmail.com" },
+]
+classifiers = [
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+dependencies = [
+]
+
+[project.optional-dependencies]
+dev = [
+    "setuptools-git-versioning",
+    "pre-commit",
+    "ruff",
+    "pytest",
+    "pyinstaller",
+    "memory-profiler",
+    "matplotlib",
+]
+gui =[
+    "itaxotools-common==0.3.2",
+    "pyside6>=6.3.2"
+]
+
+[project.gui-scripts]
+SpartParser = "itaxotools.spart_parser.main:main"
+SpartParserDemo = "itaxotools.spart_parser.main:demo"
+SpartParserGui = "itaxotools.spart_parser.gui:run"
+
+[project.urls]
+Homepage = "https://itaxotools.org/"
+Source = "https://github.com/iTaxoTools/itt-common"
+
+[tool.setuptools-git-versioning]
+dirty_template = "{tag}"
+enabled = true
+
+[tool.ruff]
+extend-select = ["I"]
+
+[tool.ruff.lint.isort]
+section-order = [
+    "future",
+    "pyqt",
+    "standard-library",
+    "first-party",
+    "local-folder",
+    "third-party"
+]
+
+[tool.ruff.lint.isort.sections]
+"pyqt" = ["PySide6"]
