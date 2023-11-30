@@ -1,5 +1,12 @@
 # SpartParser
 
+[![GitHub - Windows](https://github.com/stefanpatman/pypi-gui/actions/workflows/windows.yml/badge.svg)](
+    https://github.com/StefanPatman/pypi-gui/actions/workflows/windows.yml)
+[![GitHub - Tests](https://github.com/stefanpatman/pypi-gui/actions/workflows/test.yml/badge.svg)](
+    https://github.com/StefanPatman/pypi-gui/actions/workflows/test.yml)
+[![GitHub - Deploy](https://github.com/stefanpatman/pypi-gui/actions/workflows/deploy.yml/badge.svg)](
+    https://github.com/StefanPatman/pypi-gui/actions/workflows/deploy.yml)
+
 Parse, edit and write data in the SPART and SPART-XML file formats.
 
 Includes a GUI for converting between the two formats.

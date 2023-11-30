@@ -1,0 +1,14 @@
+name: Build a Windows executable
+description: Create a single .exe self-extracting binary
+
+runs:
+  using: composite
+  steps:
+    - name: Build using pyinstaller
+      shell: bash
+      run: |
+        pip install pyinstaller setuptools-git-versioning
+        VERSION=$(setuptools-git-versioning)
+        PLAT=$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
+        ARCH=$(echo ${{ runner.arch }} | tr '[:upper:]' '[:lower:]')
+        sh ./scripts/pack/make-executable.sh $VERSION $PLAT $ARCH
