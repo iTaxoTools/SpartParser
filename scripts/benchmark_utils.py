@@ -1,13 +1,11 @@
-from time import perf_counter
-from os import getpid
 from os.path import getsize
+from time import perf_counter
 
 
 class Timer:
-
     def __init__(self, id, msg=None):
         self.id = id
-        self.msg = msg or 'Tick {}: {:.4f}s'
+        self.msg = msg or "Tick {}: {:.4f}s"
 
     def __enter__(self):
         self.t = perf_counter()
@@ -19,13 +17,12 @@ class Timer:
 
 
 class LoopTimer:
-
     counters = dict()
-    msg = 'Tock {}: {:.4f}s'
+    msg = "Tock {}: {:.4f}s"
 
     def __init__(self, id):
         self.id = id
-        if not id in self.counters:
+        if id not in self.counters:
             self.counters[id] = 0.0
 
     def __enter__(self):
@@ -53,4 +50,4 @@ def bytes_to_string(num, suffix="B"):
 
 def print_file_size(path):
     bytes = getsize(path)
-    print(f'File size: {bytes_to_string(bytes)}')
+    print(f"File size: {bytes_to_string(bytes)}")

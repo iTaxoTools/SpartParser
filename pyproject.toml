@@ -54,6 +54,7 @@ dirty_template = "{tag}"
 enabled = true
 
 [tool.ruff]
+ignore-init-module-imports = true
 extend-select = ["I"]
 
 [tool.ruff.lint.isort]

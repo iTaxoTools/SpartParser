@@ -20,15 +20,14 @@
 
 from PySide6 import QtCore, QtGui, QtWidgets
 
-import shutil
 from pathlib import Path
 
-from itaxotools.common.utility import AttrDict
-from itaxotools.common.widgets import ToolDialog, ScalingImage, VLineSeparator
-
 from . import app
-from .utility import bind, unbind
 from .model import SpartType
+from .utility import bind
+
+from itaxotools.common.utility import AttrDict
+from itaxotools.common.widgets import ScalingImage, ToolDialog, VLineSeparator
 
 
 class ToolLogo(QtWidgets.QLabel):
@@ -51,11 +50,11 @@ class ToolBar(QtWidgets.QToolBar):
         super().__init__(*args, **kwargs)
         self.setIconSize(QtCore.QSize(32, 32))
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum,
-            QtWidgets.QSizePolicy.Policy.Minimum)
-        self.setToolButtonStyle(
-            QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
-        self.setStyleSheet("""
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Minimum
+        )
+        self.setToolButtonStyle(QtCore.Qt.ToolButtonStyle.ToolButtonTextBesideIcon)
+        self.setStyleSheet(
+            """
             QToolBar {
                 spacing: 2px;
                 }
@@ -105,26 +104,28 @@ class ToolBar(QtWidgets.QToolBar):
             QToolButton::menu-indicator:pressed {
                 border-bottom: 0px;
                 }
-            """)
+            """
+        )
 
 
 class Header(QtWidgets.QFrame):
-
     def __init__(self, parent=None):
         super().__init__(parent)
         self.draw()
 
     def draw(self):
         self.setSizePolicy(
-            QtWidgets.QSizePolicy.Policy.Minimum,
-            QtWidgets.QSizePolicy.Policy.Maximum)
-        self.setStyleSheet("""
+            QtWidgets.QSizePolicy.Policy.Minimum, QtWidgets.QSizePolicy.Policy.Maximum
+        )
+        self.setStyleSheet(
+            """
             Header {
                 background: palette(Light);
                 border-top: 1px solid palette(Mid);
                 border-bottom: 1px solid palette(Dark);
                 }
-            """)
+            """
+        )
         self.toolLogo = ToolLogo(self)
         self.projectLogo = ProjectLogo(self)
         self.toolBar = ToolBar(self)
@@ -149,7 +150,8 @@ class TextView(QtWidgets.QWidget):
         self.label = QtWidgets.QLabel(label)
         self.label.setIndent(4)
         self.label.setMargin(2)
-        self.label.setStyleSheet("""
+        self.label.setStyleSheet(
+            """
             QLabel {
                 font-size: 14px;
                 font-weight: bold;
@@ -164,11 +166,14 @@ class TextView(QtWidgets.QWidget):
                 background: palette(Mid);
                 border-right: 1px solid palette(Midlight);
                 }
-            """)
+            """
+        )
 
         self.widget = QtWidgets.QTextEdit()
         self.widget.setLineWrapMode(QtWidgets.QTextEdit.NoWrap)
-        self.widget.setFont(QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont))
+        self.widget.setFont(
+            QtGui.QFontDatabase.systemFont(QtGui.QFontDatabase.FixedFont)
+        )
         self.widget.document().setDocumentMargin(8)
         self.widget.setAcceptRichText(False)
         self.widget.setReadOnly(True)
@@ -197,9 +202,9 @@ class Body(QtWidgets.QSplitter):
     def __init__(self, *args, **kwargs):
         super().__init__(QtCore.Qt.Horizontal)
 
-        self.view_input = TextView('Original input')
-        self.view_matricial = TextView('Parsed Matricial')
-        self.view_xml = TextView('Parsed XML')
+        self.view_input = TextView("Original input")
+        self.view_matricial = TextView("Parsed Matricial")
+        self.view_xml = TextView("Parsed XML")
 
         self.addWidget(self.view_input)
         self.addWidget(self.view_matricial)
@@ -226,19 +231,19 @@ class InfoLabel(QtWidgets.QLabel):
 
     def setValue(self, value=None):
         if value is None:
-            value = '-'
+            value = "-"
         self.value = value
         if isinstance(value, int):
-            value = f'{value:,}'
-        self.setText(f'{self.prefix}: {value}')
+            value = f"{value:,}"
+        self.setText(f"{self.prefix}: {value}")
 
 
 class Footer(QtWidgets.QFrame):
-
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.setFixedHeight(32)
-        self.setStyleSheet("""
+        self.setStyleSheet(
+            """
             Footer {
                 color: palette(Shadow);
                 background: palette(Window);
@@ -251,11 +256,12 @@ class Footer(QtWidgets.QFrame):
                 background: palette(Window);
                 border: 1px solid palette(Mid);
                 }
-            """)
+            """
+        )
 
-        self.status = QtWidgets.QLabel('STATUS')
-        self.individuals = InfoLabel('Individuals')
-        self.spartitions = InfoLabel('Spartitions')
+        self.status = QtWidgets.QLabel("STATUS")
+        self.individuals = InfoLabel("Individuals")
+        self.spartitions = InfoLabel("Spartitions")
 
         bind(app.model.properties.individuals, self.individuals.setValue)
         bind(app.model.properties.spartitions, self.spartitions.setValue)
@@ -284,8 +290,11 @@ class Main(ToolDialog):
         self.draw()
         self.act()
 
-        bind(app.model.properties.input_name, self.setWindowTitle,
-            lambda x: app.title if not x else f'{app.title} - {x}')
+        bind(
+            app.model.properties.input_name,
+            self.setWindowTitle,
+            lambda x: app.title if not x else f"{app.title} - {x}",
+        )
 
     def draw(self):
         """Draw all contents"""
@@ -309,35 +318,36 @@ class Main(ToolDialog):
         """Populate dialog actions"""
         self.actions = {}
 
-        self.actions['open'] = QtGui.QAction('&Open', self)
-        self.actions['open'].setIcon(app.resources.icons.open)
-        self.actions['open'].setShortcut(QtGui.QKeySequence.Open)
-        self.actions['open'].setStatusTip('Open an existing file')
-        self.actions['open'].triggered.connect(self.handleOpen)
+        self.actions["open"] = QtGui.QAction("&Open", self)
+        self.actions["open"].setIcon(app.resources.icons.open)
+        self.actions["open"].setShortcut(QtGui.QKeySequence.Open)
+        self.actions["open"].setStatusTip("Open an existing file")
+        self.actions["open"].triggered.connect(self.handleOpen)
 
-        self.actions['save_matricial'] = QtGui.QAction('&Matricial', self)
-        self.actions['save_matricial'].setIcon(app.resources.icons.save)
-        self.actions['save_matricial'].setStatusTip('Save Matricial')
-        self.actions['save_matricial'].triggered.connect(self.handleSaveMatricial)
+        self.actions["save_matricial"] = QtGui.QAction("&Matricial", self)
+        self.actions["save_matricial"].setIcon(app.resources.icons.save)
+        self.actions["save_matricial"].setStatusTip("Save Matricial")
+        self.actions["save_matricial"].triggered.connect(self.handleSaveMatricial)
 
-        self.actions['save_xml'] = QtGui.QAction('&XML', self)
-        self.actions['save_xml'].setIcon(app.resources.icons.save)
-        self.actions['save_xml'].setStatusTip('Save XML')
-        self.actions['save_xml'].triggered.connect(self.handleSaveXML)
+        self.actions["save_xml"] = QtGui.QAction("&XML", self)
+        self.actions["save_xml"].setIcon(app.resources.icons.save)
+        self.actions["save_xml"].setStatusTip("Save XML")
+        self.actions["save_xml"].triggered.connect(self.handleSaveXML)
 
-        self.widgets.header.toolBar.addAction(self.actions['open'])
-        self.widgets.header.toolBar.addAction(self.actions['save_matricial'])
-        self.widgets.header.toolBar.addAction(self.actions['save_xml'])
+        self.widgets.header.toolBar.addAction(self.actions["open"])
+        self.widgets.header.toolBar.addAction(self.actions["save_matricial"])
+        self.widgets.header.toolBar.addAction(self.actions["save_xml"])
 
-        bind(app.model.properties.ready, self.actions['save_matricial'].setEnabled)
-        bind(app.model.properties.ready, self.actions['save_xml'].setEnabled)
+        bind(app.model.properties.ready, self.actions["save_matricial"].setEnabled)
+        bind(app.model.properties.ready, self.actions["save_xml"].setEnabled)
 
     def handleHome(self):
         self.widgets.body.showDashboard()
 
     def handleOpen(self):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, f'{app.title} - Open File')
+            self, f"{app.title} - Open File"
+        )
         if not filename:
             return
         QtCore.QDir.setCurrent(str(Path(filename).parent))
@@ -349,10 +359,10 @@ class Main(ToolDialog):
     def handleSave(self, type):
         suggested_name = app.model.path_input.stem + type.extension
         destination = Path(app.model.work_dir / suggested_name)
-        filters = f'{type.description} (*{type.extension})'
+        filters = f"{type.description} (*{type.extension})"
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(
-            self, f'{app.title} - Save File',
-            str(destination), filters)
+            self, f"{app.title} - Save File", str(destination), filters
+        )
         if not filename:
             return
         try:

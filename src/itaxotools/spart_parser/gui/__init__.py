@@ -1,7 +1,5 @@
-
 def run():
-
-    from PySide6 import QtCore, QtWidgets
+    from PySide6 import QtWidgets
 
     import sys
 
@@ -9,7 +7,7 @@ def run():
     from .main import Main
 
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyle('Fusion')
+    app.setStyle("Fusion")
     skin.apply(app)
 
     files = [file for file in sys.argv[1:]]

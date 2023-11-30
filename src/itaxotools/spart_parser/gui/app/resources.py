@@ -16,12 +16,12 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 # -----------------------------------------------------------------------------
 
-from PySide6 import QtCore, QtGui
+from PySide6 import QtGui
+
+from . import skin
 
 from itaxotools.common import resources
 from itaxotools.common.widgets import VectorIcon, VectorPixmap
-
-from . import skin
 
 
 class ResourceLoader:
@@ -41,24 +41,21 @@ def _get_common(path):
 
 
 def _get_local(path):
-    root = '.'.join(__package__.split('.')[:-1])
+    root = ".".join(__package__.split(".")[:-1])
     return resources.get_local(root, path)
 
 
 pixmaps = ResourceLoader(
-    logo_project = lambda: QtGui.QPixmap(
-        _get_common('logos/itaxotools-logo-64px.png')),
-    logo_tool = lambda: VectorPixmap(
-        _get_local('logos/spart.svg'),
+    logo_project=lambda: QtGui.QPixmap(_get_common("logos/itaxotools-logo-64px.png")),
+    logo_tool=lambda: VectorPixmap(
+        _get_local("logos/spart.svg"),
         # size=QtCore.QSize(132, 44),
-        colormap=skin.colormap_icon)
+        colormap=skin.colormap_icon,
+    ),
 )
 
 icons = ResourceLoader(
-    open = lambda: VectorIcon(
-        _get_common('icons/svg/open.svg'), skin.colormap),
-    save = lambda: VectorIcon(
-        _get_common('icons/svg/save.svg'), skin.colormap),
-    app = lambda: QtGui.QIcon(
-        _get_local('logos/spart.ico')),
+    open=lambda: VectorIcon(_get_common("icons/svg/open.svg"), skin.colormap),
+    save=lambda: VectorIcon(_get_common("icons/svg/save.svg"), skin.colormap),
+    app=lambda: QtGui.QIcon(_get_local("logos/spart.ico")),
 )
