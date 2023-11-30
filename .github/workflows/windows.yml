@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-  build-demo:
+  build-executable:
     name: Build Windows executable
     runs-on: windows-2019
 
@@ -35,7 +35,16 @@ jobs:
           pytest
 
       - name: Build executable
-        uses: ./.github/actions/make-executable
+        run: |
+          pip install pyinstaller setuptools-git-versioning
+          VERSION=$(setuptools-git-versioning)
+          PLAT=$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
+          ARCH=$(echo ${{ runner.arch }} | tr '[:upper:]' '[:lower:]')
+          echo ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+          echo $VERSION $PLAT $ARCH
+          setuptools-git-versioning
+          echo ooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo
+          sh ./scripts/pack/make-executable.sh $VERSION $PLAT $ARCH
 
       - uses: actions/upload-artifact@v3
         with:

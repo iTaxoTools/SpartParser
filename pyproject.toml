@@ -51,7 +51,7 @@ SpartParserGui = "itaxotools.spart_parser.gui:run"
 
 [project.urls]
 Homepage = "https://itaxotools.org/"
-Source = "https://github.com/iTaxoTools/itt-common"
+Source = "https://github.com/iTaxoTools/SpartParser"
 
 [tool.setuptools-git-versioning]
 dirty_template = "{tag}"
