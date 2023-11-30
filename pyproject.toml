@@ -40,9 +40,11 @@ gui =[
     "pyside6>=6.3.2"
 ]
 
-[project.gui-scripts]
+[project.scripts]
 SpartParser = "itaxotools.spart_parser.main:main"
 SpartParserDemo = "itaxotools.spart_parser.main:demo"
+
+[project.gui-scripts]
 SpartParserGui = "itaxotools.spart_parser.gui:run"
 
 [project.urls]

@@ -1240,16 +1240,13 @@ def demo():
 
     exmDir = Path("examples")
     timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+
+    print(f"Iterating '{str(exmDir.resolve())}'")
     for src in exmDir.iterdir():
+        print(f"Parsing {src.name}")
         spart = Spart.fromPath(src)
         dest_xml = demoDir / f"{src.name}.{timestamp}.xml"
         spart.toXML(dest_xml)
         dest_mat = demoDir / f"{src.name}.{timestamp}.spart"
         spart.toMatricial(dest_mat)
-
-
-if __name__ == "__main__":
-    spart = Spart.fromPath("../../../tests/data/scores.spart")
-    demoDir = Path("demo")
-    dest_mat = demoDir / "t.spart"
-    spart.toMatricial(dest_mat)
+    print(f"Done, results in '{str(demoDir.resolve())}'")
