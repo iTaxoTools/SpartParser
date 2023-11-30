@@ -31,6 +31,8 @@ dev = [
     "pre-commit",
     "ruff",
     "pytest",
+    "pytest-qt",
+    "pytest-xvfb",
     "pyinstaller",
     "memory-profiler",
     "matplotlib",
@@ -60,14 +62,15 @@ ignore-init-module-imports = true
 extend-select = ["I"]
 
 [tool.ruff.lint.isort]
+known-first-party = ["itaxotools"]
 section-order = [
     "future",
     "pyqt",
     "standard-library",
+    "third-party",
     "first-party",
     "local-folder",
-    "third-party"
 ]
 
 [tool.ruff.lint.isort.sections]
-"pyqt" = ["PySide6"]
+pyqt = ["PySide6"]

@@ -4,6 +4,7 @@ from random import random
 from sys import argv
 
 from benchmark_utils import Timer, print_file_size
+
 from itaxotools.spart_parser import Spart
 
 numIndividuals = int(argv[1])

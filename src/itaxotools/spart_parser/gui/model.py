@@ -22,9 +22,9 @@ from pathlib import Path
 from shutil import copy
 from tempfile import TemporaryDirectory
 
-from .utility import Property, PropertyObject
-
 from itaxotools.spart_parser import Spart
+
+from .utility import Property, PropertyObject
 
 
 class SpartType(Enum):

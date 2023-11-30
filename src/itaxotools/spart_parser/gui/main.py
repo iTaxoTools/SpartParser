@@ -22,12 +22,12 @@ from PySide6 import QtCore, QtGui, QtWidgets
 
 from pathlib import Path
 
+from itaxotools.common.utility import AttrDict
+from itaxotools.common.widgets import ScalingImage, ToolDialog, VLineSeparator
+
 from . import app
 from .model import SpartType
 from .utility import bind
-
-from itaxotools.common.utility import AttrDict
-from itaxotools.common.widgets import ScalingImage, ToolDialog, VLineSeparator
 
 
 class ToolLogo(QtWidgets.QLabel):

@@ -18,10 +18,10 @@
 
 from PySide6 import QtGui
 
-from . import skin
-
 from itaxotools.common import resources
 from itaxotools.common.widgets import VectorIcon, VectorPixmap
+
+from . import skin
 
 
 class ResourceLoader:

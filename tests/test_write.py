@@ -6,8 +6,9 @@ from pathlib import Path
 from typing import Callable
 
 import pytest
-from itaxotools.spart_parser import Spart
 from utility import assert_eq_files
+
+from itaxotools.spart_parser import Spart
 
 TEST_DATA_DIR = Path(__file__).parent / "data"
 

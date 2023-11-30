@@ -2,6 +2,7 @@ from pathlib import Path
 from sys import argv
 
 from benchmark_utils import Timer
+
 from itaxotools.spart_parser import Spart
 
 """
