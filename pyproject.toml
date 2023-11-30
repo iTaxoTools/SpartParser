@@ -55,6 +55,7 @@ Source = "https://github.com/iTaxoTools/SpartParser"
 
 [tool.setuptools-git-versioning]
 dirty_template = "{tag}"
+dev_template = "{tag}"
 enabled = true
 
 [tool.ruff]
