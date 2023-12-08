@@ -11,7 +11,7 @@ requires-python = ">=3.10.2, <4"
 keywords = []
 authors = [
     { name = "Khushil Prajapati" },
-    { name = "StefanPatman", email = "stefanpatman91@gmail.com" },
+    { name = "Stefanos Patmanidis", email = "stefanpatman91@gmail.com" },
 ]
 classifiers = [
     "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
@@ -52,6 +52,10 @@ SpartParserGui = "itaxotools.spart_parser.gui:run"
 [project.urls]
 Homepage = "https://itaxotools.org/"
 Source = "https://github.com/iTaxoTools/SpartParser"
+
+[tool.setuptools.packages.find]
+namespaces = true
+where = ["src"]
 
 [tool.setuptools-git-versioning]
 dirty_template = "{tag}"
