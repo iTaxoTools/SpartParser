@@ -50,7 +50,7 @@ spart.toMatricial("converted_copy.spart")
 For more details, refer to the [Spart class definition](src/itaxotools/spart_parser/main.py),
 as well as the [scripts](scripts) and [examples](examples) folders.
 
-# Demo GUI
+## Demo GUI
 
 A graphical interface is included for converting between SPART and SPART-XML.
 
