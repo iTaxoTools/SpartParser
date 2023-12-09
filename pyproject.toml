@@ -38,8 +38,8 @@ dev = [
     "matplotlib",
 ]
 gui =[
-    "itaxotools-common==0.3.2",
-    "pyside6>=6.3.2"
+    "itaxotools-common",
+    "pyside6"
 ]
 
 [project.scripts]
