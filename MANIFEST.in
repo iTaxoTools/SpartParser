@@ -2,7 +2,6 @@
 include README.md
 include LICENSE.txt
 include pyproject.toml
-include setup.py
 
 # Include data files
 include src/itaxotools/spart_parser/gui/logos/*
