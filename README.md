@@ -6,7 +6,6 @@
     https://pypi.org/project/itaxotools-spart-parser)
 [![PyPI - License](https://img.shields.io/pypi/l/itaxotools-spart-parser)](
     https://pypi.org/project/itaxotools-spart-parser)
-
 [![GitHub - Tests](https://img.shields.io/github/actions/workflow/status/iTaxoTools/SpartParser/test.yml?label=tests)](
     https://github.com/iTaxoTools/SpartParser/actions/workflows/test.yml)
 [![GitHub - Windows](https://img.shields.io/github/actions/workflow/status/iTaxoTools/SpartParser/windows.yml?logo=windows&logoColor=white&label=windows)](
