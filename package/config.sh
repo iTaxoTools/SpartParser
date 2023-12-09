@@ -6,7 +6,7 @@
 # program specifics
 APP_NAME="spart-parser"
 APP_IDENTIFIER="org.itaxotools.spart-parser"
-APP_SCRIPT="../SpartParserGui.py"
+APP_SCRIPT="run.py"
 APP_ICON_ICO="data/spart.ico"
 
 
