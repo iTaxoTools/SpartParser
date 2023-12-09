@@ -55,7 +55,7 @@ A graphical interface is included for converting between SPART and SPART-XML.
 
 Install with the optional GUI dependencies:
 ```
-pip install itaxotools-spart-parser
+pip install itaxotools-spart-parser[gui]
 SpartParserGui
 ```
 
