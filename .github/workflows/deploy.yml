@@ -124,7 +124,7 @@ jobs:
     name: Draft a GitHub Release
     runs-on: ubuntu-latest
     needs:
-      - publish-to-testpypi
+      - publish-to-pypi
 
     environment:
       name: github
