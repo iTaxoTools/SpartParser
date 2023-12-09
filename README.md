@@ -18,7 +18,7 @@ Includes a GUI for converting between the two formats.
 
 ## Installation
 
-PyInstaller is available on PyPI. You can install it through `pip`:
+SpartParser is available on PyPI. You can install it through `pip`:
 
 ```
 pip install itaxotools-spart-parser
