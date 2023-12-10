@@ -14,4 +14,4 @@ runs:
         VERSION=${VERSION%%+*}
         PLAT=$(echo ${{ runner.os }} | tr '[:upper:]' '[:lower:]')
         ARCH=$(echo ${{ runner.arch }} | tr '[:upper:]' '[:lower:]')
-        sh ./package/make-executable.sh $VERSION $PLAT $ARCH
+        sh ./tools/make-executable.sh $VERSION $PLAT $ARCH
