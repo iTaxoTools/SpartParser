@@ -8,7 +8,7 @@
     https://pypi.org/project/itaxotools-spart-parser)
 [![GitHub - Tests](https://img.shields.io/github/actions/workflow/status/iTaxoTools/SpartParser/test.yml?label=tests)](
     https://github.com/iTaxoTools/SpartParser/actions/workflows/test.yml)
-[![GitHub - Windows](https://img.shields.io/github/actions/workflow/status/iTaxoTools/SpartParser/windows.yml?logo=windows&logoColor=white&label=windows)](
+[![GitHub - Windows](https://img.shields.io/github/actions/workflow/status/iTaxoTools/SpartParser/windows.yml?label=windows)](
     https://github.com/iTaxoTools/SpartParser/actions/workflows/windows.yml)
 
 Parse, edit and write data in the SPART and SPART-XML file formats.
