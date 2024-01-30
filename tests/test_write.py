@@ -266,7 +266,7 @@ test_data = [
     WriteTest("scores_type.xml", Spart.toXML, spart_scores_type),
     WriteTest("latlon_written.xml", Spart.toXML, spart_latlon, case_sensitive=False),
     WriteTest("types.xml", Spart.toXML, spart_types),
-  #  WriteTest('spart_conc.xml', Spart.toXML, spart_concordance),
+  #  WriteTest("spart_conc.xml", Spart.toXML, spart_concordance),
 ]
 
 
