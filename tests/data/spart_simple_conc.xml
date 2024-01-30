@@ -1,0 +1,128 @@
+<?xml version="1.0" ?>
+<root>
+
+	<individuals>
+		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe"/>
+		<individual id="aura_ZCMV1235" locality="Andasibe" decimalLatitude="-18.9355" decimalLongitude="48.41455"/>
+		<individual id="aura_ZCMV1236" locality="Andasibe" decimalLatitude="-18.9366" decimalLongitude="48.41466"/>
+		<individual id="aura_FGZC987" locality="Torotorofotsy" decimalLatitude="-18.8677" decimalLongitude="48.3677"/>
+		<individual id="aura_FGZC986" locality="Torotorofotsy"/>
+		<individual id="miloty_ACZC324" locality="Fierenana" />
+		<individual id="miloty_ACZC329" locality="Fierenana"/>
+		<individual id="crocea_ZCMV234" locality="Andreba" lat="-17.6344" lon="48.5044"/>
+		<individual id="crocea_ZCMV236" locality="Andreba"/>
+		<individual id="crocea_ZCMV237" locality="Andreba"/>
+	</individuals>
+
+
+	<spartitions>
+		<spartition label="Mantella_bPTP" spartitionScore="1.234E-6" spartitionScoreType="logLikelihood" subsetScoreType = "posterior" subsetScoreSource= "BEAST analysis 2021-03-02" individualScoreType="probability" individualScoreSource="BEAST analysis 2021-03-02" >
+			<remarks>First spartition</remarks>
+			<subsets>
+				<subset label="1" score="1.23E-6" taxonname="Mantella aurantiaca" taxonlabel="species">
+					<individual ref="aura_ZCMV1234"/>
+					<individual ref="aura_ZCMV1235"/>
+					<individual ref="aura_ZCMV1236"/>
+					<individual ref="aura_FGZC987"/>
+					<individual ref="aura_FGZC986"/>
+				</subset>
+				<subset label="2" score="7.34E-6" taxonname="Mantella crocea" taxonlabel="species">
+					<individual ref="crocea_ZCMV234"/>
+					<individual ref="crocea_ZCMV236"/>
+					<individual ref="crocea_ZCMV237"/>
+				</subset>
+				<subset label="3" score="1.01E-5" taxonname="Mantella crocea milotympanum" taxonlabel="subspecies">
+					<individual ref="miloty_ACZC324"/>
+					<individual ref="miloty_ACZC329"/>
+				</subset>
+			</subsets>
+		</spartition>
+
+		<spartition label="analysis_P2" spartitionScoreType="likelihood" spartitionScore="1.0345E-06" >
+			<remarks>Second spartition</remarks>
+			<subsets>
+				<subset label="1">
+					<individual ref="aura_ZCMV1234" score="0.111"/>
+					<individual ref="aura_ZCMV1235" score="0.112"/>
+					<individual ref="aura_ZCMV1236" score="0.113"/>
+				</subset>
+				<subset label="2">
+					<individual ref="aura_FGZC987" score="0.121"/>
+					<individual ref="aura_FGZC986" score="0.122"/>
+				</subset>
+				<subset label="3">
+					<individual ref="crocea_ZCMV234" score="0.131"/>
+					<individual ref="crocea_ZCMV236" score="0.132"/>
+					<individual ref="crocea_ZCMV237" score="0.133"/>
+				</subset>
+				<subset label="4">
+					<individual ref="miloty_ACZV679" score="0.141"/>
+					<individual ref="miloty_ZCMV479" score="0.142"/>
+				</subset>
+				<subset label="5">
+					<individual ref="miloty_ACZC324" score="0.151"/>
+					<individual ref="miloty_ACZC329" score="0.152"/>
+				</subset>
+			</subsets>
+			<concordances>
+				<concordance evidenceName="Rag1 absence of Haplotype sharing" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="257" concordanceSupport="Yes"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="5" concordanceSupport="Yes"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="257" NIndividualsSubsetB="5" concordanceSupport="No"/>
+				</concordance>
+				<concordance evidenceName="BDNF degree of Haplotype sharing" evidenceType="Molecular" evidenceDataType="Continuous" evidenceDiscriminationType="Proportion" evidenceDiscriminationDataType="Proportion">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="257" concordanceSupport="0"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="5" concordanceSupport="0"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="257" NIndividualsSubsetB="5" concordanceSupport="0.2"/>
+				</concordance>
+				<concordance evidenceName="absence of overlap in advertisement call duration" evidenceType="Behaviour" evidenceDataType="Continuous" evidenceDiscriminationType="OverlapAbsence" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2"  NIndividualsSubsetA="15" NIndividualsSubsetB="3" concordanceSupport="Yes"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3"  NIndividualsSubsetA="3" NIndividualsSubsetB="20" concordanceSupport="Yes"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3"  NIndividualsSubsetA="15" NIndividualsSubsetB="20" concordanceSupport="No"/>
+				</concordance>
+				<concordance evidenceName="differences in advertisement call duration" evidenceType="Behaviour" evidenceDataType="Continuous" evidenceDiscriminationType="Significance" evidenceDiscriminationDataType="Proportion"  evidenceSignificanceTest="U-test">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="15" NIndividualsSubsetB="3" concordanceSupport="0.05"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="15" NIndividualsSubsetB="20" concordanceSupport="0.001"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="3" NIndividualsSubsetB="20" concordanceSupport="0.63"/>
+				</concordance>
+				<concordance evidenceName="differences in snout-vent length" evidenceType="Morphology" evidenceDataType="Continuous" evidenceDiscriminationType="Significance" evidenceDiscriminationDataType="Continuous" evidenceSignificanceTest="U-test">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="12" concordanceSupport="0.03"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="115" NIndividualsSubsetB="12" concordanceSupport="0.00001"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="115" concordanceSupport="0.01"/>
+				</concordance>
+				<concordance evidenceName="differences in snout-vent length" evidenceType="Morphology" evidenceDataType="Continuous" evidenceDiscriminationType="Gap" evidenceDiscriminationDataType="Continuous"  evidenceSignificanceTest="relative gap size">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="12" concordanceSupport="2.4"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="115" NIndividualsSubsetB="12" concordanceSupport="0.3"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="115" concordanceSupport="-2.1"/>
+				</concordance>
+		        <concordance evidenceName="range overlap" evidenceType="Geography" evidenceDataType="Continuous" evidenceDiscriminationType="Gap" evidenceDiscriminationDataType="Continuous"  evidenceDiscriminationUnit="km2" evidenceSignificanceTest="relative overlap size" evidenceRemark="this is just a test">
+					<analysis name="concordanceseeker"/>
+					<date>2021-01-26T18:13:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="12" concordanceSupport="2.4"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="115" NIndividualsSubsetB="12" concordanceSupport="0"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="115" concordanceSupport="-2.1"/>
+				</concordance>
+			</concordances>
+		</spartition>
+	</spartitions>
+
+	<Locations>
+		<coordinates locality="Fierenana" decimalLatitude="-18.4859" decimalLongitude="48.40157" elevation="1456" synonym="Fiherenana" measurementAccuracy="100000" elevationAccuracy="10" verbatimCoordinateSystem="WGS84"/>
+		<coordinates locality="Andasibe" decimalLatitude="-18.9351" decimalLongitude="48.41454"/>
+		<coordinates locality="Torotorofotsy" decimalLatitude="-18.8607" decimalLongitude="48.3642"/>
+		<coordinates locality="Andreba" decimalLatitude="-17.6331" decimalLongitude="48.5091"/>
+	</Locations>
+	
+</root>

@@ -131,3 +131,5 @@ pyrightconfig.json
 helpers/
 
 demo/
+# visual studio
+.vs/

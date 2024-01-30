@@ -1,0 +1,145 @@
+<?xml version="1.0" ?>
+<root>
+	<project_name>custom_generated_file</project_name>
+	<date>2022-10-02T12:00:00</date>
+	<individuals>
+		<individual id="individual_1" lat="0.43769588614373156" lon="0.3802446534739552"/>
+		<individual id="individual_2" lat="0.31084004833308543" lon="0.5605478441119927"/>
+		<individual id="individual_3" lat="0.17627612737164455" lon="0.41111599672487886"/>
+		<individual id="individual_4" lat="0.2942660052464824" lon="0.6630838997354863"/>
+		<individual id="individual_5" lat="0.3042381193644228" lon="0.43833447818171856"/>
+		<individual id="individual_6" lat="0.10438124939765703" lon="0.9171673537271737"/>
+		<individual id="individual_7" lat="0.4466953016696854" lon="0.781489676584607"/>
+		<individual id="individual_8" lat="0.0029297053837760156" lon="0.0982225210882699"/>
+		<individual id="individual_9" lat="0.6364926911687185" lon="0.8054143690141196"/>
+		<individual id="individual_10" lat="0.9935936055443824" lon="0.15320792282993845"/>
+	</individuals>
+	<spartitions>
+		<spartition label="spartition_1" spartitionScore="1.0" individualScoreType="individual_score_1" spartitionScoreType="spartition_score_1" subsetScoreType="subset_score_1">
+			<subsets>
+				<subset label="1">
+					<individual ref="individual_1" score="0.342166821579473"/>
+					<individual ref="individual_2" score="0.8752377282531991"/>
+					<individual ref="individual_3" score="0.35157637952542364"/>
+					<individual ref="individual_4" score="0.3625491778666482"/>
+					<individual ref="individual_5" score="0.395455793905683"/>
+					<individual ref="individual_6" score="0.16640931168940898"/>
+					<individual ref="individual_7" score="0.3889196289666975"/>
+					<individual ref="individual_8" score="0.2740659091912422"/>
+					<individual ref="individual_9" score="0.15984294089044038"/>
+					<individual ref="individual_10" score="0.3511630691693649"/>
+				</subset>
+				<subset label="2">
+					<individual ref="individual_11" score="0.3669184077359414"/>
+					<individual ref="individual_12" score="0.9229208226520164"/>
+					<individual ref="individual_13" score="0.2194420685459192"/>
+					<individual ref="individual_14" score="0.5200162507698269"/>
+					<individual ref="individual_15" score="0.9569989017645174"/>
+					<individual ref="individual_16" score="0.5035682511512635"/>
+					<individual ref="individual_17" score="0.11175675887332992"/>
+					<individual ref="individual_18" score="0.26266743331221"/>
+					<individual ref="individual_19" score="0.48464830685262594"/>
+					<individual ref="individual_20" score="0.3637896273188862"/>
+				</subset>
+				<subset label="3">
+					<individual ref="individual_21" score="0.4808632911527181"/>
+					<individual ref="individual_22" score="0.41278612863569764"/>
+					<individual ref="individual_23" score="0.5508512143663965"/>
+					<individual ref="individual_24" score="0.2592760986666519"/>
+					<individual ref="individual_25" score="0.5746344008921874"/>
+					<individual ref="individual_26" score="0.531288622716775"/>
+					<individual ref="individual_27" score="0.034161790452520546"/>
+					<individual ref="individual_28" score="0.8279336646295788"/>
+					<individual ref="individual_29" score="0.7590318971902984"/>
+					<individual ref="individual_30" score="0.10731307451434224"/>
+				</subset>
+			</subsets>
+			<concordances>
+				<concordance evidenceName="1" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2022-10-02T12:00:00</date>
+					<concordantLimit subsetNumberA="1" subsetNumberB="2" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.11717565970703481"/>
+					<concordantLimit subsetNumberA="1" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.8205700801166189"/>
+					<concordantLimit subsetNumberA="2" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.16773883158887737"/>
+				</concordance>
+				<concordance evidenceName="2" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2022-10-02T12:00:00</date>
+					<concordantLimit subsetNumberA="1" subsetNumberB="2" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.825332418041278"/>
+					<concordantLimit subsetNumberA="1" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.17589684675049322"/>
+					<concordantLimit subsetNumberA="2" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.6859582748629849"/>
+				</concordance>
+				<concordance evidenceName="3" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2022-10-02T12:00:00</date>
+					<concordantLimit subsetNumberA="1" subsetNumberB="2" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.20097067611893105"/>
+					<concordantLimit subsetNumberA="1" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.29910492275270817"/>
+					<concordantLimit subsetNumberA="2" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.5630109014907905"/>
+				</concordance>
+			</concordances>
+		</spartition>
+		<spartition label="spartition_2" spartitionScore="2.0" individualScoreType="individual_score_2" spartitionScoreType="spartition_score_2" subsetScoreType="subset_score_2">
+			<subsets>
+				<subset label="1">
+					<individual ref="individual_1" score="0.07698422577565678"/>
+					<individual ref="individual_2" score="0.25983692073049214"/>
+					<individual ref="individual_3" score="0.05805097835528139"/>
+					<individual ref="individual_4" score="0.9835513664163394"/>
+					<individual ref="individual_5" score="0.9717275219882995"/>
+					<individual ref="individual_6" score="0.45088050386158995"/>
+					<individual ref="individual_7" score="0.4424461008337659"/>
+					<individual ref="individual_8" score="0.37342275753801824"/>
+					<individual ref="individual_9" score="0.28193792987464994"/>
+					<individual ref="individual_10" score="0.11015388513960522"/>
+				</subset>
+				<subset label="2">
+					<individual ref="individual_11" score="0.9997314190421878"/>
+					<individual ref="individual_12" score="0.06421011987933756"/>
+					<individual ref="individual_13" score="0.6759816632457796"/>
+					<individual ref="individual_14" score="0.6462020762408742"/>
+					<individual ref="individual_15" score="0.7345012141300671"/>
+					<individual ref="individual_16" score="0.11315364075973422"/>
+					<individual ref="individual_17" score="0.14262004505041392"/>
+					<individual ref="individual_18" score="0.7965213381457673"/>
+					<individual ref="individual_19" score="0.1250468437077782"/>
+					<individual ref="individual_20" score="0.6824512666502333"/>
+				</subset>
+				<subset label="3">
+					<individual ref="individual_21" score="0.28103064132001176"/>
+					<individual ref="individual_22" score="0.22259188271389763"/>
+					<individual ref="individual_23" score="0.6803826482257883"/>
+					<individual ref="individual_24" score="0.30161395879922204"/>
+					<individual ref="individual_25" score="0.2635540762217429"/>
+					<individual ref="individual_26" score="0.6434567117884812"/>
+					<individual ref="individual_27" score="0.7951358475957704"/>
+					<individual ref="individual_28" score="0.3645066160337984"/>
+					<individual ref="individual_29" score="0.24457004079294198"/>
+					<individual ref="individual_30" score="0.5506538056549459"/>
+				</subset>
+			</subsets>
+			<concordances>
+				<concordance evidenceName="1" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2022-10-02T12:00:00</date>
+					<concordantLimit subsetNumberA="1" subsetNumberB="2" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.04244019993346648"/>
+					<concordantLimit subsetNumberA="1" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.37786382985406886"/>
+					<concordantLimit subsetNumberA="2" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.7530300378999085"/>
+				</concordance>
+				<concordance evidenceName="2" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2022-10-02T12:00:00</date>
+					<concordantLimit subsetNumberA="1" subsetNumberB="2" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.904164849107604"/>
+					<concordantLimit subsetNumberA="1" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.31709955146466684"/>
+					<concordantLimit subsetNumberA="2" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.7548882523512512"/>
+				</concordance>
+				<concordance evidenceName="3" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+					<analysis name="concordanceseeker"/>
+					<date>2022-10-02T12:00:00</date>
+					<concordantLimit subsetNumberA="1" subsetNumberB="2" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.8321699082263915"/>
+					<concordantLimit subsetNumberA="1" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.9524091760142743"/>
+					<concordantLimit subsetNumberA="2" subsetNumberB="3" numIndividualsInSubsetA="10" numIndividualsInSubsetB="10" concordanceSupport="0.9683937514579498"/>
+				</concordance>
+			</concordances>
+		</spartition>
+	</spartitions>
+</root>

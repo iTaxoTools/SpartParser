@@ -18,7 +18,17 @@ def print_tree(spart):
                 data = [f'{k}="{v}"' for k, v in spart.getIndividualData(individual).items()]
                 data += [f'{k}="{v}"' for k, v in spart.getSubsetIndividualData(spartition, subset, individual).items()]
                 print('|-+', f'<{individual}>', *data)
-        print(' ')
+        
+        for concordance in spart.getSpartitionConcordances(spartition):
+            print('|')
+            data = [f'{k}="{v}"' for k, v in spart.getConcordanceData(spartition, concordance).items()]
+            print('+', f'<{concordance}>', *data)
+            for limit in spart.getConcordantLimits(spartition, concordance):
+                data = [f'{k}="{v}"' for k, v in spart.getConcordantLimitData(spartition, concordance, limit).items()]
+                data += [f'{k}="{v}"' for k, v in spart.getConcordantLimitData(spartition, concordance, limit).items()]
+                print('|-+', f'<{concordance}>', *data)
+        
+
 
 def print_latlon(spart):
     data = [
@@ -32,11 +42,13 @@ def print_latlon(spart):
     df.to_csv(stdout, sep='\t')
 
 
+
 if __name__ == '__main__':
     input = argv[1]
     spart = Spart.fromXML(input)
     print()
     print_tree(spart)
     print()
-    print_latlon(spart)
+    """    print_latlon(spart)"""
     print()
+

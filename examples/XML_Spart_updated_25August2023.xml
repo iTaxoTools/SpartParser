@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+
+	<project_name>Mantella.fas</project_name>
+	<date>2021-01-29T18:13:35</date>
+
+
+	<!-- WARNING: The sample names below may have been changed to fit SPART specification (only alphanumeric characters and _ ) -->
+ 	<!-- user comment: this analysis was generated based on a single ML tree obtained in MEGA 7 -->
+
+	<individuals>
+		<individual id="aura_ZCMV1234" voucher="ZSM23/721" locality="Andasibe">
+			<type status="Holotype"
+				nameBearingStatus="Yes"
+				namePublishedInYear="1889"
+				scientificNameAuthorship="Boulenger"
+				originalNameUsage="Dendrobates aurantiacus"
+				verbatimTypeLocality="Perinet"
+			/>
+		</individual>
+		<individual id="crocea_ZCMV235" locality="Torotorofotsy">
+			<type status="Paratype"
+				nameBearingStatus="No"
+				namePublishedInYear="1889"
+				scientificNameAuthorship="Boulenger"
+				originalNameUsage="Dendrobates aurantiacus"
+				verbatimTypeLocality="Torotorofotsy"
+			/>
+			<type status="Neotype"
+				nameBearingStatus="Yes"
+				namePublishedInYear="2023"
+				scientificNameAuthorship="Vences"
+				originalNameUsage="Mantella inexistens"
+			/>
+		</individual>
+		<individual id="aura_ZCMV1235" locality="Andasibe"/>
+		<individual id="aura_ZCMV1236" locality="Andasibe"/>
+		<individual id="aura_ZCMV1237" locality="Andasibe"/>
+		<individual id="aura_ZCMV1238" locality="Andasibe"/>
+		<individual id="aura_ZCMV1239" locality="Andasibe"/>
+		<individual id="aura_FGZC987" locality="Torotorofotsy" />
+		<individual id="aura_FGZC986" locality="Torotorofotsy"/>
+		<individual id="crocea_ZCMV234" locality="Andreba"/>
+		<individual id="miloty_ACZC324" locality="Fierenana" />
+		<individual id="miloty_ACZC329" locality="Fierenana"/>
+		<individual id="crocea_ZCMV236" locality="Andreba"/>
+		<individual id="crocea_ZCMV237" locality="Andreba"/>
+		<individual id="miloty_ACZV679" locality="Fierenana"/>
+		<individual id="miloty_ACZV681" locality="Fierenana"/>
+		<individual id="miloty_ZCMV479" locality="Fierenana"/>
+		<individual id="miloty_ZCMV480" locality="Fierenana"/>
+	</individuals>
+
+
+	<spartitions>
+		<spartition label="Mantella_bPTP" spartitionScore="1.234E-6" spartitionScoreType="logLikelihood" subsetScoreType = "posterior" subsetScoreSource= "BEAST analysis 2021-03-02" individualScoreType="probability" individualScoreSource="BEAST analysis 2021-03-02" >
+		<remarks>First spartition</remarks>
+		<subsets>
+			<subset label="1" score="1.23E-6" taxonname="Mantella aurantiaca" taxonlabel="species">
+				<individual ref="aura_ZCMV1234" score="1.23E-3" />
+				<individual ref="aura_ZCMV1235" score="1.23E-3" />
+				<individual ref="aura_ZCMV1236" score="1.23E-3" />
+				<individual ref="aura_ZCMV1237" score="1.23E-3" />
+				<individual ref="aura_ZCMV1238" score="1.23E-3" />
+				<individual ref="aura_ZCMV1239" score="1.23E-3" />
+				<individual ref="aura_FGZC987" score="1.23E-3" />
+				<individual ref="aura_FGZC986" score="1.23E-3" />
+			</subset>
+			<subset label="2" score="7.34E-6" taxonname="Mantella crocea" taxonlabel="species">
+				<individual ref="crocea_ZCMV234" score="1.23E-3" />
+				<individual ref="crocea_ZCMV235" score="1.23E-3" />
+				<individual ref="miloty_ACZC324" score="1.23E-3" />
+				<individual ref="miloty_ACZC329" score="1.23E-3" />
+				<individual ref="crocea_ZCMV236" score="1.23E-3" />
+				<individual ref="crocea_ZCMV237" score="1.23E-3" />
+				<individual ref="miloty_ACZV679" score="1.23E-3" />
+				<individual ref="miloty_ZCMV479" score="1.23E-3" />
+			</subset>
+			<subset label="3" score="1.01E-5" taxonname="Mantella crocea milotympanum" taxonlabel="subspecies">
+				<individual ref="miloty_ACZV681" score="1.23E-3" />
+				<individual ref="miloty_ZCMV480" score="1.23E-3" />
+			</subset>
+		</subsets>
+
+<!-- MV COMMENT  This next block is to  provide concordance values of limits between pairs of subsets, separate for the kind of evidence: limits in each spartition are compared e.g. with another molecular marker,  -->
+<!-- MV COMMENT  and those subsets supported by the independent evidence are listed -->
+<!-- MV COMMENT  This has the advantage that new blocks can easily be added after each analysis without modifying the previous blocks -->
+<!-- MV COMMENT  After trying a lot of options, I think it makes sense to have the concordance info at the end of each spartition block, and "within" the spartition block.  -->
+<!-- MV COMMENT Alternatively it could be an entire new block at the end of the XML file, but then for each concordance it needs to say to which spartition it refers -->
+<!-- MV COMMENT Potential problem: With many subsets there will be many limits and so the concordances block (and thereby the spartitions block) will become very long. Still I think it should be easier to have it at this position. -->
+
+
+<!--  evidenceType describes the kind of evidence with which the subset limits have been confronted. It can take the following values: Morphology / Molecular/ Behaviour / Geography / Ecology / Other
+      evidenceName is a free description of the kind of evidence with which the subset limits have been confronted. It can take any value (free text)
+      evidenceDataType can take the following values: Continuous / Ordinal / Categorical / Boolean
+      evidenceDiscriminationType can take the following values: OverlapAbsence / Overlap / Gap / Proportion / Significance / Likelihood / Boolean / Other
+      evidenceDiscriminationDataType describes the format in which the support value (e.g., the statistical significance) is given. It can take the following value: Continuous / Percentage (1-100) / Proportion (0-1) / Boolean (Yes or No) / Other
+      evidenceDiscriminationUnit is an optional descriptor of the unit in which the discrimination value is given (such as km or km2 for geographical descriptors)
+      evidenceSignificanceTest is a free optional description of the kind of test used to obtain statistical significance or likelihood values.
+      evidenceRemark is an optional descriptor that can take any value (free text)
+      
+      To quantify the size of the gap between value ranges of two subsets, best use the formula ((range1+range2)/2)/gap, and if we want to correct for outliers,calculation can be run after outlier removal or using 90%percentiles rather than ranges. 
+      The formula basically asks "how big is the gap size relative to the average value range of the compared subsets", so it gives a kind of relative gap size, the bigger he value the bigger the gap
+      
+      For variables like gap and overlap, when quantified not as Boolean (Yes/No) variable but as continuous number, then in cases there is no gap we can use negative numbers to quantify instead the overlap in values between the two subsets, 
+      so basically, overlap and gap become the same thing and positive numbers quantify a gap and negativev numbers quantify the the overlap. 
+      
+      subsetnumberA and subsetnumberB give the numbers of the subset (from the respective partition) whose limit has been confronted with additonal evidence
+      NIndividualsSubsetA and NIndividualsSubsetB give the number of individuals in subset A and B that have been used for the concordance assessment (i.e. the number of individuals contained in the subset minus the specimens for which no data were available for the additional line of evidence
+      concordanceSupport will give the value actually supporting the concordance. It will usually be either a number (range overlap, statistical significance) or Boolean (Yes/No) 
+	  
+      One further note, I just realized that the name of each spartition must be unique, not sure if this is already clear in the published Spart specification, but here it is very important especially
+      because sometimes new spartitions will be added to the file and it is important that the spartition name is never repeated/duplicated
+      
+       -->
+		<concordances>
+			<concordance evidenceName="Rag1 absence of Haplotype sharing" evidenceType="Molecular" evidenceDataType="Boolean" evidenceDiscriminationType="Boolean" evidenceDiscriminationDataType="Boolean">
+				<analysis name="concordanceseeker"/>
+				<date>2021-01-26T18:13:35</date>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="257" concordanceSupport="Yes"/>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="5" concordanceSupport="Yes"/>
+				<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="257" NIndividualsSubsetB="5" concordanceSupport="No"/>
+			</concordance>
+
+			<concordance evidenceName="BDNF degree of Haplotype sharing" evidenceType="Molecular" evidenceDataType="Continuous" evidenceDiscriminationType="Proportion" evidenceDiscriminationDataType="Proportion">
+				<analysis name="concordanceseeker"/>
+				<date>2021-01-26T18:13:35</date>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="257" concordanceSupport="0"/>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="5" concordanceSupport="0"/>
+				<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="257" NIndividualsSubsetB="5" concordanceSupport="0.2"/>
+			</concordance>
+
+			<concordance evidenceName="absence of overlap in advertisement call duration" evidenceType="Behaviour" evidenceDataType="Continuous" evidenceDiscriminationType="OverlapAbsence" evidenceDiscriminationDataType="Boolean">
+				<analysis name="concordanceseeker"/>
+				<date>2020-01-26T18:25:35</date>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="2"  NIndividualsSubsetA="15" NIndividualsSubsetB="3" concordanceSupport="Yes"/>
+				<concordantlimit subsetnumberA= "2" subsetnumberB="3"  NIndividualsSubsetA="3" NIndividualsSubsetB="20" concordanceSupport="Yes"/>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="3"  NIndividualsSubsetA="15" NIndividualsSubsetB="20" concordanceSupport="No"/>
+			</concordance>
+
+			<concordance evidenceName="differences in advertisement call duration" evidenceType="Behaviour" evidenceDataType="Continuous" evidenceDiscriminationType="Significance" evidenceDiscriminationDataType="Proportion"  evidenceSignificanceTest="U-test">
+				<analysis name="concordanceseeker"/>
+				<date>2020-01-26T18:28:35</date>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="15" NIndividualsSubsetB="3" concordanceSupport="0.05"/>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="15" NIndividualsSubsetB="20" concordanceSupport="0.001"/>
+				<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="3" NIndividualsSubsetB="20" concordanceSupport="0.63"/>
+			</concordance>
+
+			<concordance evidenceName="differences in snout-vent length" evidenceType="Morphology" evidenceDataType="Continuous" evidenceDiscriminationType="Significance" evidenceDiscriminationDataType="Continuous" evidenceSignificanceTest="U-test">
+				<analysis name="concordanceseeker"/>
+				<date>2021-03-26T22:28:35</date>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="12" concordanceSupport="0.03"/>
+				<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="115" NIndividualsSubsetB="12" concordanceSupport="0.00001"/>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="115" concordanceSupport="0.01"/>
+			</concordance>
+
+			<concordance evidenceName="differences in snout-vent length" evidenceType="Morphology" evidenceDataType="Continuous" evidenceDiscriminationType="Gap" evidenceDiscriminationDataType="Continuous"  evidenceSignificanceTest="relative gap size">
+				<analysis name="concordanceseeker"/>
+				<date>2021-03-26T22:28:35</date>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="12" concordanceSupport="2.4"/>
+				<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="115" NIndividualsSubsetB="12" concordanceSupport="0.3"/>
+				<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="115" concordanceSupport="-2.1"/>
+			</concordance>
+				
+				
+		        <concordance evidenceName="range overlap" evidenceType="Geography" evidenceDataType="Continuous" evidenceDiscriminationType="Gap" evidenceDiscriminationDataType="Continuous"  evidenceDiscriminationUnit="km2" evidenceSignificanceTest="relative overlap size" evidenceRemark="this is just a test">
+					<analysis name="concordanceseeker"/>
+					<date>2021-03-26T22:28:35</date>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="23" NIndividualsSubsetB="12" concordanceSupport="2.4"/>
+					<concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="115" NIndividualsSubsetB="12" concordanceSupport="0"/>
+					<concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="23" NIndividualsSubsetB="115" concordanceSupport="-2.1"/>
+				</concordance>
+
+
+			</concordances>
+
+
+		</spartition>
+
+
+<!-- MV COMMENT  Here begins the next spartition -->
+
+
+		<spartition label="analysis_P2" spartitionScoreType="likelihood" spartitionScore="1.0345E-06" >
+			<remarks>Second spartition</remarks>
+			<subsets>
+				<subset label="1">
+					<individual ref="aura_ZCMV1234" />
+					<individual ref="aura_ZCMV1235" />
+					<individual ref="aura_ZCMV1236" />
+					<individual ref="aura_ZCMV1237" />
+				</subset>
+				<subset label="2">
+					<individual ref="aura_ZCMV1238" />
+					<individual ref="aura_ZCMV1239" />
+				</subset>
+				<subset label="3">
+					<individual ref="aura_FGZC987" />
+					<individual ref="aura_FGZC986" />
+				</subset>
+				<subset label="4">
+					<individual ref="crocea_ZCMV234" />
+					<individual ref="crocea_ZCMV235" />
+					<individual ref="miloty_ACZC324" />
+					<individual ref="miloty_ACZC329" />
+					<individual ref="crocea_ZCMV236" />
+					<individual ref="crocea_ZCMV237" />
+					<individual ref="miloty_ACZV679" />
+					<individual ref="miloty_ZCMV479" />
+				</subset>
+				<subset label="5">
+					<individual ref="miloty_ACZV681" />
+					<individual ref="miloty_ZCMV480" />
+				</subset>
+			</subsets>
+		</spartition>
+	</spartitions>
+
+
+<!-- MV COMMENT  As a convention, I suggest to add these additional blocks with metadata and  raw data after the spartition information, so if the file gets very large, with many sequences, -->
+<!-- MV COMMENT  a program probably can more easily retrieve the spartition information without first searching through thousands of lines with DNA sequences. -->
+<!-- MV COMMENT  Default Geographic Coordinate System (CGCS) will be WGS84 if not specified -->
+<!-- MV COMMENT  Note: In Spartmapper, if coordinates are provided in a second file, separatately from the SpartXML file, then the info in the SpartXML will be overridden-->
+<!-- MV COMMENT  But if the user provides only the SpartXML file, then the coordinates will be read from the SpartXML file-->
+
+	<Locations>
+		<coordinates locality="Fierenana" decimalLatitude="43.1234" decimalLongitude="-21.341" elevation="1456" synonym="Fiherenana" measurementAccuracy="100000" elevationAccuracy="10" verbatimCoordinateSystem="WGS84"/>
+		<coordinates locality="Andasibe" decimalLatitude="45.3" decimalLongitude="-23.4" elevation="950"/>
+		<coordinates locality="Torotorofotsy" decimalLatitude="43.1234" decimalLongitude="-21.341" elevation="1456" synonym="Fiherenana" measurementAccuracy="100000" elevationAccuracy="10" verbatimCoordinateSystem="WGS84"/>
+
+	</Locations>
+
+
+<!-- MV COMMENT  If SPART-XML provides DNA sequences (which will rarely be the case) then the syntax proposed here follows the syntax of the barcoding consortium BOL  -->
+<!-- MV COMMENT  It is fully compatible with BOL syntax, with information on indivual added to "notes" -->
+
+	<sequences>
+		<sequence>
+			<notes individual="miloty_ZCMV480"/>
+			<genbank_accession>AJ345676</genbank_accession>
+			<markercode>cytochrome_b</markercode>
+			<nucleotides> ------AAACTGAAAACCCCTTTAGTTAnnnnnAAGTk</nucleotides>
+		</sequence>
+	</sequences>
+
+
+
+</root>
+

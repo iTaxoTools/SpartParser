@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="project_name" type="xs:string" minOccurs="0"/>
+        <xs:element name="date" type="xs:string" minOccurs="0"/>
+        <xs:element name="individuals">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="individual" minOccurs="0" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="type" minOccurs="0" maxOccurs="unbounded">
+                      <xs:complexType>
+                          <xs:attribute name="status" type="xs:string"/>
+                          <xs:attribute name="nameBearingStatus" type="xs:string"/>
+                          <xs:attribute name="namePublishedInYear" type="xs:gYear"/>
+                          <xs:attribute name="scientificNameAuthorship" type="xs:string"/>
+                          <xs:attribute name="originalNameUsage" type="xs:string"/>
+                          <xs:attribute name="verbatimTypeLocality" type="xs:string"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="id" type="xs:string" use="required"/>
+                  <xs:attribute name="voucher" type="xs:string"/>
+                  <xs:attribute name="status" type="xs:string"/>
+                  <xs:attribute name="locality" type="xs:string"/>
+                  <xs:attribute name="decimalLatitude" type="xs:string"/>
+                  <xs:attribute name="decimalLongitude" type="xs:string"/>
+                  <xs:attribute name="lat" type="xs:string"/>
+                  <xs:attribute name="lon" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="spartitions">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="spartition" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="remarks" type="xs:string"/>
+                    <xs:element name="subsets">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="subset" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="individual" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="ref" type="xs:string" use="required"/>
+                                    <xs:attribute name="score" type="xs:string"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="label" type="xs:string" use="required"/>
+                              <xs:attribute name="score" type="xs:string"/>
+                              <xs:attribute name="taxonname" type="xs:string"/>
+                              <xs:attribute name="taxonlabel" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="concordances" minOccurs="0">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="concordance" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="analysis">
+									<xs:complexType>
+    									<xs:attribute name="name" type="xs:string"/>
+									</xs:complexType>
+								</xs:element>
+								<xs:element name="date" type="xs:string"/>
+                                <xs:element name="concordantlimit" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:attribute name="subsetnumberA" type="xs:string" use="required"/>
+                                    <xs:attribute name="subsetnumberB" type="xs:string" use="required"/>
+                                    <xs:attribute name="NIndividualsSubsetA" type="xs:integer"/>
+                                    <xs:attribute name="NIndividualsSubsetB" type="xs:integer"/>
+                                    <xs:attribute name="concordanceSupport" type="xs:string"/>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="evidenceName" type="xs:string" use="required"/>
+                              <xs:attribute name="evidenceType" type="xs:string"/>
+                              <xs:attribute name="evidenceDataType" type="xs:string"/>
+                              <xs:attribute name="evidenceDiscriminationType" type="xs:string"/>
+                              <xs:attribute name="evidenceDiscriminationDataType" type="xs:string"/>
+                              <xs:attribute name="evidenceDiscriminationUnit" type="xs:string"/>
+                              <xs:attribute name="evidenceSignificanceTest" type="xs:string"/>
+                              <xs:attribute name="evidenceRemark" type="xs:string"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="label" type="xs:string" use="required"/>
+                  <xs:attribute name="spartitionScore" type="xs:string"/>
+                  <xs:attribute name="spartitionScoreType" type="xs:string"/>
+                  <xs:attribute name="subsetScoreType" type="xs:string"/>
+                  <xs:attribute name="subsetScoreSource" type="xs:string"/>
+                  <xs:attribute name="individualScoreType" type="xs:string"/>
+                  <xs:attribute name="individualScoreSource" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="Locations" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="coordinates" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:attribute name="locality" type="xs:string" use="required"/>
+                  <xs:attribute name="decimalLatitude" type="xs:string"/>
+                  <xs:attribute name="decimalLongitude" type="xs:string"/>
+                  <xs:attribute name="elevation" type="xs:string"/>
+                  <xs:attribute name="synonym" type="xs:string"/>
+                  <xs:attribute name="measurementAccuracy" type="xs:string"/>
+                  <xs:attribute name="elevationAccuracy" type="xs:string"/>
+                  <xs:attribute name="verbatimCoordinateSystem" type="xs:string"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="sequences" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="sequence" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="notes">
+						<xs:complexType>
+							<xs:attribute name="individual" type="xs:string"/>
+						</xs:complexType>
+				</xs:element>
+				<xs:element name="genbank_accession" type="xs:string"/>
+                    <xs:element name="markercode" type="xs:string"/>
+                    <xs:element name="nucleotides" type="xs:string"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

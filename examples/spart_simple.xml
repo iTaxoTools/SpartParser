@@ -70,9 +70,9 @@
 
 	<Locations>
 		<coordinates locality="Fierenana" decimalLatitude="-18.4859" decimalLongitude="48.40157" elevation="1456" synonym="Fiherenana" measurementAccuracy="100000" elevationAccuracy="10" verbatimCoordinateSystem="WGS84"/>
-		<coordinates locality="Andasibe" decimalLatitude="-18.9351" decimalLongitude="48.41454"/> ,
+		<coordinates locality="Andasibe" decimalLatitude="-18.9351" decimalLongitude="48.41454"/>
 		<coordinates locality="Torotorofotsy" decimalLatitude="-18.8607" decimalLongitude="48.3642"/>
 		<coordinates locality="Andreba" decimalLatitude="-17.6331" decimalLongitude="48.5091"/>
 	</Locations>
-
+	
 </root>
