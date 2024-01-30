@@ -1,16 +1,15 @@
 #!/usr/bin/env python3
 
-from pathlib import Path
 from dataclasses import dataclass
+from pathlib import Path
 from typing import Callable
 
 import pytest
-
 from utility import assert_eq_files
 
 from itaxotools.spart_parser import Spart
 
-TEST_DATA_DIR = Path(__file__).parent / 'data'
+TEST_DATA_DIR = Path(__file__).parent / "data"
 
 
 @dataclass
@@ -22,9 +21,9 @@ class ReadWriteTest:
 
 
 test_data = [
-    ReadWriteTest('simple.spart', 'simple.xml', Spart.fromMatricial, Spart.toXML),
-    ReadWriteTest('simple.xml', 'simple.spart', Spart.fromXML, Spart.toMatricial),
-    ]
+    ReadWriteTest("simple.spart", "simple.xml", Spart.fromMatricial, Spart.toXML),
+    ReadWriteTest("simple.xml", "simple.spart", Spart.fromXML, Spart.toMatricial),
+]
 
 
 @pytest.mark.parametrize("test", test_data)

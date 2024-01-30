@@ -44,6 +44,7 @@ coverage.xml
 *.py,cover
 .hypothesis/
 .pytest_cache/
+.ruff_cache/
 
 # Translations
 *.mo
@@ -130,6 +131,7 @@ testfiles/
 pyrightconfig.json
 helpers/
 
+mprofile_*.dat
 demo/
 # visual studio
 .vs/

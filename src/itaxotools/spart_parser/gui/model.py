@@ -17,26 +17,23 @@
 # -----------------------------------------------------------------------------
 
 
-from PySide6 import QtCore
-
+from enum import Enum
 from pathlib import Path
-from tempfile import TemporaryDirectory
-from enum import Enum, auto
 from shutil import copy
-
-from .utility import Property, PropertyObject
+from tempfile import TemporaryDirectory
 
 from itaxotools.spart_parser import Spart
 
+from .utility import Property, PropertyObject
+
 
 class SpartType(Enum):
-    Matricial = 'Matricial Spart', '.spart'
-    XML = 'Spart-XML', '.xml'
+    Matricial = "Matricial Spart", ".spart"
+    XML = "Spart-XML", ".xml"
 
     def __init__(self, description, extension):
         self.description = description
         self.extension = extension
-
 
     def __str__(self):
         return self.description
@@ -56,7 +53,7 @@ class AppModel(PropertyObject):
 
     def __init__(self):
         super().__init__()
-        self.temp_dir = TemporaryDirectory(prefix='spart_')
+        self.temp_dir = TemporaryDirectory(prefix="spart_")
         self.temp_path = Path(self.temp_dir.name)
         self.object = None
         self.ready = False
@@ -64,18 +61,18 @@ class AppModel(PropertyObject):
         self.input_name = None
         self.individuals = None
         self.spartitions = None
-        self.status = 'Open a file to begin.'
+        self.status = "Open a file to begin."
 
     def open(self, path: Path):
-        parsed_matricial = self.temp_path / f'{path.name}.parsed.spart'
-        parsed_xml = self.temp_path / f'{path.name}.parsed.xml'
+        parsed_matricial = self.temp_path / f"{path.name}.parsed.spart"
+        parsed_xml = self.temp_path / f"{path.name}.parsed.xml"
 
         try:
             spart = Spart.fromPath(path)
             spart.toMatricial(parsed_matricial)
             spart.toXML(parsed_xml)
         except Exception as e:
-            raise Exception(f'Could not open file: {path.name}') from e
+            raise Exception(f"Could not open file: {path.name}") from e
 
         self.work_dir = path.parent
         self.path_input = path
@@ -88,7 +85,7 @@ class AppModel(PropertyObject):
 
         self.spart = spart
         self.ready = True
-        self.status = f'Successfully opened file: {self.shorten(self.input_name)}'
+        self.status = f"Successfully opened file: {self.shorten(self.input_name)}"
 
     def save(self, destination: Path, type: SpartType):
         source = {
@@ -96,9 +93,11 @@ class AppModel(PropertyObject):
             SpartType.XML: self.path_xml,
         }[type]
         copy(source, destination)
-        self.status = f'Successfully saved {str(type)} file: {self.shorten(destination.name)}'
+        self.status = (
+            f"Successfully saved {str(type)} file: {self.shorten(destination.name)}"
+        )
 
     def shorten(self, name):
         if len(name) < 30:
             return name
-        return f'{name[:15]}...{name[-15:]}'
+        return f"{name[:15]}...{name[-15:]}"

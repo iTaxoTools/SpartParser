@@ -23,28 +23,27 @@ from typing import Callable, ClassVar, Optional, Union
 
 
 class Property:
-
-    key_ref = 'properties'
-    key_list = '_property_list'
+    key_ref = "properties"
+    key_list = "_property_list"
 
     def __init__(self, type=object):
         self.type = type
 
     @staticmethod
     def key_value(key):
-        return f'_property_{key}_value'
+        return f"_property_{key}_value"
 
     @staticmethod
     def key_notify(key):
-        return f'_property_{key}_notify'
+        return f"_property_{key}_notify"
 
     @staticmethod
     def key_getter(key):
-        return f'_property_{key}_getter'
+        return f"_property_{key}_getter"
 
     @staticmethod
     def key_setter(key):
-        return f'_property_{key}_setter'
+        return f"_property_{key}_setter"
 
 
 class PropertyRef:
@@ -98,8 +97,8 @@ class PropertiesRef:
 class PropertyMeta(type(QtCore.QObject)):
     def __new__(cls, name, bases, attrs):
         properties = {
-            key: attrs[key] for key in attrs
-            if isinstance(attrs[key], Property)}
+            key: attrs[key] for key in attrs if isinstance(attrs[key], Property)
+        }
         cls._init_list(bases, attrs)
         for key, prop in properties.items():
             cls._register_property(attrs, key, prop)
@@ -162,8 +161,10 @@ class Binding:
     @classmethod
     def _bind(cls, signal, slot, proxy=None):
         if proxy:
+
             def proxy_slot(value):
                 slot(proxy(value))
+
             bind_slot = proxy_slot
         else:
             bind_slot = slot
@@ -184,7 +185,6 @@ def bind(
     destination: Union[PropertyRef, Callable],
     proxy: Optional[Callable] = None,
 ):
-
     if isinstance(source, PropertyRef):
         signal = source.notify
     else:
@@ -205,7 +205,6 @@ def unbind(
     source: Union[PropertyRef, QtCore.SignalInstance],
     destination: Union[PropertyRef, Callable],
 ):
-
     if isinstance(source, PropertyRef):
         signal = source.notify
     else:
