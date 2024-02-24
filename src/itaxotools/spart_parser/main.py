@@ -435,9 +435,9 @@ class Spart:
         concordanceLabel_list = []
         for spartition in self.spartDict['spartitions'].keys():
             for tag in self.spartDict['spartitions'][spartition].keys():
-                if tag == 'label':
-                    if self.spartDict['spartitions'][spartition][tag] == evidenceName:
-                        for concordanceLabel in self.spartDict['spartitions'][spartition]['concordances'].keys():
+                if tag == 'label' and self.spartDict['spartitions'][spartition][tag] == evidenceName:
+                    if 'concordances' in self.spartDict['spartitions'][spartition]:
+                        for concordanceLabel in self.spartDict['spartitions'][spartition]['concordances'].keys(): 
                             concordanceLabel_list.append(concordanceLabel)
         return concordanceLabel_list
 
