@@ -7,7 +7,7 @@ name = "itaxotools-spart-parser"
 dynamic = ["version"]
 description = "Parse and write SPART files"
 readme = "README.md"
-requires-python = ">=3.10.2, <4"
+requires-python = ">=3.8.6, <4"
 keywords = []
 authors = [
     { name = "Stefanos Patmanidis", email = "stefanpatman91@gmail.com" },
