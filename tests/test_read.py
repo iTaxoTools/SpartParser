@@ -451,6 +451,63 @@ def spart_types(spart: Spart):
     assert "locality" in data
 
 
+def spart_concordances(spart: Spart):
+    spartitions = spart.getSpartitions()
+    assert len(spartitions) == 1
+    assert "spartition_1" in spartitions
+
+    concordances = spart.getSpartitionConcordances("spartition_1")
+    assert len(concordances) == 2
+    assert "concordance_1" in concordances
+    assert "concordance_2" in concordances
+
+    concordance = spart.getConcordanceData("spartition_1", "concordance_1")
+    assert concordance["evidenceType"] == "Molecular"
+    assert concordance["evidenceDataType"] == "Boolean"
+    assert concordance["evidenceDiscriminationType"] == "Boolean"
+    assert concordance["evidenceDiscriminationDataType"] == "Boolean"
+    assert concordance["analysis"] == "concordanceseeker"
+    assert concordance["date"] == datetime.datetime(2025, 4, 1, 12, 0, 0)
+
+    limits = spart.getConcordantLimits("spartition_1", "concordance_1")
+    assert len(limits) == 1
+
+    assert limits[0]["subsetnumberA"] == "1"
+    assert limits[0]["subsetnumberB"] == "3"
+    assert limits[0]["NIndividualsSubsetA"] == "1"
+    assert limits[0]["NIndividualsSubsetB"] == "1"
+    assert limits[0]["concordanceSupport"] is True
+
+    concordance = spart.getConcordanceData("spartition_1", "concordance_2")
+    assert concordance["evidenceType"] == "Morphology"
+    assert concordance["evidenceDataType"] == "Continuous"
+    assert concordance["evidenceDiscriminationType"] == "Significance"
+    assert concordance["evidenceDiscriminationDataType"] == "Continuous"
+    assert concordance["analysis"] == "concordanceseeker"
+    assert concordance["date"] == datetime.datetime(2025, 4, 1, 12, 0, 0)
+
+    limits = spart.getConcordantLimits("spartition_1", "concordance_2")
+    assert len(limits) == 3
+
+    assert limits[0]["subsetnumberA"] == "1"
+    assert limits[0]["subsetnumberB"] == "3"
+    assert limits[0]["NIndividualsSubsetA"] == "1"
+    assert limits[0]["NIndividualsSubsetB"] == "4"
+    assert limits[0]["concordanceSupport"] == 0.1
+
+    assert limits[1]["subsetnumberA"] == "2"
+    assert limits[1]["subsetnumberB"] == "3"
+    assert limits[1]["NIndividualsSubsetA"] == "2"
+    assert limits[1]["NIndividualsSubsetB"] == "5"
+    assert limits[1]["concordanceSupport"] == 0.2
+
+    assert limits[2]["subsetnumberA"] == "1"
+    assert limits[2]["subsetnumberB"] == "2"
+    assert limits[2]["NIndividualsSubsetA"] == "3"
+    assert limits[2]["NIndividualsSubsetB"] == "6"
+    assert limits[2]["concordanceSupport"] == 0.3
+
+
 test_data = [
     ReadTest("simple.xml", Spart.fromXML, spart_simple),
     ReadTest("latlon.xml", Spart.fromXML, spart_latlon),
@@ -461,6 +518,7 @@ test_data = [
     ReadTest("scores.xml", Spart.fromXML, spart_scores),
     ReadTest("scores_type.spart", Spart.fromMatricial, spart_scores_type),
     ReadTest("scores_type.xml", Spart.fromXML, spart_scores_type),
+    ReadTest("concordances.xml", Spart.fromXML, spart_concordances),
 ]
 
 

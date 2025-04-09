@@ -333,7 +333,7 @@ class Spart:
             return without_keys(self.spartDict["individuals"][id], "types")
         return {}
 
-    def getIndividualLatLon(self, id: str) -> tuple[float, float] or None:
+    def getIndividualLatLon(self, id: str) -> tuple[float, float] | None:
         """Returns lat/lon information about the given individual id"""
         individual = self.spartDict["individuals"][id]
         lat = individual.get("decimalLatitude", None)
@@ -399,56 +399,47 @@ class Spart:
                 continue
             return self.spartDict["spartitions"][spartition]["remarks"]
 
+    def getSpartitionConcordances(self, label: str) -> list[str]:
+        """Returns a list with the labels of all concordances of the given spartition"""
+        index = self._getSpartitionKeyFromLabel(label)
+        return list(self.spartDict["spartitions"][index]["concordances"].keys())
+
+    def getConcordanceData(
+        self, spartition: str, concordance: str
+    ) -> dict[str, object]:
+        """Returns extra information about the given concordance"""
+        index = self._getSpartitionKeyFromLabel(spartition)
+        data = self.spartDict["spartitions"][index]["concordances"][concordance]
+        data = dict(data)
+        data.pop("limits")
+        return data
+
+    def getConcordantLimits(self, spartition: str, concordance: str) -> list[dict]:
+        """Returns a list of all concordant limits contained in the spartition
+        and concordance specified by the given labels."""
+        index = self._getSpartitionKeyFromLabel(spartition)
+        data = self.spartDict["spartitions"][index]["concordances"][concordance]
+        return list(data["limits"])
+
     def getSpartitionSubsets(self, label: str) -> list[str]:
         """Returns a list with the labels of all subsets of the given spartition"""
-        subsetLabel_list = []
-        for spartition in self.spartDict["spartitions"].keys():
-            for tag in self.spartDict["spartitions"][spartition].keys():
-                if tag == "label":
-                    if self.spartDict["spartitions"][spartition][tag] == label:
-                        for subLabel in self.spartDict["spartitions"][spartition][
-                            "subsets"
-                        ].keys():
-                            subsetLabel_list.append(subLabel)
-        return subsetLabel_list
+        index = self._getSpartitionKeyFromLabel(label)
+        return list(self.spartDict["spartitions"][index]["subsets"].keys())
 
     def getSubsetIndividuals(self, spartitionLabel: str, subsetNum: str) -> list[str]:
         """Returns a list of all individuals contained in the spartition
         and subset specified by the given labels."""
-        individuals_list = []
-        for spartition in self.spartDict["spartitions"].keys():
-            for tag in self.spartDict["spartitions"][spartition].keys():
-                if tag == "label":
-                    if (
-                        self.spartDict["spartitions"][spartition][tag]
-                        == spartitionLabel
-                    ):
-                        for key, val in self.spartDict["spartitions"][spartition][
-                            "subsets"
-                        ][subsetNum].items():
-                            if key == "individuals":
-                                for individual in self.spartDict["spartitions"][
-                                    spartition
-                                ]["subsets"][subsetNum]["individuals"].keys():
-                                    individuals_list.append(individual)
-        return individuals_list
+        index = self._getSpartitionKeyFromLabel(spartitionLabel)
+        data = self.spartDict["spartitions"][index]["subsets"][subsetNum]
+        return list(data["individuals"].keys())
 
     def getSubsetData(self, spartition: str, subset: str) -> dict[str, object]:
         """Returns extra information about the given subset"""
-        spartData = {}
-        for spartitionName in self.spartDict["spartitions"].keys():
-            if not self.spartDict["spartitions"][spartitionName]["label"] == spartition:
-                continue
-            for subsetLabel in self.spartDict["spartitions"][spartitionName][
-                "subsets"
-            ].keys():
-                if subsetLabel == subset:
-                    for tag, val in self.spartDict["spartitions"][spartitionName][
-                        "subsets"
-                    ][subsetLabel].items():
-                        if tag not in ["individuals"]:
-                            spartData[tag] = val
-        return spartData
+        index = self._getSpartitionKeyFromLabel(spartition)
+        data = self.spartDict["spartitions"][index]["subsets"][subset]
+        data = dict(data)
+        data.pop("individuals")
+        return data
 
     def getSubsetIndividualData(
         self, spartition: str, subset: str, individual: str
@@ -492,6 +483,12 @@ class Spart:
 
     def getSubsetIndividualScoreType(self, spartition: str) -> str:
         return self.getSpartitionFromLabel(spartition).get("individualScoreType")
+
+    def _getSpartitionKeyFromLabel(self, label: str) -> str:
+        """Since indexing is not being done with label for some reason..."""
+        for index, data in self.spartDict["spartitions"].items():
+            if data["label"] == label:
+                return index
 
     @property
     def project_name(self) -> str:
@@ -609,7 +606,7 @@ class SpartParserXML:
             if (event, token) == ("start", "project_name"):
                 self.parseProjectName(element)
             if (event, token) == ("start", "date"):
-                self.parseDate(element)
+                self.parseProjectDate(element)
             if (event, token) == ("start", "individuals"):
                 self.parseIndividuals()
             if (event, token) == ("start", "spartitions"):
@@ -622,7 +619,7 @@ class SpartParserXML:
         self.spartDict["project_name"] = element.text
         element.clear()
 
-    def parseDate(self, element):
+    def parseProjectDate(self, element):
         self.spartDict["date"] = element.text
         element.clear()
 
@@ -676,6 +673,8 @@ class SpartParserXML:
                 self.parseRemark(element, spartitionNumber)
             if (event, token) == ("start", "subsets"):
                 self.parseSubsets(spartitionNumber)
+            if (event, token) == ("start", "concordances"):
+                self.parseConcordances(spartitionNumber)
             element.clear()
 
     def parseSubsets(self, spartition):
@@ -705,6 +704,62 @@ class SpartParserXML:
         self.spartDict["spartitions"][spartition]["subsets"][subset]["individuals"][
             ref
         ] = attrs
+
+    def parseConcordances(self, spartition):
+        self.spartDict["spartitions"][spartition]["concordances"] = {}
+        for event, element in self.tokenizer:
+            token = self.translate(element.tag)
+            if (event, token) == ("end", "concordances"):
+                break
+            elif (event, token) == ("start", "concordance"):
+                self.parseConcordance(element, spartition)
+            element.clear()
+
+    def parseConcordance(self, element, spartition):
+        concordance, attrs = self.processElement(element, "evidenceName")
+        self.spartDict["spartitions"][spartition]["concordances"][concordance] = attrs
+        self.spartDict["spartitions"][spartition]["concordances"][concordance][
+            "limits"
+        ] = []
+        cast_type = str
+        if attrs["evidenceDiscriminationDataType"] == "Boolean":
+            cast_type = lambda x: x.lower() == "yes"  # noqa
+        elif attrs["evidenceDiscriminationDataType"] in [
+            "Continuous",
+            "Percentage",
+            "Proportion",
+        ]:
+            cast_type = float
+        for event, element in self.tokenizer:
+            token = self.translate(element.tag)
+            if (event, token) == ("end", "concordance"):
+                break
+            if (event, token) == ("start", "analysis"):
+                self.parseConcordanceAnalysis(element, spartition, concordance)
+            if (event, token) == ("start", "date"):
+                self.parseConcordanceDate(element, spartition, concordance)
+            elif (event, token) == ("start", "concordantlimit"):
+                self.parseConcordantLimit(element, spartition, concordance, cast_type)
+            element.clear()
+
+    def parseConcordanceAnalysis(self, element, spartition, concordance):
+        analysis, _ = self.processElement(element, "name")
+        self.spartDict["spartitions"][spartition]["concordances"][concordance][
+            "analysis"
+        ] = analysis
+
+    def parseConcordanceDate(self, element, spartition, concordance):
+        date = datetime.fromisoformat(element.text)
+        self.spartDict["spartitions"][spartition]["concordances"][concordance][
+            "date"
+        ] = date
+
+    def parseConcordantLimit(self, element, spartition, concordance, cast_type):
+        _, attrs = self.processElement(element)
+        attrs["concordanceSupport"] = cast_type(attrs["concordanceSupport"])
+        self.spartDict["spartitions"][spartition]["concordances"][concordance][
+            "limits"
+        ].append(attrs)
 
     def parseRemark(self, element, spartition):
         self.spartDict["spartitions"][spartition]["remarks"] = element.text
@@ -1239,7 +1294,7 @@ def demo():
     demoDir.mkdir(exist_ok=True)
 
     exmDir = Path("examples")
-    timestamp = datetime.utcnow().strftime("%Y%m%d%H%M%S%f")
+    timestamp = datetime.now(datetime.timezone.utc).strftime("%Y%m%d%H%M%S%f")
 
     print(f"Iterating '{str(exmDir.resolve())}'")
     for src in exmDir.iterdir():

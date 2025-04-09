@@ -28,16 +28,27 @@ def print_tree(spart):
                 print("|-+", f"<{individual}>", *data)
         print(" ")
 
-        
         for concordance in spart.getSpartitionConcordances(spartition):
-            print('|')
-            data = [f'{k}="{v}"' for k, v in spart.getConcordanceData(spartition, concordance).items()]
-            print('+', f'<{concordance}>', *data)
+            print("|")
+            data = [
+                f'{k}="{v}"'
+                for k, v in spart.getConcordanceData(spartition, concordance).items()
+            ]
+            print("+", f"<{concordance}>", *data)
             for limit in spart.getConcordantLimits(spartition, concordance):
-                data = [f'{k}="{v}"' for k, v in spart.getConcordantLimitData(spartition, concordance, limit).items()]
-                data += [f'{k}="{v}"' for k, v in spart.getConcordantLimitData(spartition, concordance, limit).items()]
-                print('|-+', f'<{concordance}>', *data)
-        
+                data = [
+                    f'{k}="{v}"'
+                    for k, v in spart.getConcordantLimitData(
+                        spartition, concordance, limit
+                    ).items()
+                ]
+                data += [
+                    f'{k}="{v}"'
+                    for k, v in spart.getConcordantLimitData(
+                        spartition, concordance, limit
+                    ).items()
+                ]
+                print("|-+", f"<{concordance}>", *data)
 
 
 def print_latlon(spart):
@@ -52,7 +63,6 @@ def print_latlon(spart):
     df.to_csv(stdout, sep="\t")
 
 
-
 if __name__ == "__main__":
     input = argv[1]
     spart = Spart.fromXML(input)
@@ -61,4 +71,3 @@ if __name__ == "__main__":
     print()
     """    print_latlon(spart)"""
     print()
-
