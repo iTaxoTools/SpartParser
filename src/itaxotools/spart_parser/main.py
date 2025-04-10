@@ -251,6 +251,7 @@ class Spart:
 
         self.spartDict["spartitions"][str(spartitionNumber)] = {}
         self.spartDict["spartitions"][str(spartitionNumber)]["subsets"] = {}
+        self.spartDict["spartitions"][str(spartitionNumber)]["concordances"] = {}
         self.spartDict["spartitions"][str(spartitionNumber)]["label"] = label
         self.spartDict["spartitions"][str(spartitionNumber)]["remarks"] = remarks
 
@@ -318,6 +319,50 @@ class Spart:
         self.spartDict["locations"][locality] = kwargs
         for synonym in synonyms:
             self.spartDict["location_synonyms"][synonym] = locality
+
+    def addConcordance(
+        self, spartitionLabel: str, concordanceLabel: str, **kwargs
+    ) -> None:
+        """Add a new concordance to the given spartition. Extra information
+        (evidence type, date etc.) is passed as keyword arguments."""
+        spartition = self.getSpartitionFromLabel(spartitionLabel)
+        concordances = spartition["concordances"]
+        concordances[concordanceLabel] = dict(kwargs)
+        concordances[concordanceLabel]["limits"] = []
+
+    def addConcordantLimit(
+        self,
+        spartitionLabel: str,
+        concordanceLabel: str,
+        subsetnumberA: str,
+        subsetnumberB: str,
+        NIndividualsSubsetA: str,
+        NIndividualsSubsetB: str,
+        concordanceSupport: str | float | bool,
+    ) -> None:
+        spartition = self.getSpartitionFromLabel(spartitionLabel)
+        concordance = spartition["concordances"][concordanceLabel]
+        (
+            self._check_concordance_support_type(
+                concordanceSupport, concordance["evidenceDiscriminationDataType"]
+            ),
+        )
+        limit = dict(
+            subsetnumberA=subsetnumberA,
+            subsetnumberB=subsetnumberB,
+            NIndividualsSubsetA=NIndividualsSubsetA,
+            NIndividualsSubsetB=NIndividualsSubsetB,
+            concordanceSupport=concordanceSupport,
+        )
+        concordance["limits"].append(limit)
+
+    @classmethod
+    def _check_concordance_support_type(cls, support: str | float | bool, type: str):
+        if type == "Boolean" and not isinstance(support, bool):
+            raise Exception(f"Unexpected support type for {support}: expected bool")
+        float_types = ["Continuous", "Percentage", "Proportion"]
+        if type in float_types and not isinstance(support, float):
+            raise Exception(f"Unexpected support type for {support}: expected float")
 
     def getIndividuals(self) -> list[str]:
         """Returns a list with the ids of each individual"""
@@ -401,15 +446,15 @@ class Spart:
 
     def getSpartitionConcordances(self, label: str) -> list[str]:
         """Returns a list with the labels of all concordances of the given spartition"""
-        index = self._getSpartitionKeyFromLabel(label)
-        return list(self.spartDict["spartitions"][index]["concordances"].keys())
+        spartition = self.getSpartitionFromLabel(label)
+        return list(spartition["concordances"].keys())
 
     def getConcordanceData(
         self, spartition: str, concordance: str
     ) -> dict[str, object]:
         """Returns extra information about the given concordance"""
-        index = self._getSpartitionKeyFromLabel(spartition)
-        data = self.spartDict["spartitions"][index]["concordances"][concordance]
+        spartition = self.getSpartitionFromLabel(spartition)
+        data = spartition["concordances"][concordance]
         data = dict(data)
         data.pop("limits")
         return data
@@ -417,26 +462,26 @@ class Spart:
     def getConcordantLimits(self, spartition: str, concordance: str) -> list[dict]:
         """Returns a list of all concordant limits contained in the spartition
         and concordance specified by the given labels."""
-        index = self._getSpartitionKeyFromLabel(spartition)
-        data = self.spartDict["spartitions"][index]["concordances"][concordance]
+        spartition = self.getSpartitionFromLabel(spartition)
+        data = spartition["concordances"][concordance]
         return list(data["limits"])
 
     def getSpartitionSubsets(self, label: str) -> list[str]:
         """Returns a list with the labels of all subsets of the given spartition"""
-        index = self._getSpartitionKeyFromLabel(label)
-        return list(self.spartDict["spartitions"][index]["subsets"].keys())
+        spartition = self.getSpartitionFromLabel(label)
+        return list(spartition["subsets"].keys())
 
     def getSubsetIndividuals(self, spartitionLabel: str, subsetNum: str) -> list[str]:
         """Returns a list of all individuals contained in the spartition
         and subset specified by the given labels."""
-        index = self._getSpartitionKeyFromLabel(spartitionLabel)
-        data = self.spartDict["spartitions"][index]["subsets"][subsetNum]
+        spartition = self.getSpartitionFromLabel(spartitionLabel)
+        data = spartition["subsets"][subsetNum]
         return list(data["individuals"].keys())
 
     def getSubsetData(self, spartition: str, subset: str) -> dict[str, object]:
         """Returns extra information about the given subset"""
-        index = self._getSpartitionKeyFromLabel(spartition)
-        data = self.spartDict["spartitions"][index]["subsets"][subset]
+        spartition = self.getSpartitionFromLabel(spartition)
+        data = spartition["subsets"][subset]
         data = dict(data)
         data.pop("individuals")
         return data
@@ -484,12 +529,6 @@ class Spart:
     def getSubsetIndividualScoreType(self, spartition: str) -> str:
         return self.getSpartitionFromLabel(spartition).get("individualScoreType")
 
-    def _getSpartitionKeyFromLabel(self, label: str) -> str:
-        """Since indexing is not being done with label for some reason..."""
-        for index, data in self.spartDict["spartitions"].items():
-            if data["label"] == label:
-                return index
-
     @property
     def project_name(self) -> str:
         return self.spartDict["project_name"]
@@ -509,11 +548,12 @@ class Spart:
     def date(self, date: datetime):
         self.spartDict["date"] = date.isoformat()
 
-    def getSpartitionFromLabel(self, spartitionLabel):
+    def getSpartitionFromLabel(self, spartitionLabel: str) -> dict | None:
+        """Since indexing is not being done with label for some reason..."""
         for spartitionRemark, spartition in self.spartDict["spartitions"].items():
             if checkKey(spartition, "label") and spartition["label"] == spartitionLabel:
                 return spartition
-        return None
+        raise Exception(f"Spartition not found: {repr(spartitionLabel)}")
 
 
 class SpartParserXML:
@@ -948,6 +988,7 @@ class SpartParserMatricial:
             self.spartDict["spartitions"][spartionNumber] = {
                 "label": spartionLabel[0],
                 "remarks": None,
+                "concordances": {},
             }
 
             # score types
@@ -1199,7 +1240,35 @@ class SpartWriterXML:
         self.handler.endElement("subset")
 
     def writeConcordances(self, spartition: str):
-        ...
+        if not any(self.spart.getSpartitionConcordances(spartition)):
+            return
+        self.handler.startElement("concordances")
+        for concordance in self.spart.getSpartitionConcordances(spartition):
+            self.writeConcordance(spartition, concordance)
+        self.handler.endElement("concordances")
+
+    def writeConcordance(self, spartition: str, concordance: str):
+        data = self.spart.getConcordanceData(spartition, concordance)
+        if "date" in data:
+            data["date"] = data["date"].isoformat()
+        data = self.formatData(data, "evidenceName", concordance)
+        data_type = data["evidenceDiscriminationDataType"]
+        analysis = data.pop("analysis", None)
+        date = data.pop("date", None)
+        self.handler.startElement("concordance", data)
+        if analysis is not None:
+            self.handler.startEndElement("analysis", dict(name=analysis))
+        if date is not None:
+            self.handler.startEndElement("date", characters=date)
+        for limit in self.spart.getConcordantLimits(spartition, concordance):
+            if data_type == "Boolean":
+                limit["concordanceSupport"] = (
+                    "Yes" if limit["concordanceSupport"] else "No"
+                )
+            if data_type in ["Continuous", "Percentage", "Proportion"]:
+                limit["concordanceSupport"] = str(limit["concordanceSupport"])
+            self.handler.startEndElement("concordantlimit", limit)
+        self.handler.endElement("concordance")
 
     def writeLocations(self):
         if not any(self.spart.getLocations()):

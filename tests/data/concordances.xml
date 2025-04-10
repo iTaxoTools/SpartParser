@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <root>
    <project_name>simple_test</project_name>
-   <date>2022-10-02T12:00:00</date>
+   <date>2025-04-01T12:00:00</date>
    <individuals>
       <individual id="individual_1"/>
       <individual id="individual_2"/>
@@ -29,9 +29,9 @@
             <concordance evidenceName="concordance_2" evidenceType="Morphology" evidenceDataType="Continuous" evidenceDiscriminationType="Significance" evidenceDiscriminationDataType="Continuous">
               <analysis name="concordanceseeker"/>
               <date>2025-04-01T12:00:00</date>
-              <concordantlimit subsetnumberA= "1" subsetnumberB="3" NIndividualsSubsetA="1" NIndividualsSubsetB="4" concordanceSupport="0.1"/>
-              <concordantlimit subsetnumberA= "2" subsetnumberB="3" NIndividualsSubsetA="2" NIndividualsSubsetB="5" concordanceSupport="0.2"/>
-              <concordantlimit subsetnumberA= "1" subsetnumberB="2" NIndividualsSubsetA="3" NIndividualsSubsetB="6" concordanceSupport="0.3"/>
+              <concordantlimit subsetnumberA="1" subsetnumberB="3" NIndividualsSubsetA="1" NIndividualsSubsetB="4" concordanceSupport="0.1"/>
+              <concordantlimit subsetnumberA="2" subsetnumberB="3" NIndividualsSubsetA="2" NIndividualsSubsetB="5" concordanceSupport="0.2"/>
+              <concordantlimit subsetnumberA="1" subsetnumberB="2" NIndividualsSubsetA="3" NIndividualsSubsetB="6" concordanceSupport="0.3"/>
             </concordance>
 			    </concordances>
       </spartition>

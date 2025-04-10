@@ -231,49 +231,81 @@ def spart_types():
     return spart
 
 
-def spart_concordance():
+def spart_concordances():
     spart = Spart()
-    spart.project_name = "concordance_types_test"
-    spart.date = datetime.datetime(2024, 1, 2, 12, 0, 0)
+    spart.project_name = "simple_test"
+    spart.date = datetime.datetime(2025, 4, 1, 12, 0, 0)
 
-    spart.addSpartition(
-        "spartition_1",
-        spartition_score_type="spartition_score_1",
-    )
+    spart.addIndividual("individual_1")
+    spart.addIndividual("individual_2")
+    spart.addIndividual("individual_3")
+
     spart.addSpartition("spartition_1")
+    spart.addSubset("spartition_1", "1")
+    spart.addSubsetIndividual("spartition_1", "1", "individual_1")
+    spart.addSubset("spartition_1", "2")
+    spart.addSubsetIndividual("spartition_1", "2", "individual_2")
+    spart.addSubset("spartition_1", "3")
+    spart.addSubsetIndividual("spartition_1", "3", "individual_3")
+
     spart.addConcordance(
         "spartition_1",
-        "Rag1 absence of Haplotype sharing",
-        spart.date,
+        "concordance_1",
         evidenceType="Molecular",
         evidenceDataType="Boolean",
         evidenceDiscriminationType="Boolean",
         evidenceDiscriminationDataType="Boolean",
+        analysis="concordanceseeker",
+        date=spart.date,
+    )
+    spart.addConcordantLimit(
+        "spartition_1",
+        "concordance_1",
+        subsetnumberA="1",
+        subsetnumberB="3",
+        NIndividualsSubsetA="1",
+        NIndividualsSubsetB="1",
+        concordanceSupport=True,
+    )
+
+    spart.addConcordance(
+        "spartition_1",
+        "concordance_2",
+        evidenceType="Morphology",
+        evidenceDataType="Continuous",
+        evidenceDiscriminationType="Significance",
+        evidenceDiscriminationDataType="Continuous",
+        analysis="concordanceseeker",
+        date=spart.date,
+    )
+    spart.addConcordantLimit(
+        "spartition_1",
+        "concordance_2",
+        subsetnumberA="1",
+        subsetnumberB="3",
+        NIndividualsSubsetA="1",
+        NIndividualsSubsetB="4",
+        concordanceSupport=0.1,
     )
 
     spart.addConcordantLimit(
         "spartition_1",
-        "1",
-        "2",
-        NIndividualsSubsetA="23",
-        NIndividualsSubsetB="257",
-        concordanceSupport="Yes",
+        "concordance_2",
+        subsetnumberA="2",
+        subsetnumberB="3",
+        NIndividualsSubsetA="2",
+        NIndividualsSubsetB="5",
+        concordanceSupport=0.2,
     )
+
     spart.addConcordantLimit(
         "spartition_1",
-        "1",
-        "3",
-        NIndividualsSubsetA="23",
-        NIndividualsSubsetB="5",
-        concordanceSupport="Yes",
-    )
-    spart.addConcordantLimit(
-        "spartition_1",
-        "2",
-        "3",
-        NIndividualsSubsetA="257",
-        NIndividualsSubsetB="5",
-        concordanceSupport="No",
+        "concordance_2",
+        subsetnumberA="1",
+        subsetnumberB="2",
+        NIndividualsSubsetA="3",
+        NIndividualsSubsetB="6",
+        concordanceSupport=0.3,
     )
 
     return spart
@@ -289,7 +321,7 @@ test_data = [
     WriteTest("scores_type.xml", Spart.toXML, spart_scores_type),
     WriteTest("latlon_written.xml", Spart.toXML, spart_latlon, case_sensitive=False),
     WriteTest("types.xml", Spart.toXML, spart_types),
-    #  WriteTest("spart_conc.xml", Spart.toXML, spart_concordance),
+    WriteTest("concordances.xml", Spart.toXML, spart_concordances),
 ]
 
 

@@ -23,6 +23,7 @@ class ReadWriteTest:
 test_data = [
     ReadWriteTest("simple.spart", "simple.xml", Spart.fromMatricial, Spart.toXML),
     ReadWriteTest("simple.xml", "simple.spart", Spart.fromXML, Spart.toMatricial),
+    ReadWriteTest("concordances.xml", "concordances.xml", Spart.fromXML, Spart.toXML),
 ]
 
 
