@@ -263,8 +263,8 @@ def spart_concordances():
         "concordance_1",
         subsetnumberA="1",
         subsetnumberB="3",
-        NIndividualsSubsetA="1",
-        NIndividualsSubsetB="1",
+        NIndividualsSubsetA=1,
+        NIndividualsSubsetB=1,
         concordanceSupport=True,
     )
 
@@ -283,8 +283,8 @@ def spart_concordances():
         "concordance_2",
         subsetnumberA="1",
         subsetnumberB="3",
-        NIndividualsSubsetA="1",
-        NIndividualsSubsetB="4",
+        NIndividualsSubsetA=1,
+        NIndividualsSubsetB=4,
         concordanceSupport=0.1,
     )
 
@@ -293,8 +293,8 @@ def spart_concordances():
         "concordance_2",
         subsetnumberA="2",
         subsetnumberB="3",
-        NIndividualsSubsetA="2",
-        NIndividualsSubsetB="5",
+        NIndividualsSubsetA=2,
+        NIndividualsSubsetB=5,
         concordanceSupport=0.2,
     )
 
@@ -303,8 +303,8 @@ def spart_concordances():
         "concordance_2",
         subsetnumberA="1",
         subsetnumberB="2",
-        NIndividualsSubsetA="3",
-        NIndividualsSubsetB="6",
+        NIndividualsSubsetA=3,
+        NIndividualsSubsetB=6,
         concordanceSupport=0.3,
     )
 

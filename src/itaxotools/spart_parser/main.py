@@ -336,8 +336,8 @@ class Spart:
         concordanceLabel: str,
         subsetnumberA: str,
         subsetnumberB: str,
-        NIndividualsSubsetA: str,
-        NIndividualsSubsetB: str,
+        NIndividualsSubsetA: int,
+        NIndividualsSubsetB: int,
         concordanceSupport: str | float | bool,
     ) -> None:
         spartition = self.getSpartitionFromLabel(spartitionLabel)
@@ -798,9 +798,10 @@ class SpartParserXML:
     def parseConcordantLimit(self, element, spartition, concordance, cast_type):
         _, attrs = self.processElement(element)
         attrs["concordanceSupport"] = cast_type(attrs["concordanceSupport"])
-        self.spartDict["spartitions"][spartition]["concordances"][concordance][
-            "limits"
-        ].append(attrs)
+        attrs["NIndividualsSubsetA"] = int(attrs["NIndividualsSubsetA"])
+        attrs["NIndividualsSubsetB"] = int(attrs["NIndividualsSubsetB"])
+        concordances = self.spartDict["spartitions"][spartition]["concordances"]
+        concordances[concordance]["limits"].append(attrs)
 
     def parseRemark(self, element, spartition):
         self.spartDict["spartitions"][spartition]["remarks"] = element.text
@@ -1262,6 +1263,8 @@ class SpartWriterXML:
         if date is not None:
             self.handler.startEndElement("date", characters=date)
         for limit in self.spart.getConcordantLimits(spartition, concordance):
+            limit["NIndividualsSubsetA"] = str(limit["NIndividualsSubsetA"])
+            limit["NIndividualsSubsetB"] = str(limit["NIndividualsSubsetB"])
             if data_type == "Boolean":
                 limit["concordanceSupport"] = (
                     "Yes" if limit["concordanceSupport"] else "No"

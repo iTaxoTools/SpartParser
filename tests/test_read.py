@@ -474,8 +474,8 @@ def spart_concordances(spart: Spart):
 
     assert limits[0]["subsetnumberA"] == "1"
     assert limits[0]["subsetnumberB"] == "3"
-    assert limits[0]["NIndividualsSubsetA"] == "1"
-    assert limits[0]["NIndividualsSubsetB"] == "1"
+    assert limits[0]["NIndividualsSubsetA"] == 1
+    assert limits[0]["NIndividualsSubsetB"] == 1
     assert limits[0]["concordanceSupport"] is True
 
     concordance = spart.getConcordanceData("spartition_1", "concordance_2")
@@ -491,20 +491,20 @@ def spart_concordances(spart: Spart):
 
     assert limits[0]["subsetnumberA"] == "1"
     assert limits[0]["subsetnumberB"] == "3"
-    assert limits[0]["NIndividualsSubsetA"] == "1"
-    assert limits[0]["NIndividualsSubsetB"] == "4"
+    assert limits[0]["NIndividualsSubsetA"] == 1
+    assert limits[0]["NIndividualsSubsetB"] == 4
     assert limits[0]["concordanceSupport"] == 0.1
 
     assert limits[1]["subsetnumberA"] == "2"
     assert limits[1]["subsetnumberB"] == "3"
-    assert limits[1]["NIndividualsSubsetA"] == "2"
-    assert limits[1]["NIndividualsSubsetB"] == "5"
+    assert limits[1]["NIndividualsSubsetA"] == 2
+    assert limits[1]["NIndividualsSubsetB"] == 5
     assert limits[1]["concordanceSupport"] == 0.2
 
     assert limits[2]["subsetnumberA"] == "1"
     assert limits[2]["subsetnumberB"] == "2"
-    assert limits[2]["NIndividualsSubsetA"] == "3"
-    assert limits[2]["NIndividualsSubsetB"] == "6"
+    assert limits[2]["NIndividualsSubsetA"] == 3
+    assert limits[2]["NIndividualsSubsetB"] == 6
     assert limits[2]["concordanceSupport"] == 0.3
 
 
