@@ -383,7 +383,7 @@ class Spart:
         individual = self.spartDict["individuals"][id]
         lat = individual.get("decimalLatitude", None)
         lon = individual.get("decimalLongitude", None)
-        if lat and lon:
+        if lat is not None and lon is not None:
             return (lat, lon)
         locality = individual.get("locality", None)
         if not locality:
