@@ -705,6 +705,7 @@ class SpartParserXML:
         self.spartDict["spartitions"][spartitionNumber] = attrs
         self.spartDict["spartitions"][spartitionNumber]["remarks"] = None
         self.spartDict["spartitions"][spartitionNumber]["subsets"] = {}
+        self.spartDict["spartitions"][spartitionNumber]["concordances"] = {}
         for event, element in self.tokenizer:
             token = self.translate(element.tag)
             if (event, token) == ("end", "spartition"):
